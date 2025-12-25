@@ -4,6 +4,8 @@ import ResumeForm from "./components/ResumeForm";
 import ResumePreview from "./components/ResumePreview";
 import { ResumeProvider } from "./context/ResumeContext";
 import ResumeBuilder from "./components/ResumeBuilder";
+import DefaultTemplate from "./components/DefaultTemplate";
+import Main from "./components/Main";
 
 
 
@@ -11,7 +13,9 @@ import ResumeBuilder from "./components/ResumeBuilder";
 export default function App() {
   return (
     <ResumeProvider>
-      <ResumeBuilder />
+      {/* <ResumeBuilder /> */}
+      {/* <DefaultTemplate /> */}
+      <Main />
     </ResumeProvider>
   );
 }
