@@ -10,11 +10,12 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
 export default function Main() {
   const [text, setText] = useState("");
   const [status, setStatus] = useState("");
+  const [jd, setJd] = useState("");
   const [resumeContent, setResumeContent] = useState({});
 
   const onSend = async () => {
     try {
-      const res = await uploadResumeAndJD(text, 'JD');
+      const res = await uploadResumeAndJD(text, jd);
       console.log('res is ', res);
       
     } catch (err) {
@@ -90,6 +91,15 @@ export default function Main() {
         type="file"
         accept="application/pdf"
         onChange={handleFileChange}
+      />
+
+      <textarea
+        value={jd}
+        onChange={(e) => setJd(e.target.value)}
+        style={{
+          border: "1px solid #ccc",
+        }}
+        placeholder="AKHIL plz Paste your JD here"
       />
 
       <button
