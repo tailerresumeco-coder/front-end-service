@@ -1,0 +1,105 @@
+{
+  "basics": {
+    "name": "Ranadeep Bashetty",
+    "location": "Hyderabad, Telangana",
+    "phone": "+91-9121923255",
+    "email": "ranadeepbashetty008@gmail.com",
+    "links": {
+      "linkedin": "https://www.linkedin.com/in/ranadeep-bashetty-a28b641bb/",
+      "github": "https://github.com/Ranadeep01",
+      "leetcode": "https://leetcode.com/ranadeep_20/",
+      "geeksforgeeks": "https://auth.geeksforgeeks.org/user/20r21a05d0"
+    }
+  },
+  "summary": "Full-Stack / Backend Engineer with hands-on experience building scalable, high-performance web applications using Java, Spring Boot, Node.js, Angular, MongoDB, PostgreSQL, and AWS. Skilled in developing RESTful APIs, microservices, event-driven architecture, database modeling, and secure authentication systems. Proven ability to collaborate with cross-functional teams, optimize performance, and deploy production-ready solutions in cloud environments. Passionate about solving real-world engineering challenges and continuously learning modern technologies.",
+  "education": [
+    {
+      "institution": "MLR Institute of Technology, Hyderabad",
+      "degree": "B.Tech - Computer Science and Engineering",
+      "cgpa": "7.5",
+      "startDate": "November 2020",
+      "endDate": "April 2024",
+      "location": "Hyderabad, Telangana"
+    }
+  ],
+  "experience": [
+    {
+      "role": "Full Stack Developer",
+      "company": "Endeavour Technologies",
+      "startDate": "March 2024",
+      "endDate": "August 2025",
+      "projects": [
+        {
+          "name": "Laboratory Information Management System (LIMS)",
+          "bullets": [
+            "Developed and enhanced core product modules integrating RESTful APIs with Angular front-end and backend service layers.",
+            "Built reusable UI frameworks and micro front-end components improving development efficiency by 25%.",
+            "Collaborated with backend teams on API contracts, data validation, and workflow orchestration.",
+            "Optimized page rendering, reducing load time using lazy loading and caching strategies.",
+            "Improved accessibility and responsiveness across platforms to ensure smooth experience."
+          ]
+        },
+        {
+          "name": "Med-worldexpo",
+          "bullets": [
+            "Implemented secure authentication flows (login, signup, password reset) and session management.",
+            "Improved overall application performance using route preloading, dynamic modules, and optimized pipeline.",
+            "Participated in code reviews, QA cycles, and debugging for production stability."
+          ]
+        }
+      ]
+    },
+    {
+      "role": "Software Engineer",
+      "company": "Ez-XBRL",
+      "startDate": "August 2025",
+      "endDate": "Present",
+      "projects": [
+        {
+          "name": "Integix (Data Automation & Processing Platform)",
+          "bullets": [
+            "Built scalable backend services using Node.js, Express and integrated with cloud-native infrastructure.",
+            "Designed and optimized document transformation pipelines and database schemas in MongoDB.",
+            "Developed and consumed REST APIs to enable distributed modular product functionality.",
+            "Deployed and monitored applications on AWS (EC2, S3, Lambda, RDS), improving availability and failover reliability.",
+            "Worked with CI/CD pipelines, version control, and deployment workflows ensuring smooth production releases."
+          ]
+        }
+      ]
+    }
+  ],
+  "personalProjects": [
+    {
+      "name": "Random Chat Room",
+      "startDate": "June 2025",
+      "endDate": "July 2025",
+      "bullets": [
+        "Developed a real-time chat web application using React.js, WebSockets and a component-based architecture.",
+        "Designed user flows such as chat rooms, message grouping, and authentication.",
+        "Ensured responsive UI compatibility and smooth performance using optimized rendering techniques."
+      ]
+    },
+    {
+      "name": "goRAP (Ride & Pool Mobile Application)",
+      "startDate": "July 2025",
+      "endDate": "November 2025",
+      "bullets": [
+        "Built a mobile-first ride-sharing system allowing users to create ride request cards and enabling vehicle owners to accept or schedule rides.",
+        "Developed core application logic including ride creation workflow, dynamic ride listing, and request handling.",
+        "Integrated real-time updates using REST API communication and event-based triggers.",
+        "Implemented modular UI architecture with React Native and reusable application components.",
+        "Ensured secure user authentication and smooth multi-device UX."
+      ]
+    }
+  ],
+  "skills": {
+    "languages": ["Java", "JavaScript", "TypeScript", "SQL"],
+    "backend": ["Spring Boot", "Node.js", "Express.js", "RESTful APIs", "Microservices"],
+    "frontend": ["Angular", "React.js", "Tailwind CSS", "React Native"],
+    "database": ["MongoDB", "PostgreSQL", "MySQL"],
+    "cloudDevOps": ["AWS (EC2, S3, Lambda, RDS)", "Docker", "CI/CD pipelines"],
+    "authentication": ["JWT", "OAuth", "Role-based Access Control"],
+    "toolsOthers": ["Git", "GitHub", "Bitbucket", "Postman", "Swagger", "Figma"],
+    "softSkills": ["Problem Solving", "Collaboration", "Ownership", "Communication"]
+  }
+}

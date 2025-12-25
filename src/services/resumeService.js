@@ -1,0 +1,11 @@
+import axios from 'axios';
+
+const BASE_PATH = 'http://127.0.0.1:8000';
+
+export const uploadResumeAndJD = (resume, jd) => {
+    const payload = {
+        resume: resume,
+        jd: jd
+    }
+    return axios.post(`${BASE_PATH}/resume/tailer-resume`, payload);
+}
