@@ -5,7 +5,7 @@ function DefaultTemplate() {
 
     const [jsonData, setJsonData] = useState(data);
 
-    useEffect(() => {
+    useEffect(() => { 
 
     }, []);
 
