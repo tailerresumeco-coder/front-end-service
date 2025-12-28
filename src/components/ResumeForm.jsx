@@ -1,7 +1,7 @@
 import React from "react";
 import { useResume } from "../context/ResumeContext";
 import DynamicForm from "./DynamicForm";
-import updateByPath from "../utils/updateByPath";
+import updateByPath from "../utils/UpdateByPath";
 import { useNavigate } from "react-router-dom";
 
 export default function ResumeForm() {

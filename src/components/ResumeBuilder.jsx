@@ -4,7 +4,7 @@ import { useReactToPrint } from 'react-to-print';
 import { useResume } from '../context/ResumeContext';
 import DynamicForm from './DynamicForm';
 import ResumePreview from './ResumePreview';
-import updateByPath from '../utils/updateByPath';
+import updateByPath from '../utils/UpdateByPath';
 
 export default function ResumeBuilder() {
   const { resume, setResume } = useResume();
