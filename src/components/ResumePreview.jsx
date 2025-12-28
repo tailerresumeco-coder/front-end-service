@@ -10,22 +10,22 @@ const ResumePreview = forwardRef(({ resume }, ref) => {
   const achievements = resume.achievements || [];
 
   return (
-<div ref={ref} className="bg-white text-gray-900 p-6 md:p-10 w-full min-h-screen print:min-h-full print:p-0">
+<div ref={ref} className="bg-white text-text-primary p-6 md:p-10 w-full min-h-screen print:min-h-full print:p-0">
   <div className="w-full border px-6 py-6 md:px-10 md:py-10">
 
         <header className="flex flex-col md:flex-row md:justify-between md:items-start gap-4 md:gap-0">
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold">{basics.name}</h1>
-            <p className="text-sm text-gray-600 mt-1">{basics.summary}</p>
+            <h1 className="text-heading font-bold">{basics.name}</h1>
+            <p className="text-badge text-text-muted mt-1">{basics.summary}</p>
           </div>
-          <div className="text-sm text-right md:text-left">
+          <div className="text-badge text-right md:text-left">
             <div>{basics.email}</div>
             <div>{basics.phone}</div>
             <div>{basics.location?.city}, {basics.location?.region}</div>
             <div className="mt-2">
               {basics.profiles?.map((p, i) => (
                 <div key={i}>
-                  <a href={p.url} target="_blank" rel="noreferrer" className="text-blue-600 underline">{p.network}</a>
+                  <a href={p.url} target="_blank" rel="noreferrer" className="text-brand-primary underline">{p.network}</a>
                 </div>
               ))}
             </div>

@@ -1,21 +1,25 @@
 // App.jsx
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import ResumeForm from "./components/ResumeForm";
-import ResumePreview from "./components/ResumePreview";
-import { ResumeProvider } from "./context/ResumeContext";
-import ResumeBuilder from "./components/ResumeBuilder";
-import DefaultTemplate from "./components/DefaultTemplate";
 import Main from "./components/Main";
+import LandingPage from "./components/LandingPage";
 
 
 
 
 export default function App() {
   return (
-    <ResumeProvider>
-      {/* <ResumeBuilder /> */}
-      {/* <DefaultTemplate /> */}
-      <Main />
-    </ResumeProvider>
+ <Router>
+   <Routes>
+     <Route path="/" element={<LandingPage />} />
+     <Route path="/generate" element={<Main />} />
+     {/* <Route path="/preview" element={<ResumePreview />} />
+     <Route path="/resume-builder" element={<ResumeBuilder />} />
+     <Route path="/default-template" element={<DefaultTemplate />} /> */}
+   </Routes>
+ </Router>
+
+   
+
+    
   );
 }
