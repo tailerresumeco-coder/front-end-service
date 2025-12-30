@@ -1,33 +1,111 @@
-import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useRef } from 'react';
+import { useReactToPrint } from 'react-to-print';
 import { useResume } from '../context/ResumeContext';
+import DynamicForm from './DynamicForm';
+import ResumeTemplate from './ResumeTemplate';
+import updateByPath from '../utils/UpdateByPath';
 
-export default function ProcessingScreen() {
-  const navigate = useNavigate();
-  const { uploadedResume, jobDescription, selectedFormat, setGeneratedResume } = useResume();
+export default function ResumeBuilder() {
+  const { resume, setResume } = useResume();
+  const [showPreview, setShowPreview] = useState(false);
+  const previewRef = useRef(null);
 
-  useEffect(() => {
-    if (!uploadedResume || !jobDescription || !selectedFormat) {
-      navigate('/');
-      return;
-    }
+  // Configure react-to-print
+  const handlePrint = useReactToPrint({
+    contentRef: previewRef,
+    documentTitle: `${resume?.basics?.name || 'Resume'}_Resume.pdf`,
+    onBeforePrint: () => console.log('📄 Preparing to print...'),
+    onAfterPrint: () => console.log('✅ Print completed'),
+    onPrintError: (error) => console.error('❌ Print error:', error),
+  });
 
-    // Simulate processing
-    const timer = setTimeout(() => {
-      // Assume generated resume is ready
-      setGeneratedResume({ /* mock generated resume */ });
-      navigate('/resume');
-    }, 2000); // 2 seconds for demo
+  const handleChange = (path, value) => {
+    const updated = updateByPath(resume, path, value);
+    setResume(updated);
+  };
 
-    return () => clearTimeout(timer);
-  }, [navigate, setGeneratedResume, uploadedResume, jobDescription, selectedFormat]);
+  if (!resume) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+        <p className="text-lg text-gray-700">Loading resume...</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto"></div>
-        <p className="mt-4 text-lg text-gray-700">Processing your resume...</p>
+    <div className="min-h-screen bg-gradient-to-br from-surface-dark via-surface-dark-mid to-brand-secondary-dark">
+      {/* Header */}
+      <header className="border-b border-border-primary backdrop-blur-sm bg-surface-dark/40 sticky top-0 z-10">
+        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+          <h1 className="text-nav font-bold text-text-primary">Resume Builder</h1>
+          <div className="flex gap-2">
+            {/* Mobile Preview Toggle */}
+            <button
+              onClick={() => setShowPreview(!showPreview)}
+              className="lg:hidden bg-brand-primary text-text-primary px-4 py-2 rounded-button hover:bg-brand-primary-hover transition"
+            >
+              {showPreview ? 'Edit' : 'Preview'}
+            </button>
+            
+            {/* Download Button */}
+            <button
+              onClick={handlePrint}
+              className="bg-brand-secondary text-text-primary px-4 py-2 rounded-button hover:bg-brand-secondary-hover transition flex items-center gap-2"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              <span className="hidden sm:inline">Download PDF</span>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content - Grid Layout */}
+      <div className="container mx-auto p-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Left Side - Form */}
+          <div className={`${showPreview ? 'hidden lg:block' : 'block'}`}>
+            <div className="bg-white rounded-lg shadow-lg p-6 sticky top-20 max-h-[calc(100vh-7rem)] overflow-y-auto">
+              <h2 className="text-xl font-bold mb-4 text-gray-800">Edit Resume</h2>
+              <DynamicForm data={resume} onChange={handleChange} />
+            </div>
+          </div>
+
+          {/* Right Side - Preview with Ref */}
+          <div className={`${showPreview ? 'block' : 'hidden lg:block'}`}>
+            <div className="bg-white rounded-lg shadow-lg overflow-hidden sticky top-20 max-h-[calc(100vh-7rem)] overflow-y-auto">
+              <div className="bg-gray-800 text-white px-4 py-2 text-sm font-semibold">
+                Live Preview (This will be downloaded as PDF)
+              </div>
+              
+              {/* CRITICAL: This is what gets printed */}
+              <ResumeTemplate ref={previewRef} resume={resume} />
+            </div>
+          </div>
+        </div>
       </div>
+
+      {/* Hidden print styles */}
+      <style>{`
+        @media print {
+          body {
+            margin: 0;
+            padding: 0;
+            background: white;
+          }
+          
+          .no-print {
+            display: none !important;
+          }
+          
+          /* Ensure resume template is on white background */
+          [data-testid="resume-preview"] {
+            background: white !important;
+            box-shadow: none !important;
+          }
+        }
+      `}</style>
     </div>
   );
 }
