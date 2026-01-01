@@ -15,11 +15,11 @@ export default function LandingPage() {
           </div>
           <span className="text-nav font-semibold">Trailer Resume</span>
         </div>
-        <div className="flex gap-8 items-center">
+        {/* <div className="flex gap-8 items-center">
           <button className="hover:text-brand-primary transition">Product</button>
           <button className="hover:text-brand-primary transition">Pricing</button>
           <button className="hover:text-brand-primary transition">Login</button>
-        </div>
+        </div> */}
       </nav>
 
       {/* Main Content */}

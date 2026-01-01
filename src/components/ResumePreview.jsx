@@ -1,110 +1,158 @@
 // components/ResumePreview.jsx
 import React, { forwardRef } from "react";
 
-const ResumePreview = forwardRef(({ resume }, ref) => {
-  const basics = resume.basics || {};
-  const work = resume.work || [];
-  const skills = resume.skills || [];
-  const projects = resume.projects || [];
-  const education = resume.education || [];
-  const achievements = resume.achievements || [];
+const ResumePreview = React.forwardRef(({ resume }, ref) => {
+  if (!resume || !resume.basics) return null;
+
+  const { basics, education, work, projects, skills } = resume;
 
   return (
-<div ref={ref} className="bg-white text-text-primary p-6 md:p-10 w-full min-h-screen print:min-h-full print:p-0">
-  <div className="w-full border px-6 py-6 md:px-10 md:py-10">
-
-        <header className="flex flex-col md:flex-row md:justify-between md:items-start gap-4 md:gap-0">
-          <div>
-            <h1 className="text-heading font-bold">{basics.name}</h1>
-            <p className="text-badge text-text-muted mt-1">{basics.summary}</p>
-          </div>
-          <div className="text-badge text-right md:text-left">
-            <div>{basics.email}</div>
-            <div>{basics.phone}</div>
-            <div>{basics.location?.city}, {basics.location?.region}</div>
-            <div className="mt-2">
-              {basics.profiles?.map((p, i) => (
-                <div key={i}>
-                  <a href={p.url} target="_blank" rel="noreferrer" className="text-brand-primary underline">{p.network}</a>
-                </div>
-              ))}
-            </div>
-          </div>
-        </header>
-
-        <hr className="my-4" />
-
-        <section className="mb-4">
-          <h2 className="text-lg font-semibold">Work Experience</h2>
-          <div className="space-y-3 mt-2">
-            {work.map((w, idx) => (
-              <div key={idx}>
-                <div className="flex justify-between">
-                  <div>
-                    <div className="font-medium">{w.name} — {w.position}</div>
-                    <div className="text-sm text-gray-600">{w.location}</div>
-                  </div>
-                  <div className="text-sm text-gray-600">{w.startDate} — {w.endDate}</div>
-                </div>
-                <div className="mt-2 text-sm">
-                  {w.projects?.map((p, pi) => (
-                    <div key={pi}>
-                      <div className="font-medium">{p.name}</div>
-                      <ul className="list-disc ml-5 mt-1">
-                        {p.highlights?.map((h, hi) => <li key={hi}>{h}</li>)}
-                      </ul>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section className="mb-4">
-          <h2 className="text-lg font-semibold">Projects</h2>
-          <div className="mt-2 space-y-2 text-sm">
-            {projects.map((p, i) => (
-              <div key={i}>
-                <div className="font-medium">{p.name} <span className="text-xs text-gray-500">— {p.type}</span></div>
-                <div className="text-sm">{p.highlights?.map((h, idx) => <div key={idx}>• {h}</div>)}</div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section className="mb-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <h3 className="font-semibold">Education</h3>
-            <div className="text-sm mt-1">
-              {education.map((e, i) => (
-                <div key={i}>
-                  <div className="font-medium">{e.institution}</div>
-                  <div className="text-gray-600">{e.studyType} — {e.area}</div>
-                  <div className="text-gray-600">{e.startDate} - {e.endDate}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <h3 className="font-semibold">Skills</h3>
-            <div className="flex flex-wrap gap-2 mt-2">
-              {skills.map((s, i) => s.keywords.map((k, ki) => (
-                <span key={`${i}-${ki}`} className="text-sm border px-2 py-1 rounded">{k}</span>
-              )))}
-            </div>
-
-            <h3 className="font-semibold mt-4">Achievements</h3>
-            <ul className="list-disc ml-5 text-sm mt-1">
-              {achievements.map((a, i) => <li key={i}>{a}</li>)}
-            </ul>
-          </div>
-        </section>
-
+    <div
+      ref={ref}
+      style={{
+        fontFamily: "'Calibri', 'Arial', sans-serif",
+        fontSize: "11px",
+        lineHeight: "1.4",
+        color: "#000",
+        padding: "40px",
+        width: "8.5in",
+        minHeight: "11in",
+        margin: "0",
+        backgroundColor: "#fff",
+        boxSizing: "border-box"
+      }}
+    >
+      {/* Header */}
+      <div style={{ marginBottom: "10px", borderBottom: "2px solid #000", paddingBottom: "8px" }}>
+        <h1 style={{ fontSize: "16px", fontWeight: "bold", margin: "0 0 2px 0" }}>
+          {basics.name}
+        </h1>
+        <p style={{ fontSize: "10px", margin: "2px 0", color: "#555", lineHeight: "1.3" }}>
+          {basics.summary}
+        </p>
+        <div style={{ fontSize: "10px", display: "flex", gap: "12px", flexWrap: "wrap", margin: "4px 0 0 0" }}>
+          <span>{basics.phone}</span>
+          <span>|</span>
+          <span>{basics.email}</span>
+          {basics.location && (
+            <>
+              <span>|</span>
+              <span>{basics.location.city}, {basics.location.region}</span>
+            </>
+          )}
+          {basics.profiles?.map((p, i) => (
+            <React.Fragment key={i}>
+              <span>|</span>
+              <span>{p.network}</span>
+            </React.Fragment>
+          ))}
+        </div>
       </div>
+
+      {/* Education */}
+      {education && education.length > 0 && (
+        <div style={{ marginBottom: "10px" }}>
+          <h2 style={{ fontSize: "11px", fontWeight: "bold", margin: "6px 0 4px 0", borderBottom: "1px solid #000", paddingBottom: "2px" }}>
+            EDUCATION
+          </h2>
+          {education.map((edu, idx) => (
+            <div key={idx} style={{ marginBottom: "4px" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", margin: "0 0 2px 0" }}>
+                <span style={{ fontWeight: "bold", fontSize: "11px" }}>{edu.institution}</span>
+                <span style={{ fontSize: "10px" }}>{edu.startDate} – {edu.endDate}</span>
+              </div>
+              <div style={{ fontSize: "10px", color: "#333" }}>
+                {edu.studyType} | GPA: {edu.score}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Experience */}
+      {work && work.length > 0 && (
+        <div style={{ marginBottom: "10px" }}>
+          <h2 style={{ fontSize: "11px", fontWeight: "bold", margin: "6px 0 4px 0", borderBottom: "1px solid #000", paddingBottom: "2px" }}>
+            EXPERIENCE
+          </h2>
+          {work.map((job, jidx) => (
+            <div key={jidx} style={{ marginBottom: "8px" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", margin: "0 0 2px 0" }}>
+                <span style={{ fontWeight: "bold", fontSize: "11px" }}>{job.position} | {job.name}</span>
+                <span style={{ fontSize: "10px" }}>{job.startDate} – {job.endDate}</span>
+              </div>
+              {job.projects?.map((proj, pidx) => (
+                <div key={pidx} style={{ marginBottom: "4px" }}>
+                  <div style={{ fontWeight: "bold", fontSize: "10px", margin: "2px 0" }}>
+                    Project: {proj.name}
+                  </div>
+                  <ul style={{ margin: "2px 0 4px 0", paddingLeft: "20px", listStyleType: "disc" }}>
+                    {proj.highlights?.map((h, hidx) => (
+                      <li key={hidx} style={{ margin: "1px 0", fontSize: "10px", lineHeight: "1.4" }}>
+                        {h}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Projects */}
+      {projects && projects.length > 0 && (
+        <div style={{ marginBottom: "10px" }}>
+          <h2 style={{ fontSize: "11px", fontWeight: "bold", margin: "6px 0 4px 0", borderBottom: "1px solid #000", paddingBottom: "2px" }}>
+            PERSONAL PROJECTS
+          </h2>
+          {projects.map((proj, pidx) => (
+            <div key={pidx} style={{ marginBottom: "6px" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", margin: "0 0 2px 0" }}>
+                <span style={{ fontWeight: "bold", fontSize: "11px" }}>
+                  {proj.name} | {proj.type}
+                </span>
+                <span style={{ fontSize: "10px" }}>{proj.startDate} – {proj.endDate}</span>
+              </div>
+              {proj.technologies && (
+                <div style={{ fontSize: "10px", color: "#333", margin: "1px 0" }}>
+                  {proj.technologies}
+                </div>
+              )}
+              <ul style={{ margin: "2px 0", paddingLeft: "20px", listStyleType: "disc" }}>
+                {proj.highlights?.map((h, hidx) => (
+                  <li key={hidx} style={{ margin: "1px 0", fontSize: "10px", lineHeight: "1.4" }}>
+                    {h}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Skills */}
+      {skills && skills.length > 0 && (
+        <div>
+          <h2 style={{ fontSize: "11px", fontWeight: "bold", margin: "6px 0 4px 0", borderBottom: "1px solid #000", paddingBottom: "2px" }}>
+            SKILLS & CERTIFICATIONS
+          </h2>
+          {skills.map((skillGroup, sidx) => (
+            <div key={sidx} style={{ marginBottom: "4px" }}>
+              <span style={{ fontWeight: "bold", fontSize: "10px" }}>
+                {skillGroup.name}:
+              </span>
+              <span style={{ fontSize: "10px", marginLeft: "6px" }}>
+                {skillGroup.keywords?.join(", ")}
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 });
+
+ResumePreview.displayName = "ResumePreview";
 
 export default ResumePreview;

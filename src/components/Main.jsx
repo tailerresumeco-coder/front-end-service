@@ -1,6 +1,8 @@
 import React, { useState, useRef } from "react";
-import { uploadResumeAndJD } from "../services/resumeService";
+
 import * as pdfjsLib from "pdfjs-dist";
+import { useResume } from "../context/ResumeContext";
+import { useNavigate } from "react-router-dom";
 
 // Set PDF.js worker
 pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
@@ -12,16 +14,17 @@ export default function Main() {
   const [resumeContent, setResumeContent] = useState({});
   const [selectedFile, setSelectedFile] = useState(null);
   const fileInputRef = useRef(null);
+  const { setUploadedResume, setJobDescription } = useResume();
+  const navigate =useNavigate();
 
-  const onSend = async () => {
-    try {
-      const res = await uploadResumeAndJD(text, jd);
-      console.log('res is ', res);
-      
-    } catch (err) {
-      console.error(err);
-    }
-  }
+ const onSend = () => {
+    // store data in context
+    setUploadedResume(text);
+    setJobDescription(jd);
+
+    // go to processing screen
+    navigate("/processing");
+  };
 
   const handleDragOver = (e) => {
     e.preventDefault();
@@ -117,11 +120,11 @@ export default function Main() {
             </div>
             <h1 className="text-nav font-bold text-text-primary">Trailer Resume</h1>
           </div>
-          <nav className="flex gap-8">
+          {/* <nav className="flex gap-8">
             <a href="#" className="text-text-secondary hover:text-brand-primary text-badge font-medium transition">Product</a>
             <a href="#" className="text-text-secondary hover:text-brand-primary text-badge font-medium transition">Pricing</a>
             <a href="#" className="text-text-secondary hover:text-brand-primary text-badge font-medium transition">Login</a>
-          </nav>
+          </nav> */}
         </div>
       </header>
 
