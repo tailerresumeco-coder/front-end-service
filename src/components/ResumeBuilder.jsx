@@ -11,7 +11,7 @@ export default function ResumeBuilder() {
   const previewRef = useRef();
 
   const handlePrint = useReactToPrint({
-    content: () => previewRef.current,
+    contentRef: previewRef,
     documentTitle: `${resume?.basics?.name || 'Resume'}_Resume`,
   });
 
