@@ -237,7 +237,7 @@ export default function Main() {
                 value={jd}
                 onChange={(e) => setJd(e.target.value)}
                 placeholder="Paste your job description here..."
-                className="w-full h-40 bg-gradient-to-br from-cyan-900/10 to-purple-900/10 border border-cyan-500/30 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400/30 transition-all backdrop-blur-sm"
+                className="w-full h-40 bg-gradient-to-br from-cyan-900/10 to-purple-900/10 border border-cyan-500/30 rounded-xl px-4 py-3 text-black placeholder-gray-600 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400/30 transition-all backdrop-blur-sm"
               />
             </div>
 
@@ -248,7 +248,7 @@ export default function Main() {
               <textarea
                 value={text}
                 readOnly
-                className="w-full h-40 bg-gradient-to-br from-cyan-900/10 to-purple-900/10 border border-cyan-500/30 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400/30 transition-all backdrop-blur-sm"
+                className="w-full h-40 bg-gradient-to-br from-cyan-900/10 to-purple-900/10 border border-cyan-500/30 rounded-xl px-4 py-3 text-black placeholder-gray-600 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400/30 transition-all backdrop-blur-sm"
               />
             </div>
           </div>
