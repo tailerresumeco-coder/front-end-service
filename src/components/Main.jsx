@@ -120,11 +120,11 @@ export default function Main() {
             </div>
             <h1 className="text-nav font-bold text-text-primary">Trailer Resume</h1>
           </div>
-          <nav className="flex gap-8">
+          {/* <nav className="flex gap-8">
             <a href="#" className="text-text-secondary hover:text-brand-primary text-badge font-medium transition">Product</a>
             <a href="#" className="text-text-secondary hover:text-brand-primary text-badge font-medium transition">Pricing</a>
             <a href="#" className="text-text-secondary hover:text-brand-primary text-badge font-medium transition">Login</a>
-          </nav>
+          </nav> */}
         </div>
       </header>
 
