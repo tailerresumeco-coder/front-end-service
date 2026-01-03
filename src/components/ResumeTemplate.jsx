@@ -119,6 +119,17 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
                 </span>
                 <span style={{ fontSize: "10px" }}>{job.dates || ""}</span>
               </div>
+
+               {job.projectName && (
+                <div style={{ 
+                  fontSize: "10px", 
+                  fontStyle: "italic", 
+                  color: "#444",
+                  margin: "1px 0 2px 0"
+                }}>
+                  Project: {job.projectName}
+                </div>
+              )}
               {job.highlights && job.highlights.length > 0 && (
                 <ul style={{ margin: "2px 0 0 0", paddingLeft: "20px", listStyleType: "disc" }}>
                   {job.highlights.map((h, hidx) => (

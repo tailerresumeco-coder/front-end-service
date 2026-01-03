@@ -3,76 +3,68 @@
  * Metadata fields are READ-ONLY
  */
 export const FIELD_CONFIG = {
-  _metadata: {
-    editable: false,
-    label: "Resume Analysis",
-    fields: {
-      atsScoreBefore: { type: "number", label: "ATS Score (Before)", readOnly: true },
-      atsScoreAfter: { type: "number", label: "ATS Score (After)", readOnly: true },
-      atsExplanation: { type: "text", label: "Score Explanation", readOnly: true }
-    }
-  },
-
   basics: {
-    editable: true,
-    label: "Personal Details",
+    label: "Basic Information",
     fields: {
-      name: { type: "text", label: "Full Name", required: true },
-      email: { type: "email", label: "Email", required: true },
-      phone: { type: "tel", label: "Phone Number" },
-      location: { type: "text", label: "Location" },
-      summary: { type: "textarea", label: "Professional Summary" },
-      github: { type: "url", label: "GitHub Profile" },
-      leetcode: { type: "url", label: "LeetCode Profile" },
-      linkedin: { type: "url", label: "LinkedIn Profile" }
+      name: { label: "Full Name", type: "text", required: true },
+      email: { label: "Email", type: "email", required: true },
+      phone: { label: "Phone", type: "tel" },
+      location: { label: "Location", type: "text" },
+      summary: { label: "Professional Summary", type: "textarea", placeholder: "Brief summary of your professional background..." },
+      github: { label: "GitHub", type: "url", placeholder: "https://github.com/username" },
+      leetcode: { label: "LeetCode", type: "url", placeholder: "https://leetcode.com/username" },
+      linkedin: { label: "LinkedIn", type: "url", placeholder: "https://linkedin.com/in/username" },
+      other: { label: "Other Link", type: "url", placeholder: "Portfolio, blog, etc." }
     }
   },
 
   education: {
-    editable: true,
     label: "Education",
-    isArray: true,
+    canAddRemove: true,
     fields: {
-      degree: { type: "text", label: "Degree", required: true },
-      institution: { type: "text", label: "Institution", required: true },
-      dates: { type: "date-range", label: "Duration" },
-      gpa: { type: "number", label: "GPA" }
+      institution: { label: "Institution", type: "text", required: true },
+      degree: { label: "Degree", type: "text", required: true },
+      dates: { label: "Duration", type: "date-range", placeholder: "Nov 2020 – Apr 2025" },
+      gpa: { label: "GPA", type: "number", placeholder: "7.5" }
     }
   },
 
   experience: {
-    editable: true,
     label: "Work Experience",
-    isArray: true,
     canAddRemove: true,
     fields: {
-      role: { type: "text", label: "Job Title", required: true },
-      company: { type: "text", label: "Company", required: true },
-      dates: { type: "date-range", label: "Duration" },
-      highlights: { type: "array", label: "Responsibilities", itemType: "text", canAddRemove: true }
+      role: { label: "Job Title", type: "text", required: true },
+      company: { label: "Company", type: "text", required: true },
+      location: { label: "Location", type: "text" },
+      dates: { label: "Duration", type: "date-range", placeholder: "Apr 2024 – Dec 2024" },
+      projectName: { label: "Project Name", type: "text", placeholder: "Optional: Project you worked on" },
+      highlights: { label: "Responsibilities/Achievements", type: "array" }
     }
   },
 
   projects: {
-    editable: true,
     label: "Projects",
-    isArray: true,
     canAddRemove: true,
     fields: {
-      name: { type: "text", label: "Project Name", required: true },
-      technologies: { type: "array", label: "Technologies", itemType: "text", canAddRemove: true },
-      description: { type: "textarea", label: "Description" }
+      name: { label: "Project Name", type: "text", required: true },
+      technologies: { label: "Technologies", type: "array" },
+      description: { label: "Description", type: "textarea" },
+      highlights: { label: "Key Features/Highlights", type: "array" }
     }
   },
 
   skills: {
-    editable: true,
     label: "Skills",
-    isArray: true,
+    canAddRemove: true,
     fields: {
-      category: { type: "text", label: "Category", required: true },
-      items: { type: "array", label: "Skills", itemType: "text", canAddRemove: true }
+      category: { label: "Skill Category", type: "text", placeholder: "e.g., Technical Skills, Soft Skills" },
+      items: { label: "Skills", type: "array" }
     }
+  },
+
+  certifications: {
+    label: "Certifications",
+    canAddRemove: true
   }
 };
 

@@ -58,19 +58,19 @@ export default function DynamicForm({ data, onChange, path = "", sectionKey = nu
       case "number":
         return <input
           type="number"
+          step="0.1"
           className="border p-2 rounded w-full focus:ring-2 focus:ring-blue-500"
           value={value || ""}
           placeholder={placeholder}
-          onChange={(e) => onChange(path, Number(e.target.value))}
+          onChange={(e) => onChange(path, parseFloat(e.target.value) || 0)}
         />;
 
       case "date-range":
-        // For now, accept "Aug 2024 – Dec 2024" format
         return <input
           type="text"
           className="border p-2 rounded w-full focus:ring-2 focus:ring-blue-500"
           value={value || ""}
-          placeholder="e.g., Aug 2024 – Dec 2024"
+          placeholder="e.g., Apr 2024 – Dec 2024"
           onChange={(e) => onChange(path, e.target.value)}
         />;
 
@@ -91,6 +91,15 @@ export default function DynamicForm({ data, onChange, path = "", sectionKey = nu
           placeholder={placeholder}
           onChange={(e) => onChange(path, e.target.value)}
         />;
+    }
+  };
+
+  const handleRemoveItem = (arrayPath, index) => {
+    const pathParts = arrayPath.split('.');
+    const currentValue = pathParts.reduce((obj, key) => obj?.[key], data);
+    if (Array.isArray(currentValue)) {
+      const newArray = currentValue.filter((_, i) => i !== index);
+      onChange(arrayPath, newArray);
     }
   };
 
@@ -136,11 +145,27 @@ export default function DynamicForm({ data, onChange, path = "", sectionKey = nu
               <label className="block text-sm font-semibold mb-2">
                 {sectionConfig?.label || fieldConfig?.label || formatLabel(key)}
               </label>
+              {value.length === 0 && sectionConfig?.canAddRemove && (
+                <div className="text-gray-500 text-sm italic mb-2">
+                  No {formatLabel(key).toLowerCase()} added yet. Click "Add" to create one.
+                </div>
+              )}
               {value.map((item, index) => (
                 <div
                   key={index}
-                  className="ml-4 border-l-2 border-blue-300 pl-4 my-4 bg-blue-50 p-3 rounded"
+                  className="ml-4 border-l-2 border-blue-300 pl-4 my-4 bg-blue-50 p-3 rounded relative"
                 >
+                  {/* Remove button for array items */}
+                  {sectionConfig?.canAddRemove && (
+                    <button
+                      onClick={() => handleRemoveItem(currentPath, index)}
+                      className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded text-xs hover:bg-red-600"
+                      title="Remove this item"
+                    >
+                      ✕
+                    </button>
+                  )}
+
                   {typeof item === "string" ? (
                     <input
                       className="border p-2 rounded w-full"
@@ -201,15 +226,38 @@ export default function DynamicForm({ data, onChange, path = "", sectionKey = nu
 function formatLabel(key) {
   return key
     .replace(/([A-Z])/g, " $1")
+    .replace(/_/g, " ")
     .replace(/^./, (str) => str.toUpperCase())
     .trim();
 }
 
 function createEmptyItem(sectionKey) {
   const templates = {
-    experience: { role: "", company: "", dates: "", highlights: [] },
-    projects: { name: "", technologies: [], description: "" },
-    skills: { category: "", items: [] }
+    experience: { 
+      role: "", 
+      company: "", 
+      location: "",
+      dates: "", 
+      projectName: "",
+      highlights: [] 
+    },
+    projects: { 
+      name: "", 
+      technologies: [], 
+      description: "",
+      highlights: []
+    },
+    skills: { 
+      category: "", 
+      items: [] 
+    },
+    education: {
+      institution: "",
+      degree: "",
+      dates: "",
+      gpa: ""
+    },
+    certifications: ""
   };
   return templates[sectionKey] || {};
 }
