@@ -1,6 +1,8 @@
 import axios from 'axios';
 
-const BASE_PATH = 'https://back-end-service-vvxg.onrender.com';
+// const BASE_PATH = 'https://back-end-service-vvxg.onrender.com';
+
+const BASE_PATH='http://localhost:8000';
 
 export const uploadResumeAndJD = (resume, jd) => {
     const payload = {

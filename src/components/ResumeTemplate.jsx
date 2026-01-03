@@ -36,7 +36,7 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
       }}
     >
       {/* HEADER */}
-      <div style={{ marginBottom: "10px", borderBottom: "2px solid #000", paddingBottom: "8px" }}>
+      <div style={{ marginBottom: "10px", borderBottom: "1px solid #000", paddingBottom: "8px" }}>
         <h1 style={{ fontSize: "16px", fontWeight: "bold", margin: "0 0 2px 0" ,textAlign:"center"}}>
           {basics.name || "Your Name"}
         </h1>
@@ -88,7 +88,7 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
            <h2 style={{
             fontSize: "11px",
             fontWeight: "bold",
-            margin: "6px 0 4px 0",
+            margin: "6px 0 2px 0",
             paddingBottom: "2px"
           }}>
            SUMMARY 
@@ -101,11 +101,11 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
 
       {/* EDUCATION */}
       {education && education.length > 0 && (
-        <div style={{ marginBottom: "10px" }}>
+        <div style={{ marginBottom: "3px" }}>
           <h2 style={{
             fontSize: "11px",
             fontWeight: "bold",
-            margin: "6px 0 4px 0",
+            margin: "4px 0 4px 0",
             borderBottom: "1px solid #000",
             paddingBottom: "2px"
           }}>
