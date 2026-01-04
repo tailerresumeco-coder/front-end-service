@@ -1,18 +1,27 @@
 /**
  * Transform backend API response to internal resume format
- * Handles optional fields gracefully
+ * Handles nested projects under experience entries
  * 
  * Backend Response Structure:
  * {
  *   basic: { name, phone, email, links: { github, leetcode, linkedin, other } },
- *   ats_score: { before_tailoring, after_tailoring, score_explanation },
- *   gap_analysis: { missing_technical_skills, missing_certifications_or_education, experience_gap },
+ *   ats_score: { 
+ *     before_tailoring, after_tailoring, score_explanation,
+ *     keyword_additions: { added_skills, reasoning }
+ *   },
+ *   gap_analysis: { 
+ *     missing_technical_skills, missing_certifications_or_education, 
+ *     experience_gap, related_skills_found 
+ *   },
  *   tailored_content: { 
  *     professional_summary, 
- *     experience: [{ role, company, location, duration, project_name, responsibilities }],
+ *     experience: [{ 
+ *       role, company, location, duration, 
+ *       projects: [{ project_name, duration, responsibilities }]
+ *     }],
  *     education: [{ institution, degree, duration, gpa }],
- *     skills: { technical_skills, soft_skills, tools_and_languages },
- *     projects: [{ project_name, description, technologies }],
+ *     skills: { technical_skills, soft_skills, tools_and_languages, auto_added_keywords },
+ *     projects: [{ project_name, technologies, highlights }],
  *     certifications: []
  *   }
  * }
@@ -27,7 +36,7 @@ export function transformBackendResponse(backendData) {
   // Extract links from nested structure
   const links = basic.links ?? {};
 
-  // Transform education - now from tailored_content
+  // Transform education
   const education = (tailored_content.education ?? []).map(edu => ({
     degree: edu.degree ?? "",
     institution: edu.institution ?? "",
@@ -35,25 +44,40 @@ export function transformBackendResponse(backendData) {
     gpa: edu.gpa ? parseFloat(edu.gpa) : 0
   }));
 
-  // Transform experience - includes project_name and responsibilities
-  const experience = (tailored_content.experience ?? []).map(exp => ({
-    role: exp.role ?? "",
-    company: exp.company ?? "",
-    location: exp.location ?? "",
-    dates: exp.duration ?? "",
-    projectName: exp.project_name ?? "", // NEW: Track project name
-    highlights: Array.isArray(exp.responsibilities) ? exp.responsibilities : []
-  }));
+  // Transform experience with NESTED PROJECTS
+  const experience = (tailored_content.experience ?? []).map(exp => {
+    // Check if this experience has nested projects array
+    if (exp.projects && Array.isArray(exp.projects) && exp.projects.length > 0) {
+      // Has nested projects - flatten them into separate experience entries
+      return exp.projects.map(project => ({
+        role: exp.role ?? "",
+        company: exp.company ?? "",
+        location: exp.location ?? "",
+        dates: project.duration ?? exp.duration ?? "",
+        projectName: project.project_name ?? "",
+        highlights: Array.isArray(project.responsibilities) ? project.responsibilities : []
+      }));
+    } else {
+      // Old format without nested projects
+      return {
+        role: exp.role ?? "",
+        company: exp.company ?? "",
+        location: exp.location ?? "",
+        dates: exp.duration ?? "",
+        projectName: exp.project_name ?? "",
+        highlights: Array.isArray(exp.responsibilities) ? exp.responsibilities : []
+      };
+    }
+  }).flat(); // Flatten array in case of nested projects
 
-  // Transform projects - description is now an array
+  // Transform personal projects (highlights array)
   const projects = (tailored_content.projects ?? []).map(proj => ({
     name: proj.project_name ?? "",
     technologies: Array.isArray(proj.technologies) ? proj.technologies : [],
-    description: Array.isArray(proj.description) ? proj.description.join(" ") : (proj.description ?? ""),
-    highlights: Array.isArray(proj.description) ? proj.description : []
+    highlights: Array.isArray(proj.highlights) ? proj.highlights : []
   }));
 
-  // Transform skills - new structure with technical_skills, soft_skills, tools_and_languages
+  // Transform skills
   const skills = transformSkills(tailored_content.skills ?? {});
 
   // Transform certifications
@@ -67,10 +91,15 @@ export function transformBackendResponse(backendData) {
       atsScoreBefore: ats_score.before_tailoring ?? null,
       atsScoreAfter: ats_score.after_tailoring ?? null,
       atsExplanation: ats_score.score_explanation ?? "",
+      keywordAdditions: {
+        addedSkills: ats_score.keyword_additions?.added_skills ?? [],
+        reasoning: ats_score.keyword_additions?.reasoning ?? ""
+      },
       gapAnalysis: {
         missingTechnicalSkills: gap_analysis.missing_technical_skills ?? [],
         missingCertificationsOrEducation: gap_analysis.missing_certifications_or_education ?? [],
-        experienceGap: gap_analysis.experience_gap ?? ""
+        experienceGap: gap_analysis.experience_gap ?? "",
+        relatedSkillsFound: gap_analysis.related_skills_found ?? []
       }
     },
 
@@ -79,7 +108,7 @@ export function transformBackendResponse(backendData) {
       name: basic.name ?? "",
       email: basic.email ?? "",
       phone: basic.phone ?? "",
-      location: "", // Not in basic anymore
+      location: basic.location ?? "",
       summary: tailored_content.professional_summary ?? "",
       github: links.github ?? "",
       leetcode: links.leetcode ?? "",
@@ -97,7 +126,7 @@ export function transformBackendResponse(backendData) {
 
 /**
  * Transform skills object to array of categories
- * New structure: technical_skills, soft_skills, tools_and_languages
+ * Includes auto_added_keywords tracking
  */
 function transformSkills(skillsObj) {
   const skillCategories = [
@@ -115,7 +144,7 @@ function transformSkills(skillsObj) {
     }
   ];
 
-  return skillCategories
+  const skills = skillCategories
     .map(({ key, label }) => {
       const items = skillsObj[key];
       return {
@@ -123,16 +152,22 @@ function transformSkills(skillsObj) {
         items: Array.isArray(items) ? items : []
       };
     })
-    .filter(skill => skill.items && skill.items.length > 0); // Hide empty skill groups
+    .filter(skill => skill.items && skill.items.length > 0);
+
+  // Add auto-added keywords as a separate category if they exist
+  const autoAddedKeywords = skillsObj.auto_added_keywords;
+  if (Array.isArray(autoAddedKeywords) && autoAddedKeywords.length > 0) {
+    skills.push({
+      category: "Auto-Added Keywords",
+      items: autoAddedKeywords
+    });
+  }
+
+  return skills;
 }
 
 /**
  * Validate resume has minimum required fields
- * 
- * Minimum requirements:
- * - basics.name
- * - basics.email
- * - At least one experience entry OR one project
  */
 export function isResumeValid(resume) {
   const hasBasicInfo = !!(
@@ -154,7 +189,6 @@ export function isResumeValid(resume) {
     resume.projects.some(proj => proj.name && proj.name.trim().length > 0)
   );
 
-  // Valid if has basic info AND (experience OR projects)
   return hasBasicInfo && (hasExperience || hasProjects);
 }
 
@@ -168,12 +202,10 @@ export function calculateYearsOfExperience(experience) {
   }
 
   try {
-    // Extract all dates
     const dates = experience
       .map(exp => exp.dates)
       .filter(Boolean)
       .map(dateStr => {
-        // Handle formats like "Apr 2024 – Dec 2024", "Aug 2025 – Present"
         const parts = dateStr.split('–').map(s => s.trim());
         if (parts.length !== 2) return null;
 
@@ -188,15 +220,13 @@ export function calculateYearsOfExperience(experience) {
 
     if (dates.length === 0) return 0;
 
-    // Find earliest start and latest end
     const earliestStart = new Date(Math.min(...dates.map(d => d.start.getTime())));
     const latestEnd = new Date(Math.max(...dates.map(d => d.end.getTime())));
 
-    // Calculate difference in years
     const diffMs = latestEnd - earliestStart;
     const diffYears = diffMs / (1000 * 60 * 60 * 24 * 365.25);
 
-    return Math.round(diffYears * 10) / 10; // Round to 1 decimal
+    return Math.round(diffYears * 10) / 10;
   } catch (error) {
     console.error("Error calculating YoE:", error);
     return 0;
@@ -205,7 +235,6 @@ export function calculateYearsOfExperience(experience) {
 
 /**
  * Parse month-year date strings
- * Supports formats: "Apr 2024", "January 2025", etc.
  */
 function parseDate(dateStr) {
   const monthMap = {

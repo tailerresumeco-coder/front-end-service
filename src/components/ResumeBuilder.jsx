@@ -4,16 +4,54 @@ import { useResume } from '../context/ResumeContext';
 import DynamicForm from './DynamicForm';
 import ResumeTemplate from './ResumeTemplate';
 import updateByPath from '../utils/UpdateByPath';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 export default function ResumeBuilder() {
   const { resume, setResume } = useResume();
   const [showPreview, setShowPreview] = useState(false);
   const previewRef = useRef();
+   const [isGenerating, setIsGenerating] = useState(false);
 
   const handlePrint = useReactToPrint({
     contentRef: previewRef,
     documentTitle: `${resume?.basics?.name || 'Resume'}_Resume`,
   });
+
+   const handleDownloadPDF = async () => {
+    if (!previewRef.current) return;
+    
+    setIsGenerating(true);
+    try {
+      // Capture the resume as canvas
+      const canvas = await html2canvas(previewRef.current, {
+        scale: 2, // Higher quality
+        useCORS: true,
+        logging: false,
+        backgroundColor: '#ffffff'
+      });
+
+      // Calculate PDF dimensions
+      const imgWidth = 210; // A4 width in mm
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      
+      // Create PDF
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const imgData = canvas.toDataURL('image/png');
+      
+      // Add image to PDF
+      pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+      
+      // Download the PDF
+      const fileName = `${resume?.basics?.name || 'Resume'}_Resume.pdf`;
+      pdf.save(fileName);
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      alert('Failed to generate PDF. Please try again.');
+    } finally {
+      setIsGenerating(false);
+    }
+  };
 
   const handleChange = (path, value) => {
     const updated = updateByPath(resume, path, value);
