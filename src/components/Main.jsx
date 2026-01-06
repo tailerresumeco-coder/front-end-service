@@ -34,6 +34,13 @@ export default function Main() {
     e.preventDefault();
   };
 
+  const scrollToPasteJd = () => {
+    const element = document.getElementById("paste-jd");
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   const handleDrop = (e) => {
     e.preventDefault();
     const file = e.dataTransfer.files[0];
@@ -103,6 +110,7 @@ export default function Main() {
 
       setText(extractedText.trim());
       setStatus("✅ Text extracted successfully");
+      scrollToPasteJd();
     } catch (err) {
       console.error(err);
       setStatus("❌ Failed to process PDF");
@@ -120,17 +128,17 @@ export default function Main() {
             </div>
             <h1 className="text-nav font-bold text-text-primary">Trailer Resume</h1>
           </div>
-          {/* <nav className="flex gap-8">
-            <a href="#" className="text-text-secondary hover:text-brand-primary text-badge font-medium transition">Product</a>
-            <a href="#" className="text-text-secondary hover:text-brand-primary text-badge font-medium transition">Pricing</a>
-            <a href="#" className="text-text-secondary hover:text-brand-primary text-badge font-medium transition">Login</a>
-          </nav> */}
+          <nav className="flex gap-8">
+            {/* <a href="#" className="text-text-secondary hover:text-brand-primary text-badge font-medium transition">About Us</a> */}
+            {/* <a href="#" className="text-text-secondary hover:text-brand-primary text-badge font-medium transition">Pricing</a>
+            <a href="#" className="text-text-secondary hover:text-brand-primary text-badge font-medium transition">Login</a> */}
+          </nav>
         </div>
       </header>
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-8 py-20">
-        <div className="grid grid-cols-2 gap-20 items-center mb-16">
+        <div className="gap-20 items-center mb-16">
           {/* Left Column - Upload Section */}
           <div>
             {/* Step Label */}
@@ -215,20 +223,19 @@ export default function Main() {
           </div>
 
           {/* Right Column - Visual */}
-          <div className="relative h-96">
+          {/* <div className="relative h-96">
             <div className="absolute inset-0 border-2 border-border-primary rounded-card backdrop-blur-3xl bg-gradient-to-br from-brand-primary/5 to-brand-secondary/5"></div>
-            {/* Animated dots */}
             <div className="absolute top-12 right-12 w-3 h-3 rounded-dot bg-brand-primary animate-pulse"></div>
             <div className="absolute top-1/3 right-1/4 w-2.5 h-2.5 rounded-dot bg-brand-secondary animate-pulse delay-75"></div>
             <div className="absolute top-2/3 right-1/3 w-2 h-2 rounded-dot bg-brand-primary-hover animate-pulse delay-150"></div>
             <div className="absolute bottom-1/4 left-1/4 w-2.5 h-2.5 rounded-dot bg-brand-secondary-hover animate-pulse delay-100"></div>
-          </div>
+          </div> */}
         </div>
 
         {/* Job Description Section */}
         <div className="border-t border-cyan-500/20 pt-16">
-          <h3 className="text-2xl font-bold text-white mb-6">Paste Job Description</h3>
-          <div className="grid grid-cols-2 gap-8">
+          <h3 className="text-2xl font-bold text-white mb-6" id="paste-jd">Paste Job Description</h3>
+          <div className=" gap-8">
             <div>
               <label className="block text-sm font-medium text-cyan-400 mb-3 uppercase tracking-wider">
                 Job Description
@@ -241,7 +248,7 @@ export default function Main() {
               />
             </div>
 
-            <div>
+            {/* <div>
               <label className="block text-sm font-medium text-cyan-400 mb-3 uppercase tracking-wider">
                 Extracted Resume
               </label>
@@ -250,7 +257,7 @@ export default function Main() {
                 readOnly
                 className="w-full h-40 bg-gradient-to-br from-cyan-900/10 to-purple-900/10 border border-cyan-500/30 rounded-xl px-4 py-3 text-black placeholder-gray-600 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400/30 transition-all backdrop-blur-sm"
               />
-            </div>
+            </div> */}
           </div>
         </div>
 
@@ -263,10 +270,10 @@ export default function Main() {
           >
             Generate my resume
           </button>
-          <button className="px-8 py-4 border border-border-secondary hover:border-brand-primary text-text-primary font-semibold rounded-button transition-all duration-300 flex items-center gap-2 hover:bg-brand-primary/10">
+          {/* <button className="px-8 py-4 border border-border-secondary hover:border-brand-primary text-text-primary font-semibold rounded-button transition-all duration-300 flex items-center gap-2 hover:bg-brand-primary/10">
             Watch how it works
             <span>→</span>
-          </button>
+          </button> */}
         </div>
 
         {/* Trust Message */}

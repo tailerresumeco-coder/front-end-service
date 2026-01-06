@@ -50,18 +50,17 @@ export default function LandingPage() {
 
             {/* Buttons */}
             <div className="flex gap-4">
-              <button onClick={() => navigate('/generate')} className="px-8 py-3 bg-gradient-to-r from-brand-primary to-brand-secondary rounded-button font-semibold hover:shadow-lg hover:shadow-brand-primary/50 transition transform hover:scale-105">
+              {/* <button onClick={() => navigate('/generate')} className="px-8 py-3 bg-gradient-to-r from-brand-primary to-brand-secondary rounded-button font-semibold hover:shadow-lg hover:shadow-brand-primary/50 transition transform hover:scale-105">
                 Generate my resume
+              </button> */}
+               <button onClick={() => navigate('/generate')} className="px-8 py-3 bg-gradient-to-r from-brand-primary to-brand-secondary rounded-button font-semibold hover:shadow-lg hover:shadow-brand-primary/50 transition transform hover:scale-105">
+                Tailer my resume
               </button>
-              <button className="px-8 py-3 border border-border-secondary rounded-button font-semibold hover:border-brand-primary hover:text-brand-primary transition flex items-center gap-2">
+              {/* <button className="px-8 py-3 border border-border-secondary rounded-button font-semibold hover:border-brand-primary hover:text-brand-primary transition flex items-center gap-2">
                 Watch how it works <ArrowRight size={18} />
-              </button>
+              </button> */}
             </div>
 
-            {/* Footer Text */}
-            <p className="text-text-subtle text-badge mt-12">
-              Trusted by <span className="text-text-muted font-semibold">millions of successful applications</span> to optimize your next move.
-            </p>
           </div>
 
           {/* Right Side - Animated Background */}
