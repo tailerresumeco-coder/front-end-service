@@ -1,30 +1,7 @@
 /**
  * Transform backend API response to internal resume format
  * Handles nested projects under experience entries
- * 
- * Backend Response Structure:
- * {
- *   basic: { name, phone, email, links: { github, leetcode, linkedin, other } },
- *   ats_score: { 
- *     before_tailoring, after_tailoring, score_explanation,
- *     keyword_additions: { added_skills, reasoning }
- *   },
- *   gap_analysis: { 
- *     missing_technical_skills, missing_certifications_or_education, 
- *     experience_gap, related_skills_found 
- *   },
- *   tailored_content: { 
- *     professional_summary, 
- *     experience: [{ 
- *       role, company, location, duration, 
- *       projects: [{ project_name, duration, responsibilities }]
- *     }],
- *     education: [{ institution, degree, duration, gpa }],
- *     skills: { technical_skills, soft_skills, tools_and_languages, auto_added_keywords },
- *     projects: [{ project_name, technologies, highlights }],
- *     certifications: []
- *   }
- * }
+ * FIXED: Safely handles missing/undefined dates to prevent .trim() errors
  */
 export function transformBackendResponse(backendData) {
   if (!backendData) {
@@ -45,30 +22,34 @@ export function transformBackendResponse(backendData) {
   }));
 
   // Transform experience with NESTED PROJECTS
-  const experience = (tailored_content.experience ?? []).map(exp => {
-    // Check if this experience has nested projects array
-    if (exp.projects && Array.isArray(exp.projects) && exp.projects.length > 0) {
-      // Has nested projects - flatten them into separate experience entries
-      return exp.projects.map(project => ({
-        role: exp.role ?? "",
-        company: exp.company ?? "",
-        location: exp.location ?? "",
-        dates: project.duration ?? exp.duration ?? "",
-        projectName: project.project_name ?? "",
-        highlights: Array.isArray(project.responsibilities) ? project.responsibilities : []
-      }));
-    } else {
-      // Old format without nested projects
-      return {
-        role: exp.role ?? "",
-        company: exp.company ?? "",
-        location: exp.location ?? "",
-        dates: exp.duration ?? "",
-        projectName: exp.project_name ?? "",
-        highlights: Array.isArray(exp.responsibilities) ? exp.responsibilities : []
-      };
-    }
-  }).flat(); // Flatten array in case of nested projects
+  const experience = (tailored_content.experience ?? [])
+    .map(exp => {
+      // Check if this experience has nested projects array
+      if (exp.projects && Array.isArray(exp.projects) && exp.projects.length > 0) {
+        // Has nested projects - flatten them into separate experience entries
+        return exp.projects.map(project => ({
+          role: exp.role ?? "",
+          company: exp.company ?? "",
+          location: exp.location ?? "",
+          // FIXED: Use project duration, fall back to parent experience duration, then empty string
+          dates: sanitizeDateString(project.duration ?? exp.duration ?? ""),
+          projectName: project.project_name ?? "",
+          highlights: Array.isArray(project.responsibilities) ? project.responsibilities : []
+        }));
+      } else {
+        // Old format without nested projects
+        return {
+          role: exp.role ?? "",
+          company: exp.company ?? "",
+          location: exp.location ?? "",
+          // FIXED: Sanitize date string
+          dates: sanitizeDateString(exp.duration ?? ""),
+          projectName: exp.project_name ?? "",
+          highlights: Array.isArray(exp.responsibilities) ? exp.responsibilities : []
+        };
+      }
+    })
+    .flat(); // Flatten array in case of nested projects
 
   // Transform personal projects (highlights array)
   const projects = (tailored_content.projects ?? []).map(proj => ({
@@ -123,6 +104,11 @@ export function transformBackendResponse(backendData) {
     certifications
   };
 }
+function sanitizeDateString(dateStr) {
+  if (!dateStr) return "";
+  if (typeof dateStr !== 'string') return String(dateStr);
+  return dateStr.trim();
+}
 
 /**
  * Transform skills object to array of categories
@@ -168,33 +154,40 @@ function transformSkills(skillsObj) {
 
 /**
  * Validate resume has minimum required fields
+ * FIXED: Safely handle potentially undefined values
  */
 export function isResumeValid(resume) {
-  const hasBasicInfo = !!(
-    resume?.basics?.name &&
-    resume.basics.name.trim().length > 0 &&
-    resume?.basics?.email &&
-    resume.basics.email.trim().length > 0
-  );
+  try {
+    const hasBasicInfo = !!(
+      resume?.basics?.name &&
+      String(resume.basics.name).trim().length > 0 &&
+      resume?.basics?.email &&
+      String(resume.basics.email).trim().length > 0
+    );
 
-  const hasExperience = !!(
-    Array.isArray(resume?.experience) &&
-    resume.experience.length > 0 &&
-    resume.experience.some(exp => exp.role || exp.company)
-  );
+    const hasExperience = !!(
+      Array.isArray(resume?.experience) &&
+      resume.experience.length > 0 &&
+      resume.experience.some(exp => exp.role || exp.company)
+    );
 
-  const hasProjects = !!(
-    Array.isArray(resume?.projects) &&
-    resume.projects.length > 0 &&
-    resume.projects.some(proj => proj.name && proj.name.trim().length > 0)
-  );
+    const hasProjects = !!(
+      Array.isArray(resume?.projects) &&
+      resume.projects.length > 0 &&
+      resume.projects.some(proj => proj.name && String(proj.name).trim().length > 0)
+    );
 
-  return hasBasicInfo && (hasExperience || hasProjects);
+    return hasBasicInfo && (hasExperience || hasProjects);
+  } catch (error) {
+    console.error("Error validating resume:", error);
+    return false;
+  }
 }
 
 /**
  * Helper: Get total years of experience from resume
  * Parses date strings and calculates duration
+ * FIXED: Better error handling for invalid/missing dates
  */
 export function calculateYearsOfExperience(experience) {
   if (!Array.isArray(experience) || experience.length === 0) {
@@ -204,17 +197,20 @@ export function calculateYearsOfExperience(experience) {
   try {
     const dates = experience
       .map(exp => exp.dates)
-      .filter(Boolean)
+      .filter(Boolean) // Filter out empty strings
       .map(dateStr => {
-        const parts = dateStr.split('–').map(s => s.trim());
-        if (parts.length !== 2) return null;
+        // FIXED: Safely handle date parsing
+        if (!dateStr || typeof dateStr !== 'string') return null;
+        
+        const parts = dateStr.split('–').map(s => s.trim()).filter(Boolean);
+        if (parts.length < 2) return null;
 
         const start = parseDate(parts[0]);
         const end = parts[1].toLowerCase().includes('present') 
           ? new Date() 
           : parseDate(parts[1]);
 
-        return { start, end };
+        return (start && end) ? { start, end } : null;
       })
       .filter(d => d && d.start && d.end);
 
@@ -234,7 +230,8 @@ export function calculateYearsOfExperience(experience) {
 }
 
 /**
- * Parse month-year date strings
+ * Parse month-year date strings safely
+ * FIXED: Better error handling
  */
 function parseDate(dateStr) {
   const monthMap = {
@@ -244,14 +241,21 @@ function parseDate(dateStr) {
     july: 6, august: 7, september: 8, october: 9, november: 10, december: 11
   };
 
-  const parts = dateStr.trim().split(/\s+/);
-  if (parts.length !== 2) return null;
+  try {
+    if (!dateStr || typeof dateStr !== 'string') return null;
 
-  const [monthStr, yearStr] = parts;
-  const month = monthMap[monthStr.toLowerCase()];
-  const year = parseInt(yearStr);
+    const parts = dateStr.trim().split(/\s+/);
+    if (parts.length !== 2) return null;
 
-  if (month === undefined || isNaN(year)) return null;
+    const [monthStr, yearStr] = parts;
+    const month = monthMap[monthStr.toLowerCase()];
+    const year = parseInt(yearStr);
 
-  return new Date(year, month, 1);
+    if (month === undefined || isNaN(year)) return null;
+
+    return new Date(year, month, 1);
+  } catch (error) {
+    console.error(`Error parsing date "${dateStr}":`, error);
+    return null;
+  }
 }

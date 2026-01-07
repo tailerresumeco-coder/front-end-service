@@ -1,10 +1,9 @@
-import React, { useEffect } from "react";
+import React from "react";
 import '../components/styles.css';
-import { useNavigate } from "react-router-dom";
 
 /**
  * Shared resume template for Preview and PDF
- * Handles nested projects under experience
+ * FIXED: Safely handles missing dates and prevents .trim() errors
  */
 const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
   if (!resume?.basics) {
@@ -38,12 +37,12 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
       }}
     >
       {/* HEADER */}
-      <div style={{ }}>
-        <h1 style={{ fontSize: "18px", fontWeight: "bold", margin: "0 0 2px 0" ,textAlign:"center"}}>
+      <div style={{}}>
+        <h1 style={{ fontSize: "18px", fontWeight: "bold", margin: "0 0 2px 0", textAlign: "center" }}>
           {basics.name || "Your Name"}
         </h1>
         
-        <div style={{ fontSize: "11px", display: "flex", gap: "3px", flexWrap: "wrap",justifyContent:"center", margin: "4px 0 0 0" }}>
+        <div style={{ fontSize: "11px", display: "flex", gap: "3px", flexWrap: "wrap", justifyContent: "center", margin: "4px 0 0 0" }}>
           {basics.phone && <span>{basics.phone}</span>}
           {basics.phone && basics.email && <span>|</span>}
           {basics.email && <span className="hyperlink">{basics.email}</span>}
@@ -64,7 +63,7 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
           {basics.leetcode && (
             <>
               <span>|</span>
-              <span className="hyperlink" onClick={() => window.open(basics.github, "_blank")} style={{ fontSize: "11px", wordBreak: "break-all" }}>
+              <span className="hyperlink" onClick={() => window.open(basics.leetcode, "_blank")} style={{ fontSize: "11px", wordBreak: "break-all" }}>
                 Leetcode
               </span>
             </>
@@ -72,7 +71,7 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
           {basics.linkedin && (
             <>
               <span>|</span>
-              <span className="hyperlink" onClick={() => window.open(basics.github, "_blank")} style={{ fontSize: "11px", wordBreak: "break-all" }}>
+              <span className="hyperlink" onClick={() => window.open(basics.linkedin, "_blank")} style={{ fontSize: "11px", wordBreak: "break-all" }}>
                 Linkedin
               </span>
             </>
@@ -86,17 +85,17 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
             </>
           )}
         </div>
-        <div >
-           <h2 style={{
+        <div>
+          <h2 style={{
             fontSize: "14px",
             fontWeight: "bold",
             borderBottom: "1px solid #000"
           }}>
-           SUMMARY 
+            SUMMARY 
           </h2>
-        <p style={{ fontSize: "11px", margin: "2px 0", color: "#000", lineHeight: "1.3" }}>
-          {basics.summary || ""}
-        </p>
+          <p style={{ fontSize: "11px", margin: "2px 0", color: "#000", lineHeight: "1.3" }}>
+            {basics.summary || ""}
+          </p>
         </div>
       </div>
 
@@ -167,7 +166,7 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
                       margin: "2px 0"
                     }}>
                       <span>Project: {project.projectName}</span>
-                      <span>{project.dates}</span>
+                      <span>{project.dates || ""}</span>
                     </div>
                   )}
 
@@ -208,7 +207,7 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
                 </span>
               </div>
               {proj.technologies && proj.technologies.length > 0 && (
-                <div style={{ fontSize: "14px", color: "#000", margin: "1px 0" }}>
+                <div style={{ fontSize: "11px", color: "#000", margin: "1px 0" }}>
                   <strong>Technologies:</strong> {proj.technologies.join(", ")}
                 </div>
               )}
@@ -280,7 +279,7 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
 
 /**
  * Helper function to group experience entries by company
- * Groups multiple projects under the same company/role
+ * FIXED: Safely handles missing or undefined dates
  */
 function groupExperienceByCompany(experience) {
   const grouped = {};
@@ -293,14 +292,14 @@ function groupExperienceByCompany(experience) {
         role: exp.role,
         company: exp.company,
         location: exp.location,
-        overallDuration: exp.dates,
+        overallDuration: exp.dates || "",
         projects: []
       };
     }
 
     grouped[key].projects.push({
       projectName: exp.projectName,
-      dates: exp.dates,
+      dates: exp.dates || "",
       highlights: exp.highlights
     });
   });
@@ -311,11 +310,25 @@ function groupExperienceByCompany(experience) {
       // Find earliest start and latest end date
       const dates = company.projects
         .map(p => p.dates)
-        .filter(Boolean);
+        .filter(d => d && typeof d === 'string' && d.trim().length > 0);
       
       if (dates.length > 0) {
-        // Simple approach: use first and last project dates
-        company.overallDuration = `${dates[dates.length - 1].split('–')[0].trim()} – ${dates[0].split('–')[1].trim()}`;
+        try {
+          // FIXED: Safely split and trim dates
+          const firstProjectDate = dates[dates.length - 1];
+          const lastProjectDate = dates[0];
+          
+          const firstPart = firstProjectDate.split('–')[0];
+          const lastPart = lastProjectDate.split('–')[1];
+          
+          if (firstPart && lastPart) {
+            company.overallDuration = `${firstPart.trim()} – ${lastPart.trim()}`;
+          }
+        } catch (error) {
+          console.warn("Error calculating overall duration:", error);
+          // Fallback: keep first project's duration
+          company.overallDuration = dates[0] || "";
+        }
       }
     }
   });
