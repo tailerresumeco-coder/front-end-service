@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useReactToPrint } from 'react-to-print';
 import { useResume } from '../context/ResumeContext';
 import DynamicForm from './DynamicForm';
@@ -6,12 +6,21 @@ import ResumeTemplate from './ResumeTemplate';
 import updateByPath from '../utils/UpdateByPath';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import { useNavigate } from 'react-router-dom';
 
 export default function ResumeBuilder() {
   const { resume, setResume } = useResume();
   const [showPreview, setShowPreview] = useState(false);
   const previewRef = useRef();
    const [isGenerating, setIsGenerating] = useState(false);
+   
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if ((resume && resume.length === 0) || !resume) {
+      navigate("/generate");
+    }
+  }, []);
 
   const handlePrint = useReactToPrint({
     contentRef: previewRef,

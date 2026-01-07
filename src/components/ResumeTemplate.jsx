@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
+import '../components/styles.css';
+import { useNavigate } from "react-router-dom";
 
 /**
  * Shared resume template for Preview and PDF
@@ -36,15 +38,15 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
       }}
     >
       {/* HEADER */}
-      <div style={{ marginBottom: "10px", borderBottom: "1px solid #000", paddingBottom: "8px" }}>
+      <div style={{ }}>
         <h1 style={{ fontSize: "18px", fontWeight: "bold", margin: "0 0 2px 0" ,textAlign:"center"}}>
           {basics.name || "Your Name"}
         </h1>
         
-        <div style={{ fontSize: "11px", display: "flex", gap: "12px", flexWrap: "wrap",justifyContent:"center",borderBottom: "1px solid #000", margin: "4px 0 0 0" }}>
+        <div style={{ fontSize: "11px", display: "flex", gap: "3px", flexWrap: "wrap",justifyContent:"center", margin: "4px 0 0 0" }}>
           {basics.phone && <span>{basics.phone}</span>}
           {basics.phone && basics.email && <span>|</span>}
-          {basics.email && <span>{basics.email}</span>}
+          {basics.email && <span className="hyperlink">{basics.email}</span>}
           {basics.location && (
             <>
               {basics.email && <span>|</span>}
@@ -54,24 +56,24 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
           {basics.github && (
             <>
               <span>|</span>
-              <span style={{ fontSize: "11px", wordBreak: "break-all" }}>
-                {basics.github.replace(/^https?:\/\/(www\.)?/, '')}
+              <span className="hyperlink" onClick={() => window.open(basics.github, "_blank")} style={{ fontSize: "11px", wordBreak: "break-all" }}>
+                Github
               </span>
             </>
           )}
           {basics.leetcode && (
             <>
               <span>|</span>
-              <span style={{ fontSize: "11px", wordBreak: "break-all" }}>
-                {basics.leetcode.replace(/^https?:\/\/(www\.)?/, '')}
+              <span className="hyperlink" onClick={() => window.open(basics.github, "_blank")} style={{ fontSize: "11px", wordBreak: "break-all" }}>
+                Leetcode
               </span>
             </>
           )}
           {basics.linkedin && (
             <>
               <span>|</span>
-              <span style={{ fontSize: "11px", wordBreak: "break-all" }}>
-                {basics.linkedin.replace(/^https?:\/\/(www\.)?/, '')}
+              <span className="hyperlink" onClick={() => window.open(basics.github, "_blank")} style={{ fontSize: "11px", wordBreak: "break-all" }}>
+                Linkedin
               </span>
             </>
           )}
@@ -79,7 +81,7 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
             <>
               <span>|</span>
               <span style={{ fontSize: "11px", wordBreak: "break-all" }}>
-                {basics.other.replace(/^https?:\/\/(www\.)?/, '')}
+                {basics.other}
               </span>
             </>
           )}
@@ -88,8 +90,6 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
            <h2 style={{
             fontSize: "14px",
             fontWeight: "bold",
-            margin: "6px 0 2px 0",
-            paddingBottom: "2px",
             borderBottom: "1px solid #000"
           }}>
            SUMMARY 
@@ -108,7 +108,6 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
             fontWeight: "bold",
             margin: "4px 0 4px 0",
             borderBottom: "1px solid #000",
-            paddingBottom: "2px"
           }}>
             EDUCATION
           </h2>
