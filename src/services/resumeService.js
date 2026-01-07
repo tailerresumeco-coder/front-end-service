@@ -11,3 +11,7 @@ export const uploadResumeAndJD = (resume, jd) => {
     }
     return axios.post(`${BASE_PATH}/resume/tailer-resume`, payload);
 }
+
+export const keepaLive = () => {
+    return axios.get(`${BASE_PATH}/resume/keepalive`);
+}
