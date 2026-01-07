@@ -15,6 +15,10 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
     );
   }
 
+  const mailTo = () => {
+    window.location.href = `mailto:${resume.basics.email}`
+  }
+
   const { basics, education, experience, projects, skills, certifications } = resume;
 
   // Group experience entries by company to show them together
@@ -46,7 +50,7 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
         <div style={{ fontSize: "11px", display: "flex", gap: "3px", flexWrap: "wrap",justifyContent:"center", margin: "4px 0 0 0" }}>
           {basics.phone && <span>{basics.phone}</span>}
           {basics.phone && basics.email && <span>|</span>}
-          {basics.email && <span className="hyperlink">{basics.email}</span>}
+          {basics.email && <a  href={`mailto:${basics.email}`} className="hyperlink"> {basics.email} </a>}
           {basics.location && (
             <>
               {basics.email && <span>|</span>}
