@@ -13,7 +13,7 @@ export default function LandingPage() {
           <div className="w-8 h-8 rounded-dot border-2 border-brand-primary flex items-center justify-center">
             <div className="w-3 h-3 bg-brand-primary rounded-dot"></div>
           </div>
-          <span className="text-nav font-semibold">Trailer Resume</span>
+          <span className="text-nav font-semibold">Tailer Resume</span>
         </div>
         {/* <div className="flex gap-8 items-center">
           <button className="hover:text-brand-primary transition">Product</button>
