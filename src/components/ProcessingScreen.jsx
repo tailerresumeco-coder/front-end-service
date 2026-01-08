@@ -123,7 +123,7 @@ const startAdaptiveProgress = () => {
           <h2 className="text-2xl font-bold mb-4 text-red-600">Processing Failed</h2>
           <p className="text-gray-700 mb-8 leading-relaxed">{error}</p>
           <button
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/generate")}
             className="bg-blue-600 text-white px-8 py-3 rounded-lg text-lg hover:bg-blue-700 transition"
           >
             Try Again

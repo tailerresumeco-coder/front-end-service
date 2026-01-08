@@ -126,7 +126,7 @@ export default function Main() {
             <div className="w-10 h-10 rounded-dot border-2 border-brand-primary flex items-center justify-center">
               <div className="w-6 h-6 rounded-dot bg-brand-primary"></div>
             </div>
-            <h1 className="text-nav font-bold text-text-primary">Trailer Resume</h1>
+            <h1 className="text-nav font-bold text-text-primary">Tailer Resume</h1>
           </div>
           <nav className="flex gap-8">
             {/* <a href="#" className="text-text-secondary hover:text-brand-primary text-badge font-medium transition">About Us</a> */}
