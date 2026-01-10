@@ -4,16 +4,15 @@ import { useResume } from '../context/ResumeContext';
 import DynamicForm from './DynamicForm';
 import ResumeTemplate from './ResumeTemplate';
 import updateByPath from '../utils/UpdateByPath';
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
 import { useNavigate } from 'react-router-dom';
+import { downloadPdfApi } from '../services/resumeService';
 
 export default function ResumeBuilder() {
   const { resume, setResume } = useResume();
   const [showPreview, setShowPreview] = useState(false);
   const previewRef = useRef();
-   const [isGenerating, setIsGenerating] = useState(false);
-   
+  const [isGenerating, setIsGenerating] = useState(false);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -27,40 +26,33 @@ export default function ResumeBuilder() {
     documentTitle: `${resume?.basics?.name || 'Resume'}_Resume`,
   });
 
-   const handleDownloadPDF = async () => {
-    if (!previewRef.current) return;
-    
-    setIsGenerating(true);
+  const downloadPdf = async () => {
     try {
-      // Capture the resume as canvas
-      const canvas = await html2canvas(previewRef.current, {
-        scale: 2, // Higher quality
-        useCORS: true,
-        logging: false,
-        backgroundColor: '#ffffff'
-      });
+      const payload = {
+        html: previewRef.current.outerHTML,   // real resume HTML
+        filename: `${resume?.basics?.name || 'Resume'}_Resume.pdf`,
+      };
 
-      // Calculate PDF dimensions
-      const imgWidth = 210; // A4 width in mm
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      
-      // Create PDF
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      const imgData = canvas.toDataURL('image/png');
-      
-      // Add image to PDF
-      pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
-      
-      // Download the PDF
-      const fileName = `${resume?.basics?.name || 'Resume'}_Resume.pdf`;
-      pdf.save(fileName);
+      const res = await downloadPdfApi(payload);
+
+      // Create downloadable file
+      const blob = new Blob([res.data], { type: "application/pdf" });
+      const url = window.URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = payload.filename;
+      document.body.appendChild(link);
+      link.click();
+
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+
     } catch (error) {
-      console.error('Error generating PDF:', error);
-      alert('Failed to generate PDF. Please try again.');
-    } finally {
-      setIsGenerating(false);
+      console.error("Error downloading PDF:", error);
     }
   };
+
 
   const handleChange = (path, value) => {
     const updated = updateByPath(resume, path, value);
@@ -81,7 +73,7 @@ export default function ResumeBuilder() {
               {showPreview ? 'Edit' : 'Preview'}
             </button>
             <button
-              onClick={handlePrint}
+              onClick={downloadPdf}
               disabled={!resume}
               className="bg-brand-secondary text-text-primary px-4 py-2 rounded-button hover:bg-brand-secondary-hover transition flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
@@ -95,11 +87,11 @@ export default function ResumeBuilder() {
       </header>
 
       {/* Main Content */}
-      <div className="container mx-auto p-4">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="mx-auto">
+        <div className="flex gap-3">
           {/* Left - Form */}
-          <div className={`${showPreview ? 'hidden lg:block' : 'block'}`}>
-            <div className="bg-white rounded-lg shadow-lg p-6 sticky top-20 max-h-[calc(100vh-7rem)] overflow-y-auto">
+          <div className={`${showPreview ? 'hidden lg:block' : 'block'} flex-1`}>
+            <div className="bg-white rounded-lg shadow-lg p-6 sticky top-20 max-h-[calc(100vh-7rem)] overflow-y-auto" style={{ borderRadius: '0px' }}>
               <h2 className="text-xl font-bold mb-4 text-gray-800">Edit Resume</h2>
               {resume ? (
                 <DynamicForm data={resume} onChange={handleChange} />
@@ -110,11 +102,11 @@ export default function ResumeBuilder() {
           </div>
 
           {/* Right - Preview */}
-          <div className={`${showPreview ? 'block' : 'hidden lg:block'}`}>
-            <div className="bg-white rounded-lg shadow-lg overflow-hidden sticky top-20 max-h-[calc(100vh-7rem)] overflow-y-auto">
-              <div className="bg-gray-800 text-white px-4 py-2 text-sm font-semibold">
+          <div className={`${showPreview ? 'block' : 'hidden lg:block'} flex-2`}>
+            <div className="bg-white rounded-lg shadow-lg overflow-hidden sticky top-20 max-h-[calc(100vh-7rem)] overflow-y-auto whitespace-normal break-words" style={{ width: '800px', borderRadius: '0px' }}>
+              {/* <div className="bg-gray-800 text-white px-4 py-2 text-sm font-semibold" style={{width: '800px'}}>
                 Live Preview
-              </div>
+              </div> */}
               {resume ? (
                 <ResumeTemplate ref={previewRef} resume={resume} />
               ) : (

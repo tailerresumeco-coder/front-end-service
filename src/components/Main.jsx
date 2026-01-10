@@ -3,6 +3,7 @@ import React, { useState, useRef } from "react";
 import * as pdfjsLib from "pdfjs-dist";
 import { useResume } from "../context/ResumeContext";
 import { useNavigate } from "react-router-dom";
+import mammoth from "mammoth";
 
 // Set PDF.js worker
 pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
@@ -15,9 +16,9 @@ export default function Main() {
   const [selectedFile, setSelectedFile] = useState(null);
   const fileInputRef = useRef(null);
   const { setUploadedResume, setJobDescription } = useResume();
-  const navigate =useNavigate();
+  const navigate = useNavigate();
 
- const onSend = () => {
+  const onSend = () => {
     // store data in context
     setUploadedResume(text);
     setJobDescription(jd);
@@ -58,62 +59,79 @@ export default function Main() {
 
     setSelectedFile(file);
 
-    if (file.type !== "application/pdf") {
-      setStatus("❌ Please upload a PDF file");
-      return;
-    }
 
-    setStatus("⏳ Processing PDF...");
+    setStatus("⏳ Processing Resume...");
     setText("");
 
     try {
-      const pdf = await pdfjsLib.getDocument(
-        URL.createObjectURL(file)
-      ).promise;
+      if (file.type === "application/pdf") {
+        console.log('type id pdf');
+        
+        const pdf = await pdfjsLib.getDocument(
+          URL.createObjectURL(file)
+        ).promise;
 
-      let extractedText = "";
-      let hasText = false;
+        let extractedText = "";
+        let hasText = false;
 
-      for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
-        const page = await pdf.getPage(pageNum);
-        const content = await page.getTextContent();
-        const hyperLinks = await page.getAnnotations();
+        for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+          const page = await pdf.getPage(pageNum);
+          const content = await page.getTextContent();
+          const hyperLinks = await page.getAnnotations();
 
-        const hyperlinksMap = {};
-        hyperLinks.forEach((hyperlink) => {
-          if (hyperlinksMap.length === 0 || !hyperlinksMap[hyperlink.overlaidText]) {
-            hyperlinksMap[hyperlink.overlaidText] = hyperlink.url;
+          const hyperlinksMap = {};
+          hyperLinks.forEach((hyperlink) => {
+            if (hyperlinksMap.length === 0 || !hyperlinksMap[hyperlink.overlaidText]) {
+              hyperlinksMap[hyperlink.overlaidText] = hyperlink.url;
+            }
+          });
+
+
+          content.items.forEach((item) => {
+            if (hyperlinksMap[item.str]) {
+              item.str = `${item.str}HASHYPERLINK${hyperlinksMap[item.str]}`;
+            }
+          });
+
+          if (content.items.length > 0) {
+            hasText = true;
           }
-        });
 
-
-        content.items.forEach((item) => {
-          if (hyperlinksMap[item.str]) {
-            item.str = `${item.str}HASHYPERLINK${hyperlinksMap[item.str]}`;
-          }
-        });
-
-        if (content.items.length > 0) {
-          hasText = true;
+          content.items.forEach((item) => {
+            extractedText += item.str + " ";
+          });
         }
 
-        content.items.forEach((item) => {
-          extractedText += item.str + " ";
-        });
-      }
+        if (!hasText) {
+          setStatus("⚠️ Scanned PDF detected. Send to OCR (FastAPI).");
+          return;
+        }
 
-      if (!hasText) {
-        setStatus("⚠️ Scanned PDF detected. Send to OCR (FastAPI).");
-        // TODO: send PDF to FastAPI OCR endpoint
-        return;
-      }
+        setText(extractedText.trim());
+        setStatus("✅ Resume scanned successfully");
+        scrollToPasteJd();
+      } else if (file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document") {
+        console.log('type is docx');
+        
+        const arrayBuffer = await file.arrayBuffer();
+        const result = await mammoth.extractRawText({ arrayBuffer });
 
-      setText(extractedText.trim());
-      setStatus("✅ Text extracted successfully");
-      scrollToPasteJd();
+        if (!result.value.trim()) {
+          setStatus("❌ Could not extract text from DOCX");
+          return;
+        }
+
+        setText(result.value.trim());
+        setStatus("✅ DOCX Resume scanned successfully");
+        scrollToPasteJd();
+      } else {
+        setStatus("❌ Unsupported file format");
+      }
     } catch (err) {
       console.error(err);
-      setStatus("❌ Failed to process PDF");
+      setStatus("❌ Failed to process Resume", err);
+      console.log('errr', err);
+      
     }
   };
 
