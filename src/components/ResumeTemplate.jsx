@@ -72,12 +72,10 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
           fontSize: "12px",
           lineHeight: "1.4",
           color: "#000",
-          padding: "40px",
           minHeight: "11in",
           margin: "0",
           backgroundColor: "#fff",
           boxSizing: "border-box",
-          width: '800px',
           transform: `scale(${zoomPx})`,
           transformOrigin: `${origin.x}% ${origin.y}%`, // Use percentage for origin
           ...zoomStyle,

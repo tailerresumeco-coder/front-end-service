@@ -11,7 +11,7 @@ export default function ResumeBuilder() {
   const { resume, setResume } = useResume();
   const [showPreview, setShowPreview] = useState(false);
   const previewRef = useRef();
-  const [isGenerating, setIsGenerating] = useState(false);
+  const [downloadLoading, setDownloadLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -27,6 +27,7 @@ export default function ResumeBuilder() {
   });
 
   const downloadPdf = async () => {
+    setDownloadLoading(true);
     try {
       const payload = {
         html: previewRef.current.outerHTML,   // real resume HTML
@@ -50,6 +51,8 @@ export default function ResumeBuilder() {
 
     } catch (error) {
       console.error("Error downloading PDF:", error);
+    } finally {
+      setDownloadLoading(false);
     }
   };
 
@@ -74,13 +77,28 @@ export default function ResumeBuilder() {
             </button>
             <button
               onClick={downloadPdf}
-              disabled={!resume}
+              disabled={!resume || downloadLoading}
               className="bg-brand-secondary text-text-primary px-4 py-2 rounded-button hover:bg-brand-secondary-hover transition flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
-              <span className="hidden sm:inline">Download</span>
+              <span>
+                {
+                  downloadLoading ? (
+                    <span>
+                      <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018 4H0c0 3.46 7.78 8 12v9.59zm3.59 3.59L3 21.35l1.45-1.45zm2.82-8.38a8.59 8.59 0 011.41 0zm3.59 3.59l1.45 1.45L21.35 3l1.45 1.45z"></path>
+                      </svg>
+                    </span>
+                  ) : (
+                    <span className='flex items-center justify-center gap-2'>
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                      <span className="hidden sm:inline">Download</span>
+                    </span>
+                  )
+                }
+              </span>
             </button>
           </div>
         </div>
@@ -104,9 +122,6 @@ export default function ResumeBuilder() {
           {/* Right - Preview */}
           <div className={`${showPreview ? 'block' : 'hidden lg:block'} flex-2`}>
             <div className="bg-white rounded-lg shadow-lg overflow-hidden sticky top-20 max-h-[calc(100vh-7rem)] overflow-y-auto whitespace-normal break-words" style={{ width: '800px', borderRadius: '0px' }}>
-              {/* <div className="bg-gray-800 text-white px-4 py-2 text-sm font-semibold" style={{width: '800px'}}>
-                Live Preview
-              </div> */}
               {resume ? (
                 <ResumeTemplate ref={previewRef} resume={resume} />
               ) : (
