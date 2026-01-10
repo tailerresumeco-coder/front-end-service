@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useResume } from "../context/ResumeContext";
 import { uploadResumeAndJD } from "../services/resumeService";
@@ -10,6 +10,7 @@ export default function ProcessingScreen() {
 
   const [error, setError] = useState(null);
   const [progress, setProgress] = useState(0);
+  const apiCalledRef = useRef(false);
 
   // Immediate redirect if missing data
   useEffect(() => {
@@ -20,7 +21,9 @@ export default function ProcessingScreen() {
   }, [uploadedResume, jobDescription, navigate]);
 
   useEffect(() => {
-    if (!uploadedResume || !jobDescription) return;
+    if (!uploadedResume || !jobDescription || apiCalledRef.current) return;
+
+    apiCalledRef.current = true;
 
     let animationInterval;
     let timeoutId;
@@ -69,13 +72,14 @@ const startAdaptiveProgress = () => {
         const response = await uploadResumeAndJD(uploadedResume, jobDescription, {
           signal: controller.signal,
         });
+        console.log("📥 Backend response received",response);
 
         clearInterval(animationInterval);
         clearTimeout(timeoutId);
 
         console.log("📥 Backend response received");
 
-        const transformedResume = transformBackendResponse(response.data.response);
+        const transformedResume = transformBackendResponse(response.data.data);
 
         if (!isResumeValid(transformedResume)) {
           console.error("❌ Validation failed", transformedResume);
@@ -113,7 +117,7 @@ const startAdaptiveProgress = () => {
       clearInterval(animationInterval);
       clearTimeout(timeoutId);
     };
-  }, [uploadedResume, jobDescription, navigate, setResume, setGeneratedResume]);
+  }, [uploadedResume, jobDescription]);
 
   if (error) {
     return (
