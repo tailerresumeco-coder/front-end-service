@@ -121,7 +121,7 @@ export default function ResumeBuilder() {
 
           {/* Right - Preview */}
           <div className={`${showPreview ? 'block' : 'hidden lg:block'} flex-2`}>
-            <div className="bg-white rounded-lg shadow-lg overflow-hidden sticky top-20 max-h-[calc(100vh-7rem)] overflow-y-auto whitespace-normal break-words" style={{ width: '800px', borderRadius: '0px' }}>
+            <div className="bg-white rounded-lg shadow-lg overflow-hidden sticky top-20 max-h-[calc(100vh-7rem)] overflow-y-auto whitespace-normal break-words" style={{ width: '800px', borderRadius: '0px', padding: '40px' }}>
               {resume ? (
                 <ResumeTemplate ref={previewRef} resume={resume} />
               ) : (
