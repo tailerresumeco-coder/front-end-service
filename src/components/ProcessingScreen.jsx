@@ -124,7 +124,7 @@ const startAdaptiveProgress = () => {
   return (
     <>
       <Helmet>
-        <meta name="robots" content="noindex" />
+        <meta name="robots" content="noindex,nofollow" />
       </Helmet>
       <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
         <div className="text-center bg-white p-10 rounded-xl shadow-xl max-w-md">

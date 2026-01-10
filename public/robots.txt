@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /processing
+
+Sitemap: https://tailer-resume.com/sitemap.xml

@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react";
 import { Helmet } from "react-helmet-async";
+import { Link } from "react-router-dom";
 
 import * as pdfjsLib from "pdfjs-dist";
 import { useResume } from "../context/ResumeContext";
@@ -121,16 +122,13 @@ export default function Main() {
   return (
     <>
       <Helmet>
-        <title>AI Resume Generator – Create ATS-Friendly Resume Instantly</title>
-        <meta name="description" content="Generate and optimize your resume using AI. Our resume generator analyzes your profile and creates ATS-optimized resumes in minutes." />
+        <title>ATS Resume Checker - Optimize for Job Matching</title>
+        <meta name="description" content="Upload resume and job description to get ATS score, tailored resume, and parsing insights. Boost your resume's visibility with AI-powered optimization tools." />
         <link rel="canonical" href="https://tailer-resume.com/generate" />
-        <meta property="og:title" content="AI Resume Generator – Create ATS-Friendly Resume Instantly" />
-        <meta property="og:description" content="Generate and optimize your resume using AI. Our resume generator analyzes your profile and creates ATS-optimized resumes in minutes." />
+        <meta property="og:title" content="ATS Resume Checker - Optimize for Job Matching" />
+        <meta property="og:description" content="Upload resume and job description to get ATS score, tailored resume, and parsing insights. Boost your resume's visibility with AI-powered optimization tools." />
         <meta property="og:url" content="https://tailer-resume.com/generate" />
         <meta property="og:type" content="website" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="AI Resume Generator – Create ATS-Friendly Resume Instantly" />
-        <meta name="twitter:description" content="Generate and optimize your resume using AI. Our resume generator analyzes your profile and creates ATS-optimized resumes in minutes." />
       </Helmet>
       <div className="min-h-screen bg-gradient-to-br from-surface-dark via-surface-dark-mid to-brand-secondary-dark">
       {/* Header */}
@@ -295,6 +293,40 @@ export default function Main() {
           Trusted by <span className="text-text-primary font-semibold">millions of successful applications</span> to optimize your next move.
         </p>
       </div>
+
+      {/* Footer */}
+      <footer className="border-t border-border-primary backdrop-blur-sm bg-surface-dark/40 py-12">
+        <div className="max-w-7xl mx-auto px-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div>
+              <h3 className="text-nav font-bold text-text-primary mb-4">Tailer Resume</h3>
+              <p className="text-text-muted text-body-small leading-relaxed">
+                AI-powered resume tailoring for job seekers. Create ATS-friendly resumes that get results.
+              </p>
+            </div>
+            <div>
+              <h4 className="text-badge font-semibold text-text-primary mb-4">Quick Links</h4>
+              <ul className="space-y-2">
+                <li><Link to="/" className="text-text-secondary hover:text-brand-primary transition">Home</Link></li>
+                <li><Link to="/generate" className="text-text-secondary hover:text-brand-primary transition">AI Resume Generator</Link></li>
+                {/* <li><Link to="/resume-builder" className="text-text-secondary hover:text-brand-primary transition">Resume Builder</Link></li> */}
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-badge font-semibold text-text-primary mb-4">Resources</h4>
+              <ul className="space-y-2">
+                <li><a href="https://tailer-resume.com/sitemap.xml" className="text-text-secondary hover:text-brand-primary transition">Sitemap</a></li>
+                <li><a href="https://tailer-resume.com/robots.txt" className="text-text-secondary hover:text-brand-primary transition">Robots.txt</a></li>
+              </ul>
+            </div>
+          </div>
+          <div className="border-t border-border-primary mt-8 pt-8 text-center">
+            <p className="text-text-subtle text-badge">
+              © 2026 Tailer Resume. All rights reserved.
+            </p>
+          </div>
+        </div>
+      </footer>
     </div>
     </>
   );

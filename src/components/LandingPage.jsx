@@ -1,7 +1,7 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { ArrowRight } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 export default function LandingPage() {
   const navigate = useNavigate();
@@ -9,16 +9,13 @@ export default function LandingPage() {
   return (
     <>
       <Helmet>
-        <title>AI Resume Builder & ATS Optimizer | Create Job-Winning Resumes</title>
-        <meta name="description" content="Build ATS-friendly resumes using AI. Generate, analyze, and optimize your resume to match job descriptions and get more interview calls." />
+        <title>AI Resume Tailoring Tool - ATS Checker & Parser</title>
+        <meta name="description" content="Tailor resumes with AI to match job descriptions. Get ATS scores, parse resumes, and build professional resumes that increase interview chances for job seekers." />
         <link rel="canonical" href="https://tailer-resume.com/" />
-        <meta property="og:title" content="AI Resume Builder & ATS Optimizer | Create Job-Winning Resumes" />
-        <meta property="og:description" content="Build ATS-friendly resumes using AI. Generate, analyze, and optimize your resume to match job descriptions and get more interview calls." />
+        <meta property="og:title" content="AI Resume Tailoring Tool - ATS Checker & Parser" />
+        <meta property="og:description" content="Tailor resumes with AI to match job descriptions. Get ATS scores, parse resumes, and build professional resumes that increase interview chances for job seekers." />
         <meta property="og:url" content="https://tailer-resume.com/" />
         <meta property="og:type" content="website" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="AI Resume Builder & ATS Optimizer | Create Job-Winning Resumes" />
-        <meta name="twitter:description" content="Build ATS-friendly resumes using AI. Generate, analyze, and optimize your resume to match job descriptions and get more interview calls." />
       </Helmet>
       <div className="min-h-screen bg-gradient-to-br from-surface-dark via-surface-dark-mid to-brand-secondary-dark text-text-primary overflow-hidden">
       {/* Navigation */}
@@ -64,15 +61,12 @@ export default function LandingPage() {
 
             {/* Buttons */}
             <div className="flex gap-4">
-              {/* <button onClick={() => navigate('/generate')} className="px-8 py-3 bg-gradient-to-r from-brand-primary to-brand-secondary rounded-button font-semibold hover:shadow-lg hover:shadow-brand-primary/50 transition transform hover:scale-105">
-                Generate my resume
-              </button> */}
-               <button onClick={() => navigate('/generate')} className="px-8 py-3 bg-gradient-to-r from-brand-primary to-brand-secondary rounded-button font-semibold hover:shadow-lg hover:shadow-brand-primary/50 transition transform hover:scale-105">
+              <Link to="/generate" className="px-8 py-3 bg-gradient-to-r from-brand-primary to-brand-secondary rounded-button font-semibold hover:shadow-lg hover:shadow-brand-primary/50 transition transform hover:scale-105 inline-block">
                 Tailer my resume
-              </button>
-              {/* <button className="px-8 py-3 border border-border-secondary rounded-button font-semibold hover:border-brand-primary hover:text-brand-primary transition flex items-center gap-2">
-                Watch how it works <ArrowRight size={18} />
-              </button> */}
+              </Link>
+              {/* <Link to="/resume-builder" className="px-8 py-3 border border-border-secondary rounded-button font-semibold hover:border-brand-primary hover:text-brand-primary transition flex items-center gap-2 inline-block">
+               Tailer my resume<ArrowRight size={18} />
+              </Link> */}
             </div>
 
           </div>
@@ -103,6 +97,40 @@ export default function LandingPage() {
           </div>
         </div>
       </div>
+
+      {/* Footer */}
+      <footer className="border-t border-border-primary backdrop-blur-sm bg-surface-dark/40 py-12">
+        <div className="max-w-7xl mx-auto px-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div>
+              <h3 className="text-nav font-bold text-text-primary mb-4">Tailer Resume</h3>
+              <p className="text-text-muted text-body-small leading-relaxed">
+                AI-powered resume tailoring for job seekers. Create ATS-friendly resumes that get results.
+              </p>
+            </div>
+            <div>
+              <h4 className="text-badge font-semibold text-text-primary mb-4">Quick Links</h4>
+              <ul className="space-y-2">
+                <li><Link to="/" className="text-text-secondary hover:text-brand-primary transition">Home</Link></li>
+                <li><Link to="/generate" className="text-text-secondary hover:text-brand-primary transition">AI Resume Generator</Link></li>
+                {/* <li><Link to="/resume-builder" className="text-text-secondary hover:text-brand-primary transition">Resume Builder</Link></li> */}
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-badge font-semibold text-text-primary mb-4">Resources</h4>
+              <ul className="space-y-2">
+                <li><a href="https://tailer-resume.com/sitemap.xml" className="text-text-secondary hover:text-brand-primary transition">Sitemap</a></li>
+                <li><a href="https://tailer-resume.com/robots.txt" className="text-text-secondary hover:text-brand-primary transition">Robots.txt</a></li>
+              </ul>
+            </div>
+          </div>
+          <div className="border-t border-border-primary mt-8 pt-8 text-center">
+            <p className="text-text-subtle text-badge">
+              © 2026 Tailer Resume. All rights reserved.
+            </p>
+          </div>
+        </div>
+      </footer>
     </div>
     </>
   );
