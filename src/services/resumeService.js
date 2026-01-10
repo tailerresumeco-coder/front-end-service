@@ -15,3 +15,13 @@ export const uploadResumeAndJD = (resume, jd) => {
 export const keepaLive = () => {
     return axios.get(`${BASE_PATH}/resume/keepalive`);
 }
+
+export const downloadPdfApi = (payload) => {
+  return axios.post(
+    `${BASE_PATH}/resume/download-pdf`,
+    payload,
+    {
+      responseType: "blob"
+    }
+  );
+};

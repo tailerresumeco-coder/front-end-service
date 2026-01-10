@@ -4,16 +4,15 @@ import { useResume } from '../context/ResumeContext';
 import DynamicForm from './DynamicForm';
 import ResumeTemplate from './ResumeTemplate';
 import updateByPath from '../utils/UpdateByPath';
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
 import { useNavigate } from 'react-router-dom';
+import { downloadPdfApi } from '../services/resumeService';
 
 export default function ResumeBuilder() {
   const { resume, setResume } = useResume();
   const [showPreview, setShowPreview] = useState(false);
   const previewRef = useRef();
-   const [isGenerating, setIsGenerating] = useState(false);
-   
+  const [downloadLoading, setDownloadLoading] = useState(false);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -27,40 +26,36 @@ export default function ResumeBuilder() {
     documentTitle: `${resume?.basics?.name || 'Resume'}_Resume`,
   });
 
-   const handleDownloadPDF = async () => {
-    if (!previewRef.current) return;
-    
-    setIsGenerating(true);
+  const downloadPdf = async () => {
+    setDownloadLoading(true);
     try {
-      // Capture the resume as canvas
-      const canvas = await html2canvas(previewRef.current, {
-        scale: 2, // Higher quality
-        useCORS: true,
-        logging: false,
-        backgroundColor: '#ffffff'
-      });
+      const payload = {
+        html: previewRef.current.outerHTML,   // real resume HTML
+        filename: `${resume?.basics?.name || 'Resume'}_Resume.pdf`,
+      };
 
-      // Calculate PDF dimensions
-      const imgWidth = 210; // A4 width in mm
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      
-      // Create PDF
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      const imgData = canvas.toDataURL('image/png');
-      
-      // Add image to PDF
-      pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
-      
-      // Download the PDF
-      const fileName = `${resume?.basics?.name || 'Resume'}_Resume.pdf`;
-      pdf.save(fileName);
+      const res = await downloadPdfApi(payload);
+
+      // Create downloadable file
+      const blob = new Blob([res.data], { type: "application/pdf" });
+      const url = window.URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = payload.filename;
+      document.body.appendChild(link);
+      link.click();
+
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+
     } catch (error) {
-      console.error('Error generating PDF:', error);
-      alert('Failed to generate PDF. Please try again.');
+      console.error("Error downloading PDF:", error);
     } finally {
-      setIsGenerating(false);
+      setDownloadLoading(false);
     }
   };
+
 
   const handleChange = (path, value) => {
     const updated = updateByPath(resume, path, value);
@@ -81,25 +76,40 @@ export default function ResumeBuilder() {
               {showPreview ? 'Edit' : 'Preview'}
             </button>
             <button
-              onClick={handlePrint}
-              disabled={!resume}
+              onClick={downloadPdf}
+              disabled={!resume || downloadLoading}
               className="bg-brand-secondary text-text-primary px-4 py-2 rounded-button hover:bg-brand-secondary-hover transition flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
-              <span className="hidden sm:inline">Download</span>
+              <span>
+                {
+                  downloadLoading ? (
+                    <span>
+                      <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018 4H0c0 3.46 7.78 8 12v9.59zm3.59 3.59L3 21.35l1.45-1.45zm2.82-8.38a8.59 8.59 0 011.41 0zm3.59 3.59l1.45 1.45L21.35 3l1.45 1.45z"></path>
+                      </svg>
+                    </span>
+                  ) : (
+                    <span className='flex items-center justify-center gap-2'>
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                      <span className="hidden sm:inline">Download</span>
+                    </span>
+                  )
+                }
+              </span>
             </button>
           </div>
         </div>
       </header>
 
       {/* Main Content */}
-      <div className="container mx-auto p-4">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="mx-auto">
+        <div className="flex gap-3">
           {/* Left - Form */}
-          <div className={`${showPreview ? 'hidden lg:block' : 'block'}`}>
-            <div className="bg-white rounded-lg shadow-lg p-6 sticky top-20 max-h-[calc(100vh-7rem)] overflow-y-auto">
+          <div className={`${showPreview ? 'hidden lg:block' : 'block'} flex-1`}>
+            <div className="bg-white rounded-lg shadow-lg p-6 sticky top-20 max-h-[calc(100vh-7rem)] overflow-y-auto" style={{ borderRadius: '0px' }}>
               <h2 className="text-xl font-bold mb-4 text-gray-800">Edit Resume</h2>
               {resume ? (
                 <DynamicForm data={resume} onChange={handleChange} />
@@ -110,11 +120,8 @@ export default function ResumeBuilder() {
           </div>
 
           {/* Right - Preview */}
-          <div className={`${showPreview ? 'block' : 'hidden lg:block'}`}>
-            <div className="bg-white rounded-lg shadow-lg overflow-hidden sticky top-20 max-h-[calc(100vh-7rem)] overflow-y-auto">
-              <div className="bg-gray-800 text-white px-4 py-2 text-sm font-semibold">
-                Live Preview
-              </div>
+          <div className={`${showPreview ? 'block' : 'hidden lg:block'} flex-2`}>
+            <div className="bg-white rounded-lg shadow-lg overflow-hidden sticky top-20 max-h-[calc(100vh-7rem)] overflow-y-auto whitespace-normal break-words" style={{ width: '800px', borderRadius: '0px' }}>
               {resume ? (
                 <ResumeTemplate ref={previewRef} resume={resume} />
               ) : (
