@@ -1,4 +1,5 @@
 import React from 'react';
+import { Helmet } from 'react-helmet-async';
 import { ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -6,7 +7,20 @@ export default function LandingPage() {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-surface-dark via-surface-dark-mid to-brand-secondary-dark text-text-primary overflow-hidden">
+    <>
+      <Helmet>
+        <title>AI Resume Builder & ATS Optimizer | Create Job-Winning Resumes</title>
+        <meta name="description" content="Build ATS-friendly resumes using AI. Generate, analyze, and optimize your resume to match job descriptions and get more interview calls." />
+        <link rel="canonical" href="https://tailer-resume.com/" />
+        <meta property="og:title" content="AI Resume Builder & ATS Optimizer | Create Job-Winning Resumes" />
+        <meta property="og:description" content="Build ATS-friendly resumes using AI. Generate, analyze, and optimize your resume to match job descriptions and get more interview calls." />
+        <meta property="og:url" content="https://tailer-resume.com/" />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="AI Resume Builder & ATS Optimizer | Create Job-Winning Resumes" />
+        <meta name="twitter:description" content="Build ATS-friendly resumes using AI. Generate, analyze, and optimize your resume to match job descriptions and get more interview calls." />
+      </Helmet>
+      <div className="min-h-screen bg-gradient-to-br from-surface-dark via-surface-dark-mid to-brand-secondary-dark text-text-primary overflow-hidden">
       {/* Navigation */}
       <nav className="flex justify-between items-center px-8 py-6 max-w-7xl mx-auto w-full">
         <div className="flex items-center gap-2">
@@ -90,5 +104,6 @@ export default function LandingPage() {
         </div>
       </div>
     </div>
+    </>
   );
 }

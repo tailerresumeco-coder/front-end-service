@@ -1,4 +1,5 @@
 import React, { useState, useRef } from "react";
+import { Helmet } from "react-helmet-async";
 
 import * as pdfjsLib from "pdfjs-dist";
 import { useResume } from "../context/ResumeContext";
@@ -118,7 +119,20 @@ export default function Main() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-surface-dark via-surface-dark-mid to-brand-secondary-dark">
+    <>
+      <Helmet>
+        <title>AI Resume Generator – Create ATS-Friendly Resume Instantly</title>
+        <meta name="description" content="Generate and optimize your resume using AI. Our resume generator analyzes your profile and creates ATS-optimized resumes in minutes." />
+        <link rel="canonical" href="https://tailer-resume.com/generate" />
+        <meta property="og:title" content="AI Resume Generator – Create ATS-Friendly Resume Instantly" />
+        <meta property="og:description" content="Generate and optimize your resume using AI. Our resume generator analyzes your profile and creates ATS-optimized resumes in minutes." />
+        <meta property="og:url" content="https://tailer-resume.com/generate" />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="AI Resume Generator – Create ATS-Friendly Resume Instantly" />
+        <meta name="twitter:description" content="Generate and optimize your resume using AI. Our resume generator analyzes your profile and creates ATS-optimized resumes in minutes." />
+      </Helmet>
+      <div className="min-h-screen bg-gradient-to-br from-surface-dark via-surface-dark-mid to-brand-secondary-dark">
       {/* Header */}
       <header className="border-b border-border-primary backdrop-blur-sm bg-surface-dark/40">
         <div className="max-w-7xl mx-auto flex items-center justify-between px-8 py-6">
@@ -282,5 +296,6 @@ export default function Main() {
         </p>
       </div>
     </div>
+    </>
   );
 }

@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
+import { Helmet } from "react-helmet-async";
 import { useNavigate } from "react-router-dom";
 import { useResume } from "../context/ResumeContext";
 import { uploadResumeAndJD } from "../services/resumeService";
@@ -120,7 +121,11 @@ const startAdaptiveProgress = () => {
   }, [uploadedResume, jobDescription]);
 
   if (error) {
-    return (
+  return (
+    <>
+      <Helmet>
+        <meta name="robots" content="noindex" />
+      </Helmet>
       <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
         <div className="text-center bg-white p-10 rounded-xl shadow-xl max-w-md">
           <div className="text-6xl mb-6">❌</div>
@@ -134,7 +139,8 @@ const startAdaptiveProgress = () => {
           </button>
         </div>
       </div>
-    );
+    </>
+    );   
   }
 
   return (

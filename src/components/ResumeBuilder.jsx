@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useReactToPrint } from 'react-to-print';
 import { useResume } from '../context/ResumeContext';
 import DynamicForm from './DynamicForm';
@@ -68,7 +69,20 @@ export default function ResumeBuilder() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-surface-dark via-surface-dark-mid to-brand-secondary-dark">
+    <>
+      <Helmet>
+        <title>Resume Builder – Edit and Download Your AI-Generated Resume</title>
+        <meta name="description" content="Edit your AI-generated resume, customize sections, and download as PDF. Our resume builder provides live preview and easy editing tools." />
+        <link rel="canonical" href="https://tailer-resume.com/resume-builder" />
+        <meta property="og:title" content="Resume Builder – Edit and Download Your AI-Generated Resume" />
+        <meta property="og:description" content="Edit your AI-generated resume, customize sections, and download as PDF. Our resume builder provides live preview and easy editing tools." />
+        <meta property="og:url" content="https://tailer-resume.com/resume-builder" />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Resume Builder – Edit and Download Your AI-Generated Resume" />
+        <meta name="twitter:description" content="Edit your AI-generated resume, customize sections, and download as PDF. Our resume builder provides live preview and easy editing tools." />
+      </Helmet>
+      <div className="min-h-screen bg-gradient-to-br from-surface-dark via-surface-dark-mid to-brand-secondary-dark">
       {/* Header */}
       <header className="border-b border-border-primary backdrop-blur-sm bg-surface-dark/40 sticky top-0 z-10">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
@@ -125,5 +139,6 @@ export default function ResumeBuilder() {
         </div>
       </div>
     </div>
+    </>
   );
 }
