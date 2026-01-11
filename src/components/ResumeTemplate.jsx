@@ -89,7 +89,7 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
           </h1>
 
           <div style={{ fontSize: "12px", display: "flex", gap: "3px", flexWrap: "wrap", justifyContent: "center", margin: "4px 0 0 0" }}>
-            {basics.phone && <span>{basics.phone}</span>}
+            {basics.phone && <a href={`tel:${basics.phone}`} className="hyperlink"> {basics.phone} </a>}
             {basics.phone && basics.email && <span>|</span>}
             {basics.email && <a href={`mailto:${basics.email}`} className="hyperlink"> {basics.email} </a>}
             {basics.location && (
@@ -101,33 +101,33 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
             {basics.github && (
               <>
                 <span>|</span>
-                <span className="hyperlink" onClick={() => window.open(basics.github, "_blank")} style={{ fontSize: "12px", wordBreak: "break-all" }}>
+                <a href={basics.github} className="hyperlink" target="_blank">
                   Github
-                </span>
+                </a>
               </>
             )}
             {basics.leetcode && (
               <>
                 <span>|</span>
-                <span className="hyperlink" onClick={() => window.open(basics.leetcode, "_blank")} style={{ fontSize: "12px", wordBreak: "break-all" }}>
+                <a href={basics.leetcode} className="hyperlink" target="_blank">
                   Leetcode
-                </span>
+                </a>
               </>
             )}
             {basics.linkedin && (
               <>
                 <span>|</span>
-                <span className="hyperlink" onClick={() => window.open(basics.linkedin, "_blank")} style={{ fontSize: "12px", wordBreak: "break-all" }}>
+                <a href={basics.linkedin} className="hyperlink" target="_blank">
                   Linkedin
-                </span>
+                </a>
               </>
             )}
             {basics.other && (
               <>
                 <span>|</span>
-                <span style={{ fontSize: "12px", wordBreak: "break-all" }}>
+                <a href={basics.other} className="hyperlink" target="_blank">
                   {basics.other}
-                </span>
+                </a>
               </>
             )}
           </div>
