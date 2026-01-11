@@ -1,5 +1,5 @@
 import React, { useMemo, useCallback, useState } from "react";
-import { FIELD_CONFIG } from "../config/FieldConfig";
+import { FIELD_CONFIG, TEMPLATE_SECTIONS } from "../config/FieldConfig";
 
 /**
  * FIXED Production-ready DynamicForm component
@@ -17,6 +17,7 @@ export default function DynamicForm({
   const [editingPath, setEditingPath] = useState(null);
   const [saveStatus, setSaveStatus] = useState(null);
   const [unsavedSections, setUnsavedSections] = useState(new Set());
+  const [expandedSections, setExpandedSections] = useState(new Set(TEMPLATE_SECTIONS.map(s => s.key)));
 
   if (!data || typeof data !== 'object') {
     return null;
@@ -280,6 +281,18 @@ export default function DynamicForm({
     });
   }, []);
 
+  const toggleSection = useCallback((sectionKey) => {
+    setExpandedSections(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(sectionKey)) {
+        newSet.delete(sectionKey);
+      } else {
+        newSet.add(sectionKey);
+      }
+      return newSet;
+    });
+  }, []);
+
   const renderField = useCallback((key, value, currentPath, fieldConfig, sectionConfig) => {
     try {
       // STRING
@@ -459,6 +472,80 @@ export default function DynamicForm({
     }
   }, [renderInput, onChange, handleRemoveItem, handleAddItem, handleSaveSection, onSave]);
 
+  // Render collapsible sections for top-level data
+  if (!path) {
+    return (
+      <div className="space-y-4">
+        {saveStatus && (
+          <div className="fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded shadow-lg text-sm">
+            {saveStatus}
+          </div>
+        )}
+
+        {TEMPLATE_SECTIONS.map(({ key: sectionKey, displayName }) => {
+          const value = data[sectionKey];
+          if (!value) return null;
+
+          const isExpanded = expandedSections.has(sectionKey);
+          const sectionConfig = FIELD_CONFIG[sectionKey];
+
+          return (
+            <div
+              key={sectionKey}
+              className="border border-gray-300 rounded-lg bg-white shadow-sm overflow-hidden"
+            >
+              {/* Collapsible Header */}
+              <button
+                onClick={() => toggleSection(sectionKey)}
+                className={`w-full text-left p-4 flex justify-between items-center hover:bg-gray-50 transition-colors ${
+                  isExpanded ? 'bg-blue-50 border-b border-gray-200' : ''
+                }`}
+                aria-expanded={isExpanded}
+                aria-controls={`section-${sectionKey}`}
+              >
+                <div className="flex items-center justify-between gap-3 w-full">
+                  <div className="flex space-x-2">
+
+                  <h3 className="text-lg font-semibold text-gray-800">
+                    {displayName}
+                  </h3>
+                  {isExpanded && (
+                    <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
+                      Active
+                    </span>
+                  )}
+                  </div>
+                  <span className={`text-xl transition-transform ${isExpanded ? 'rotate-360' : ''}`}>
+                    {isExpanded ? '▲' : '▼'}
+                  </span>
+                </div>
+              </button>
+
+              {/* Collapsible Content */}
+              <div
+                id={`section-${sectionKey}`}
+                className={`transition-all duration-300 ease-in-out overflow-hidden ${
+                  isExpanded ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'
+                }`}
+              >
+                <div className="p-4">
+                  <DynamicForm
+                    data={value}
+                    onChange={onChange}
+                    path={sectionKey}
+                    sectionKey={sectionKey}
+                    onSave={onSave}
+                  />
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
+
+  // Render nested fields normally
   return (
     <div className="space-y-4">
       {saveStatus && (
@@ -466,7 +553,7 @@ export default function DynamicForm({
           {saveStatus}
         </div>
       )}
-      
+
       {Object.entries(data).map(([key, value]) => {
         if (key === "_metadata") return null;
 
