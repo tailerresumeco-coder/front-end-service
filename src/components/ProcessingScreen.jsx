@@ -149,7 +149,7 @@ const startAdaptiveProgress = () => {
             We're carefully analyzing the job description and optimizing your experience
           </p>
           <p className="text-sm text-gray-500 mt-4">
-            This can take 50–90 seconds for the best results. Please wait...
+            This can take 3-4 seconds for the best results. Please wait...
           </p>
         </div>
 

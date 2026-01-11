@@ -15,7 +15,9 @@ export default function App() {
 
     const intervalId = setInterval(() => {
       keepaLive();
-    }, 780000);
+      console.log('keepaLive...');
+      
+    }, 600000);
 
     return () => clearInterval(intervalId);
   }, []);
