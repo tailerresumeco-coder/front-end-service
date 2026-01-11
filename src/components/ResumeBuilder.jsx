@@ -1,4 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { Helmet } from 'react-helmet-async';
+import { Link } from 'react-router-dom';
 import { useReactToPrint } from 'react-to-print';
 import { useResume } from '../context/ResumeContext';
 import DynamicForm from './DynamicForm';
@@ -63,11 +65,24 @@ export default function ResumeBuilder() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-surface-dark via-surface-dark-mid to-brand-secondary-dark">
+    <>
+      <Helmet>
+        <title>AI Resume Builder - Create Professional Resumes</title>
+        <meta name="description" content="Build resumes section by section using AI writing assistant. Generate ATS-friendly resumes with live preview, editing tools, and PDF download capabilities." />
+        <link rel="canonical" href="https://tailer-resume.com/resume-builder" />
+        <meta property="og:title" content="AI Resume Builder - Create Professional Resumes" />
+        <meta property="og:description" content="Build resumes section by section using AI writing assistant. Generate ATS-friendly resumes with live preview, editing tools, and PDF download capabilities." />
+        <meta property="og:url" content="https://tailer-resume.com/resume-builder" />
+        <meta property="og:type" content="website" />
+      </Helmet>
+      <div className="min-h-screen bg-gradient-to-br from-surface-dark via-surface-dark-mid to-brand-secondary-dark">
       {/* Header */}
       <header className="border-b border-border-primary backdrop-blur-sm bg-surface-dark/40 sticky top-0 z-10">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <h1 className="text-nav font-bold text-text-primary">Resume Builder</h1>
+          <div className="flex items-center gap-4">
+            <Link to="/" className="text-text-secondary hover:text-brand-primary transition">← Home</Link>
+            <h1 className="text-nav font-bold text-text-primary">Resume Builder</h1>
+          </div>
           <div className="flex gap-2">
             <button
               onClick={() => setShowPreview(!showPreview)}
@@ -132,5 +147,6 @@ export default function ResumeBuilder() {
         </div>
       </div>
     </div>
+    </>
   );
 }
