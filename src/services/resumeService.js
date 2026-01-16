@@ -1,8 +1,7 @@
 import axios from 'axios';
 
 const BASE_PATH = 'https://back-end-service-vvxg.onrender.com';
-
-// const BASE_PATH='http://localhost:8000';
+// const BASE_PATH='http://127.0.0.1:8000';
 
 export const uploadResumeAndJD = (resume, jd) => {
     const payload = {
@@ -10,10 +9,6 @@ export const uploadResumeAndJD = (resume, jd) => {
         jd: jd
     }
     return axios.post(`${BASE_PATH}/resume/tailer-resume`, payload);
-}
-
-export const keepaLive = () => {
-    return axios.get(`${BASE_PATH}/resume/keepalive`);
 }
 
 export const downloadPdfApi = (payload) => {

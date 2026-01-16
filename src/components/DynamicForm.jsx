@@ -533,7 +533,7 @@ export default function DynamicForm({
                   isExpanded ? 'max-h-[3000px] opacity-100' : 'max-h-0 opacity-0'
                 }`}
               >
-                <div className="px-5 py-4 bg-gradient-to-b from-white to-gray-50 border-t border-gray-200">
+                <div className="px-3 py-4 bg-gradient-to-b from-white to-gray-50 border-t border-gray-200">
                   <DynamicForm
                     data={value}
                     onChange={onChange}

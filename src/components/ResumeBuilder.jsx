@@ -58,7 +58,6 @@ export default function ResumeBuilder() {
     }
   };
 
-
   const handleChange = (path, value) => {
     const updated = updateByPath(resume, path, value);
     setResume(updated);
@@ -124,7 +123,7 @@ export default function ResumeBuilder() {
         <div className="flex gap-3">
           {/* Left - Form */}
           <div className={`${showPreview ? 'hidden lg:block' : 'block'} flex-1`}>
-            <div className="bg-white rounded-lg shadow-lg p-6 sticky top-20 max-h-[calc(100vh-7rem)] overflow-y-auto" style={{ borderRadius: '0px' }}>
+            <div className="bg-white rounded-lg shadow-lg p-3 sticky top-20 max-h-[calc(100vh-7rem)] overflow-y-auto" style={{ borderRadius: '0px' }}>
               <h2 className="text-xl font-bold mb-4 text-gray-800">Edit Resume</h2>
               {resume ? (
                 <DynamicForm data={resume} onChange={handleChange} />

@@ -6,22 +6,8 @@ import LandingPage from "./components/LandingPage";
 import ProcessingScreen from "./components/ProcessingScreen";
 import ResumeBuilder from "./components/ResumeBuilder";
 import { ResumeProvider } from "./context/ResumeContext";
-import { keepaLive } from "./services/resumeService";
-import { useEffect } from "react";
 
 export default function App() {
-
-  useEffect(() => {
-    keepaLive();
-
-    const intervalId = setInterval(() => {
-      keepaLive();
-      console.log('keepaLive...');
-      
-    }, 600000);
-
-    return () => clearInterval(intervalId);
-  }, []);
   
   return (
     <HelmetProvider>
