@@ -15,6 +15,7 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
   }
 
   const zoomRef = useRef(null);
+  const [highlightSkills, setHighlightSkills] = useState();
 
   const mailTo = () => {
     window.location.href = `mailto:${resume.basics.email}`
@@ -30,7 +31,18 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
   const [zoomPx, setZoomPx] = useState(1);
   const [origin, setOrigin] = useState({ x: 50, y: 50 });
 
+  const changeToBold = () => {
+    resume?.highlight_keywords?.forEach(keyword => {
+      document.querySelectorAll("#experience-highlights li").forEach(li => {
+        if (li.textContent.includes(keyword)) {
+          li.innerHTML = (li.innerHTML.trim()).replace(keyword, `<span style="font-weight: bold;">${keyword}</span>`);
+        }
+      });
+    })
+  }
+
   useEffect(() => {
+    changeToBold();
     const node = zoomRef.current;
     if (!node) return;
 
@@ -84,11 +96,11 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
       >
         {/* HEADER */}
         <div style={{}}>
-          <h1 style={{ fontSize: "18px", fontWeight: "bold", margin: "0 0 2px 0", textAlign: "center" }}>
+          <h1 style={{ fontSize: "24px", fontWeight: "bold", margin: "0 0 2px 0", textAlign: "center" }}>
             {basics.name || "Your Name"}
           </h1>
 
-          <div style={{ fontSize: "12px", display: "flex", gap: "3px", flexWrap: "wrap", justifyContent: "center", margin: "4px 0 0 0" }}>
+          <div style={{ fontSize: "14px", display: "flex", gap: "3px", flexWrap: "wrap", justifyContent: "center", margin: "4px 0 0 0" }}>
             {basics.phone && <a href={`tel:${basics.phone}`} className="hyperlink"> {basics.phone} </a>}
             {basics.phone && basics.email && <span>|</span>}
             {basics.email && <a href={`mailto:${basics.email}`} className="hyperlink"> {basics.email} </a>}
@@ -193,7 +205,7 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
                         {company.role || ""} | {company.company || ""}
                         {company.location && `, ${company.location}`}
                       </span>
-                      <span style={{ fontSize: "12px" }}>{company.overallDuration || ""}</span>
+                      <span style={{ fontSize: "12px", fontWeight: "bold" }}>{company.overallDuration || ""}</span>
                     </div>
 
                     {/* Multiple Projects under this company */}
@@ -209,14 +221,14 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
                             color: "#000",
                             margin: "2px 0"
                           }}>
-                            <span>Project: {project.projectName}</span>
-                            {/* <span>{project.dates || ""}</span> */}
+                            <span style={{fontWeight: "bold"}}>Project: {project.projectName}</span>
+                            {/* <span style={{fontWeight: "bold"}}>{project?.dates || ""}</span> */}
                           </div>
                         )}
 
                         {/* Project Responsibilities */}
                         {project.highlights && project.highlights.length > 0 && (
-                          <ul style={{ margin: "2px 0 0 0", paddingLeft: "20px", listStyleType: "disc" }}>
+                          <ul style={{ margin: "2px 0 0 0", paddingLeft: "20px", listStyleType: "disc" }}  id="experience-highlights">
                             {project.highlights.map((h, hidx) => (
                               <li key={hidx} style={{ margin: "1px 0", fontSize: "12px", lineHeight: "1.4", paddingRight: "15px" }}>
                                 {h}
@@ -245,20 +257,21 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
                 </h2>
                 {projects.map((proj, pidx) => (
                   <div key={pidx} style={{ marginBottom: "6px" }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", margin: "0 0 2px 0" }}>
+                    <div style={{ display: "flex", margin: "0 0 2px 0" }}>
                       <span style={{ fontWeight: "bold", fontSize: "12px" }}>
                         {proj.name || ""}
-                      </span>
+                      </span> <strong> | </strong>
+                      {proj.technologies && proj.technologies.length > 0 && (
+                        <span style={{ fontSize: "12px", color: "#000", fontWeight: "bold" }}>
+                          {proj.technologies.join(", ")}
+                        </span>
+                      )}
                     </div>
-                    {proj.technologies && proj.technologies.length > 0 && (
-                      <div style={{ fontSize: "12px", color: "#000", margin: "1px 0" }}>
-                        <strong>Technologies:</strong> {proj.technologies.join(", ")}
-                      </div>
-                    )}
+                
                     {proj.highlights && proj.highlights.length > 0 && (
-                      <ul style={{ margin: "2px 0 0 0", paddingLeft: "20px", listStyleType: "disc" }}>
+                      <ul style={{ margin: "2px 0 0 0", paddingLeft: "20px", listStyleType: "disc" }} id="experience-highlights">
                         {proj.highlights.map((h, hidx) => (
-                          <li key={hidx} style={{ margin: "1px 0", fontSize: "10px", lineHeight: "1.4", paddingRight: "15px" }}>
+                          <li key={hidx} style={{ margin: "1px 0", fontSize: "12px", lineHeight: "1.4", paddingRight: "15px" }}>
                             {h}
                           </li>
                         ))}
@@ -286,7 +299,7 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
                       <span style={{ fontWeight: "bold", fontSize: "12px" }}>
                         {edu.institution || ""}
                       </span>
-                      <span style={{ fontSize: "12px" }}>{edu.dates || ""}</span>
+                      <span className="dates" style={{ fontSize: "12px", fontWeight: "bold" }}>{edu.dates || ""}</span>
                     </div>
                     {edu.degree && (
                       <div style={{ fontSize: "12px", color: "#000" }}>
@@ -340,7 +353,7 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
                       <span style={{ fontWeight: "bold", fontSize: "12px" }}>
                         {edu.institution || ""}
                       </span>
-                      <span style={{ fontSize: "12px" }}>{edu.dates || ""}</span>
+                      <span className="dates" style={{ fontSize: "12px", fontWeight: "bold" }}>{edu.dates || ""}</span>
                     </div>
                     {edu.degree && (
                       <div style={{ fontSize: "12px", color: "#000" }}>

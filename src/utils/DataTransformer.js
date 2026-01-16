@@ -66,6 +66,8 @@ export function transformBackendResponse(backendData) {
     ? tailored_content.certifications 
     : [];
 
+  const highlight_keywords = tailored_content.highlight_keywords || [];
+
   return {
     // Meta - Read-only
     _metadata: {
@@ -101,7 +103,8 @@ export function transformBackendResponse(backendData) {
     experience,
     projects,
     skills,
-    certifications
+    certifications,
+    highlight_keywords
   };
 }
 function sanitizeDateString(dateStr) {
