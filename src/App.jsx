@@ -6,6 +6,7 @@ import LandingPage from "./components/LandingPage";
 import ProcessingScreen from "./components/ProcessingScreen";
 import ResumeBuilder from "./components/ResumeBuilder";
 import { ResumeProvider } from "./context/ResumeContext";
+import APIKeysManagement from "./components/APIKeysManagement";
 
 export default function App() {
   
@@ -19,6 +20,7 @@ export default function App() {
             <Route path="/processing" element={<ProcessingScreen />} />
 
             <Route path="/resume-builder" element={<ResumeBuilder />} />
+            <Route path="/api-keys" element={<APIKeysManagement />} />
             {/* <Route path="/preview" element={<ResumePreview />} />
        <Route path="/default-template" element={<DefaultTemplate />} /> */}
           </Routes>
