@@ -20,3 +20,15 @@ export const downloadPdfApi = (payload) => {
     }
   );
 };
+
+export const apikeySave=(payload)=>{
+  return axios.post(`${BASE_PATH}/resume/token/save`,payload);
+}
+
+export const getKeys=()=>{
+  return axios.get(`${BASE_PATH}/resume/tokens`);
+}
+
+export const activateKey=(payload)=>{
+  return axios.patch(`${BASE_PATH}/resume/token/activate`,payload);
+}
