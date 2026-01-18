@@ -33,7 +33,7 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
 
   const changeToBold = () => {
     resume?.highlight_keywords?.forEach(keyword => {
-      document.querySelectorAll("#experience-highlights li").forEach(li => {
+      document.querySelectorAll("#experience-highlights").forEach(li => {
         if (li.textContent.includes(keyword)) {
           li.innerHTML = (li.innerHTML.trim()).replace(keyword, `<span style="font-weight: bold;">${keyword}</span>`);
         }
@@ -151,7 +151,7 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
             }}>
               SUMMARY
             </h2>
-            <p style={{ fontSize: "12px", margin: "2px 0", color: "#000", lineHeight: "1.3" }}>
+            <p style={{ fontSize: "12px", margin: "2px 0", color: "#000", lineHeight: "1.3" }} className="experience-highlights" >
               {basics.summary || ""}
             </p>
           </div>
