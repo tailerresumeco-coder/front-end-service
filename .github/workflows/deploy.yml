@@ -37,7 +37,7 @@ jobs:
       
       # 6. Deploy to S3
       - name: Deploy to S3
-        run: aws s3 sync build/ s3://tailerresume-prod  --delete
+        run: aws s3 sync dist/ s3://tailerresume-prod --delete
       
       # 7. Invalidate CloudFront cache
       - name: Invalidate CloudFront cache
