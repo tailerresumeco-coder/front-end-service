@@ -116,13 +116,13 @@ export default function LandingPage() {
                 {/* <li><Link to="/resume-builder" className="text-text-secondary hover:text-brand-primary transition">Resume Builder</Link></li> */}
               </ul>
             </div>
-            <div>
+            {/* <div>
               <h4 className="text-badge font-semibold text-text-primary mb-4">Resources</h4>
               <ul className="space-y-2">
                 <li><a href="https://tailer-resume.com/sitemap.xml" className="text-text-secondary hover:text-brand-primary transition">Sitemap</a></li>
                 <li><a href="https://tailer-resume.com/robots.txt" className="text-text-secondary hover:text-brand-primary transition">Robots.txt</a></li>
               </ul>
-            </div>
+            </div> */}
           </div>
           <div className="border-t border-border-primary mt-8 pt-8 text-center">
             <p className="text-text-subtle text-badge">
