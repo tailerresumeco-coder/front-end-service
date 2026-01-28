@@ -96,11 +96,11 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
       >
         {/* HEADER */}
         <div style={{}}>
-          <h1 style={{ fontSize: "24px", fontWeight: "bold", margin: "0 0 2px 0", textAlign: "center" }}>
+          <h1 style={{ fontSize: "20px", fontWeight: "bold", margin: "0 0 2px 0", textAlign: "center" }}>
             {basics.name || "Your Name"}
           </h1>
 
-          <div style={{ fontSize: "14px", display: "flex", gap: "3px", flexWrap: "wrap", justifyContent: "center", margin: "4px 0 0 0" }}>
+          <div style={{ fontSize: "12px", display: "flex", gap: "3px", flexWrap: "wrap", justifyContent: "center", margin: "4px 0 0 0" }}>
             {basics.phone && <a href={`tel:${basics.phone}`} className="hyperlink"> {basics.phone} </a>}
             {basics.phone && basics.email && <span>|</span>}
             {basics.email && <a href={`mailto:${basics.email}`} className="hyperlink"> {basics.email} </a>}
@@ -145,7 +145,7 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
           </div>
           <div>
             <h2 style={{
-              fontSize: "14px",
+              fontSize: "12px",
               fontWeight: "bold",
               borderBottom: "1px solid #000"
             }}>
@@ -160,7 +160,7 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
           {skills && skills.length > 0 && (
           <div style={{ marginBottom: "10px" }}>
             <h2 style={{
-              fontSize: "14px",
+              fontSize: "12px",
               fontWeight: "bold",
               margin: "6px 0 4px 0",
               borderBottom: "1px solid #000",
@@ -189,7 +189,7 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
             {groupedExperience && groupedExperience.length > 0 && (
               <div style={{ marginBottom: "10px" }}>
                 <h2 style={{
-                  fontSize: "14px",
+                  fontSize: "12px",
                   fontWeight: "bold",
                   margin: "6px 0 4px 0",
                   borderBottom: "1px solid #000",
@@ -247,7 +247,7 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
             {projects && projects.length > 0 && (
               <div style={{ marginBottom: "10px" }}>
                 <h2 style={{
-                  fontSize: "14px",
+                  fontSize: "12px",
                   fontWeight: "bold",
                   margin: "6px 0 4px 0",
                   borderBottom: "1px solid #000",
@@ -286,7 +286,7 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
             {education && education.length > 0 && (
               <div style={{ marginBottom: "3px" }}>
                 <h2 style={{
-                  fontSize: "14px",
+                  fontSize: "12px",
                   fontWeight: "bold",
                   margin: "4px 0 4px 0",
                   borderBottom: "1px solid #000",
@@ -316,7 +316,7 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
             {certifications && certifications.length > 0 && (
               <div style={{ marginBottom: "10px" }}>
                 <h2 style={{
-                  fontSize: "14px",
+                  fontSize: "12px",
                   fontWeight: "bold",
                   margin: "6px 0 4px 0",
                   borderBottom: "1px solid #000",
@@ -340,7 +340,7 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
             {education && education.length > 0 && (
               <div style={{ marginBottom: "3px" }}>
                 <h2 style={{
-                  fontSize: "14px",
+                  fontSize: "12px",
                   fontWeight: "bold",
                   margin: "4px 0 4px 0",
                   borderBottom: "1px solid #000",
@@ -370,7 +370,7 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
             {projects && projects.length > 0 && (
               <div style={{ marginBottom: "10px" }}>
                 <h2 style={{
-                  fontSize: "14px",
+                  fontSize: "12px",
                   fontWeight: "bold",
                   margin: "6px 0 4px 0",
                   borderBottom: "1px solid #000",
@@ -408,7 +408,7 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
             {certifications && certifications.length > 0 && (
               <div style={{ marginBottom: "10px" }}>
                 <h2 style={{
-                  fontSize: "14px",
+                  fontSize: "12px",
                   fontWeight: "bold",
                   margin: "6px 0 4px 0",
                   borderBottom: "1px solid #000",
