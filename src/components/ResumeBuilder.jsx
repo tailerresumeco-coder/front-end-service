@@ -32,9 +32,12 @@ export default function ResumeBuilder() {
     setDownloadLoading(true);
     try {
       const payload = {
-        html: previewRef.current.outerHTML,   // real resume HTML
+        html: previewRef.current.outerHTML.replace('font-weight: bold', 'font-weight: 500px'),   // real resume HTML
         filename: `${resume?.basics?.name || 'Resume'}_Resume.pdf`,
       };
+
+      console.log('payload ', payload);
+      
 
       const res = await downloadPdfApi(payload);
 
