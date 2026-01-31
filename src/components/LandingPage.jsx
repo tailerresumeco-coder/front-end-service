@@ -62,11 +62,11 @@ export default function LandingPage() {
             {/* Buttons */}
             <div className="flex gap-4">
               <Link to="/generate" className="px-8 py-3 bg-gradient-to-r from-brand-primary to-brand-secondary rounded-button font-semibold hover:shadow-lg hover:shadow-brand-primary/50 transition transform hover:scale-105 inline-block">
-                Tailer my resume
+                Tailor my Resume
               </Link>
-              {/* <Link to="/resume-builder" className="px-8 py-3 border border-border-secondary rounded-button font-semibold hover:border-brand-primary hover:text-brand-primary transition flex items-center gap-2 inline-block">
-               Tailer my resume<ArrowRight size={18} />
-              </Link> */}
+              <Link to="/build" className="px-8 py-3 border border-border-secondary rounded-button font-semibold hover:border-brand-primary hover:text-brand-primary transition flex items-center gap-2 inline-block">
+               Buid my Resume<ArrowRight size={18} />
+              </Link>
             </div>
 
           </div>

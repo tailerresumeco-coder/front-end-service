@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Key, CheckCircle, XCircle } from 'lucide-react';
-import { activateKey, apikeySave, getKeys } from '../services/resumeService';
+import { Plus, Key, CheckCircle, XCircle, Trash } from 'lucide-react';
+import { activateKey, apikeySave, getKeys, deleteKey } from '../services/resumeService';
 
 export default function APIKeysManagement() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -10,12 +10,13 @@ export default function APIKeysManagement() {
   ]);
   const [showAddModal, setShowAddModal] = useState(false);
   const [newKey, setNewKey] = useState({
+    name: '',
     key: '',
     tokens: '',
     requests: ''
   });
 
-  const correctPin =  "987654"; // Default for demo
+  const correctPin = "987654"; // Default for demo
 
   const handlePinSubmit = (e) => {
     e.preventDefault();
@@ -28,47 +29,56 @@ export default function APIKeysManagement() {
     }
   };
 
-  const handleSetActive =async (apikeys) => {
+  const handleDelete = async (apikey) => {
+    const updatedKeys = await deleteKey(apikey._id);
+    
+    setApiKeys(updatedKeys.data);
+  }
 
-    const key={
+  const handleSetActive = async (apikeys) => {
+    const key = {
       apikey: apikeys.apikey,
       active: true
     }
-    const response=await activateKey(key);
-    console.log("response",response)
+    const response = await activateKey(key);
+    setApiKeys(response.data);
   };
 
-  const handleAddKey = () => {
-    if (!newKey.key || !newKey.tokens || !newKey.requests) {
+  const handleAddKey = async () => {
+    if (!newKey?.key || !newKey?.name) {
       alert('Please fill in all fields');
       return;
     }
 
     const key = {
-      apikey: newKey.key,
-      tokens: parseInt(newKey.tokens),
-      requests: parseInt(newKey.requests),
-      active: false
+      apikey: newKey?.key,
+      tokens: parseInt(newKey?.tokens) || 0,
+      requests: parseInt(newKey?.requests) || 0,
+      active: false,
+      name: newKey?.name
     };
-    const save=apikeySave(key)
-
-    setApiKeys([...apiKeys, key]);
-    setNewKey({ key: '', tokens: '', requests: '' });
-    setShowAddModal(false);
+    try {
+      const res = await apikeySave(key)
+      if (res?.status !== 200) {
+        alert('Error saving API key');
+        return;
+      }
+      setApiKeys(res.data);
+      setNewKey({ key: '', tokens: '', requests: '', name: '' });
+      setShowAddModal(false);
+    }
+    catch (error) {
+      console.error('Error saving API key:', error);
+    }
   };
-  const getKeysData=async ()=>{
+  const getKeysData = async () => {
     const result = await getKeys();
-   console.log("result",result)
-   setApiKeys(result.data)
+    setApiKeys(result.data)
   }
 
   useEffect(() => {
-   getKeysData();
-  },[])
-
-
-
-
+    getKeysData();
+  }, [])
 
   if (!isAuthenticated) {
     return (
@@ -125,9 +135,9 @@ export default function APIKeysManagement() {
 
         {/* API Keys Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {apiKeys.map((key) => (
+          {apiKeys?.map((key) => (
             <div
-              key={key.id}
+              key={key?.id}
               className="bg-surface-dark-light rounded-card p-6 shadow-lg border border-border-primary hover:shadow-xl transition-all"
             >
               <div className="flex justify-between items-start mb-4">
@@ -136,30 +146,47 @@ export default function APIKeysManagement() {
                     <Key className="w-5 h-5 text-brand-primary" />
                     <span className="text-text-primary font-semibold">API Key</span>
                   </div>
-                  <p className="text-text-secondary font-mono text-sm bg-surface-dark px-3 py-2 rounded-button break-all">
-                    {key.apikey}
-                  </p>
+
                 </div>
-                <div className={`px-3 py-1 rounded-button text-xs font-semibold ${
-                  key.active
+                <div className='flex gap-2 row'>
+                  <div className={`px-3 py-1 rounded-button text-xs font-semibold items-center flex ${key?.active
                     ? 'bg-green-500/20 text-green-400 border border-green-500/30'
                     : 'bg-gray-500/20 text-gray-400 border border-gray-500/30'
-                }`}>
-                  {key.active ? (
-                    <div className="flex items-center gap-1">
-                      <CheckCircle size={12} />
-                      Active
-                    </div>
-                  ) : (
-                    <div className="flex items-center gap-1">
-                      <XCircle size={12} />
-                      Inactive
-                    </div>
-                  )}
+                    }`}>
+                    {key?.active ? (
+                      <div className="flex items-center gap-1">
+                        <CheckCircle size={12} />
+                        Active
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-1">
+                        <XCircle size={12} />
+                        Inactive
+                      </div>
+                    )}
+                  </div>
+                  <div>
+                    <button
+                      onClick={() => handleDelete(key)}
+                      className="bg-red-500 text-text-primary px-4 py-2 rounded-button font-semibold hover:bg-red-600 transition-all transform hover:scale-105"
+                    >
+                      <Trash size={18} />
+                    </button>
+                  </div>
                 </div>
+
+              </div>
+              <div>
+                <p className="text-text-secondary font-mono text-sm bg-surface-dark px-3 py-2 rounded-button break-all">
+                  {key?.apikey || null}
+                </p>
               </div>
 
               <div className="space-y-3 mb-6">
+                <div className="flex justify-between">
+                  <span className="text-text-muted text-sm">Name</span>
+                  <span className="text-text-primary font-semibold">{key?.name || null}</span>
+                </div>
                 <div className="flex justify-between">
                   <span className="text-text-muted text-sm">Tokens Used</span>
                   <span className="text-text-primary font-semibold">{key?.tokens?.toLocaleString()}</span>
@@ -172,14 +199,13 @@ export default function APIKeysManagement() {
 
               <button
                 onClick={() => handleSetActive(key)}
-                disabled={key.active}
-                className={`w-full py-2 rounded-button font-semibold transition-all ${
-                  key.active
-                    ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
-                    : 'bg-brand-secondary text-text-primary hover:bg-brand-secondary-dark transform hover:scale-105'
-                }`}
+                disabled={key?.active}
+                className={`w-full py-2 rounded-button font-semibold transition-all ${key?.active
+                  ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                  : 'bg-brand-secondary text-text-primary hover:bg-brand-secondary-dark transform hover:scale-105'
+                  }`}
               >
-                {key.active ? 'Currently Active' : 'Set Active'}
+                {key?.active ? 'Currently Active' : 'Set Active'}
               </button>
             </div>
           ))}
@@ -196,8 +222,19 @@ export default function APIKeysManagement() {
                   <label className="block text-text-secondary text-sm font-semibold mb-2">API Key</label>
                   <input
                     type="text"
-                    value={newKey.key}
-                    onChange={(e) => setNewKey({...newKey, key: e.target.value})}
+                    value={newKey?.name}
+                    onChange={(e) => setNewKey({ ...newKey, name: e.target.value })}
+                    className="w-full px-4 py-3 bg-surface-dark border border-border-primary rounded-button text-text-primary placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-transparent transition-all"
+                    placeholder="Name the key..."
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-text-secondary text-sm font-semibold mb-2">API Key</label>
+                  <input
+                    type="text"
+                    value={newKey?.key}
+                    onChange={(e) => setNewKey({ ...newKey, key: e.target.value })}
                     className="w-full px-4 py-3 bg-surface-dark border border-border-primary rounded-button text-text-primary placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-transparent transition-all"
                     placeholder="sk-..."
                   />
@@ -207,8 +244,8 @@ export default function APIKeysManagement() {
                   <label className="block text-text-secondary text-sm font-semibold mb-2">Tokens</label>
                   <input
                     type="number"
-                    value={newKey.tokens}
-                    onChange={(e) => setNewKey({...newKey, tokens: e.target.value})}
+                    value={newKey?.tokens}
+                    onChange={(e) => setNewKey({ ...newKey, tokens: e.target.value })}
                     className="w-full px-4 py-3 bg-surface-dark border border-border-primary rounded-button text-text-primary placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-transparent transition-all"
                     placeholder="0"
                   />
@@ -218,8 +255,8 @@ export default function APIKeysManagement() {
                   <label className="block text-text-secondary text-sm font-semibold mb-2">Requests</label>
                   <input
                     type="number"
-                    value={newKey.requests}
-                    onChange={(e) => setNewKey({...newKey, requests: e.target.value})}
+                    value={newKey?.requests}
+                    onChange={(e) => setNewKey({ ...newKey, requests: e.target.value })}
                     className="w-full px-4 py-3 bg-surface-dark border border-border-primary rounded-button text-text-primary placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-transparent transition-all"
                     placeholder="0"
                   />

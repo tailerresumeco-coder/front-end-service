@@ -63,3 +63,7 @@ export const getKeys=()=>{
 export const activateKey=(payload)=>{
   return axios.patch(`${BASE_PATH}/resume/token/activate`,payload);
 }
+
+export const deleteKey = (id) => {
+  return axios.delete(`${BASE_PATH}/resume/token/delete/${id}`);
+};
