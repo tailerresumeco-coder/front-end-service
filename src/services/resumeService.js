@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const BASE_PATH = 'https://api.tailerresume.com';
-// const BASE_PATH='http://127.0.0.1:8000';
+// const BASE_PATH = 'https://api.tailerresume.com';
+const BASE_PATH='http://127.0.0.1:8000';
 
 /**
  * Upload resume and JD for tailoring (uses V2 two-step processing)
