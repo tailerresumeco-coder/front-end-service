@@ -39,9 +39,6 @@ export default function ResumeBuilder() {
         filename: `${resume?.basics?.name || 'Resume'}_Resume.pdf`,
       };
 
-      console.log('payload ', payload);
-      
-
       const res = await downloadPdfApi(payload);
 
       // Create downloadable file

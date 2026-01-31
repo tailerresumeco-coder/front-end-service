@@ -24,7 +24,7 @@ export default function LandingPage() {
           <div className="w-8 h-8 rounded-dot border-2 border-brand-primary flex items-center justify-center">
             <div className="w-3 h-3 bg-brand-primary rounded-dot"></div>
           </div>
-          <span className="text-nav font-semibold">Tailer Resume</span>
+          <span className="text-nav font-semibold">Tailor Resume</span>
         </div>
         {/* <div className="flex gap-8 items-center">
           <button className="hover:text-brand-primary transition">Product</button>
@@ -64,9 +64,9 @@ export default function LandingPage() {
               <Link to="/generate" className="px-8 py-3 bg-gradient-to-r from-brand-primary to-brand-secondary rounded-button font-semibold hover:shadow-lg hover:shadow-brand-primary/50 transition transform hover:scale-105 inline-block">
                 Tailor my Resume
               </Link>
-              <Link to="/build" className="px-8 py-3 border border-border-secondary rounded-button font-semibold hover:border-brand-primary hover:text-brand-primary transition flex items-center gap-2 inline-block">
-               Buid my Resume<ArrowRight size={18} />
-              </Link>
+              {/* <Link to="/build" className="px-8 py-3 border border-border-secondary rounded-button font-semibold hover:border-brand-primary hover:text-brand-primary transition flex items-center gap-2 inline-block">
+               Build my Resume<ArrowRight size={18} />
+              </Link> */}
             </div>
 
           </div>
@@ -126,7 +126,7 @@ export default function LandingPage() {
           </div>
           <div className="border-t border-border-primary mt-8 pt-8 text-center">
             <p className="text-text-subtle text-badge">
-              © 2026 Tailer Resume. All rights reserved.
+              © 2026 Tailor Resume. All rights reserved.
             </p>
           </div>
         </div>

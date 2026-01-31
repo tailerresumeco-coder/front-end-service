@@ -6,12 +6,23 @@ import '../components/styles.css';
  * FIXED: Safely handles missing dates and prevents .trim() errors
  */
 const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
+  
   if (!resume?.basics) {
     return (
       <div ref={ref} style={{ padding: "40px", textAlign: "center", color: "#999" }}>
         No resume data available
       </div>
     );
+  }
+
+  let lineHeight = "1.4";
+
+  console.log('Character Length:', resume?._metadata?.charecterLength);
+
+  if (resume?._metadata?.charecterLength <= 35000) {
+    lineHeight = "1.9";
+  } else if (resume?._metadata?.charecterLength <= 45000) {
+    lineHeight = "1.7";
   }
 
   const zoomRef = useRef(null);
@@ -69,13 +80,12 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
 
     const handleOnWheel = (e) => {
       if (e.ctrlKey) {
-        console.log('zooming');
-        
+
         e.preventDefault();
         e.stopPropagation();
 
         const { left, top, width, height } = node.getBoundingClientRect();
-        
+
         // Fixed math for scroll positions
         const x = ((e.clientX - left) / width) * 100;
         const y = ((e.clientY - top) / height) * 100;
@@ -95,6 +105,41 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
     return () => node.removeEventListener('wheel', handleOnWheel);
   }, []);
 
+  const handleBasicsOthers = () => {
+    if (basics.other && basics.other.length > 0) {
+      const others = basics.other.split(',').map(item => {
+        const linkPattern = /^(https?:\/\/|www\.)/i;
+
+        if (linkPattern.test(item.trim())) {
+          const displayName = (item.trim())
+            .replace(/^https?:\/\//, '')
+            .replace(/^www\./, '')
+            .split('/')[0]?.split('.')[0]
+            ?.replace(/^./, c => c.toUpperCase());
+          return (
+            <>
+              <span>|</span>
+              <a
+                href={item.trim()}
+                className="hyperlink"
+                target="_blank"
+                rel="noopener noreferrer"
+                key={item}
+              >
+                {displayName}
+              </a>
+            </>
+          );
+        } else {
+          return (
+            <span key={item}>{item}</span>
+          );
+        }
+      });
+      return others
+    }
+  }
+
   return (
     <div ref={zoomRef}>
       <div
@@ -103,7 +148,7 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
         style={{
           fontFamily: "'Calibri', 'Arial', sans-serif",
           fontSize: "12px",
-          lineHeight: "1.4",
+          lineHeight: lineHeight,
           color: "#000",
           minHeight: "11in",
           margin: "0",
@@ -156,12 +201,7 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
               </>
             )}
             {basics.other && (
-              <>
-                <span>|</span>
-                <a href={basics.other} className="hyperlink" target="_blank">
-                  {basics.other}
-                </a>
-              </>
+              handleBasicsOthers()
             )}
           </div>
           <div>
@@ -178,7 +218,7 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
           </div>
         </div>
 
-          {skills && skills.length > 0 && (
+        {skills && skills.length > 0 && (
           <div style={{ marginBottom: "10px" }}>
             <h2 style={{
               fontSize: "14px",
@@ -243,7 +283,7 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
                             margin: "2px 0"
                           }}>
                             <span>
-                              <span style={{fontWeight: "bold", fontStyle: "italic"}}>Project: {project.projectName}</span>
+                              <span style={{ fontWeight: "bold", fontStyle: "italic" }}>Project: {project.projectName}</span>
                               {project.technologies && project.technologies.length > 0 && (
                                 <span style={{ marginLeft: "8px", fontWeight: "normal" }}>
                                   | {project.technologies.join(", ")}
@@ -251,7 +291,7 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
                               )}
                             </span>
                             {project.dates && (
-                              <span style={{fontWeight: "bold", fontSize: "11px", whiteSpace: "nowrap", marginLeft: "10px"}}>
+                              <span style={{ fontWeight: "bold", fontSize: "11px", whiteSpace: "nowrap", marginLeft: "10px" }}>
                                 {project.dates}
                               </span>
                             )}
@@ -262,7 +302,7 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
                         {project.highlights && project.highlights.length > 0 && (
                           <ul style={{ margin: "2px 0 0 0", paddingLeft: "20px", listStyleType: "disc" }}>
                             {project.highlights.map((h, hidx) => (
-                              <li key={hidx} style={{ margin: "1px 0", fontSize: "12px", lineHeight: "1.4", paddingRight: "15px" }}>
+                              <li key={hidx} style={{ margin: "1px 0", fontSize: "12px", lineHeight: lineHeight, paddingRight: "15px" }}>
                                 {highlightText(h)}
                               </li>
                             ))}
@@ -299,11 +339,11 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
                         </span>
                       )}
                     </div>
-                
+
                     {proj.highlights && proj.highlights.length > 0 && (
                       <ul style={{ margin: "2px 0 0 0", paddingLeft: "20px", listStyleType: "disc" }}>
                         {proj.highlights.map((h, hidx) => (
-                          <li key={hidx} style={{ margin: "1px 0", fontSize: "12px", lineHeight: "1.4", paddingRight: "15px" }}>
+                          <li key={hidx} style={{ margin: "1px 0", fontSize: "12px", lineHeight: lineHeight, paddingRight: "15px" }}>
                             {highlightText(h)}
                           </li>
                         ))}
@@ -358,7 +398,7 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
                 </h2>
                 <ul style={{ margin: "2px 0 0 0", paddingLeft: "20px", listStyleType: "disc" }}>
                   {certifications.map((cert, cidx) => (
-                    <li key={cidx} style={{ margin: "1px 0", fontSize: "10px", lineHeight: "1.4", paddingRight: "15px" }}>
+                    <li key={cidx} style={{ margin: "1px 0", fontSize: "10px", lineHeight: lineHeight, paddingRight: "15px" }}>
                       {cert}
                     </li>
                   ))}
@@ -425,7 +465,7 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
                     {proj.highlights && proj.highlights.length > 0 && (
                       <ul style={{ margin: "2px 0 0 0", paddingLeft: "20px", listStyleType: "disc" }}>
                         {proj.highlights.map((h, hidx) => (
-                          <li key={hidx} style={{ margin: "1px 0", fontSize: "10px", lineHeight: "1.4", paddingRight: "15px" }}>
+                          <li key={hidx} style={{ margin: "1px 0", fontSize: "10px", lineHeight: lineHeight, paddingRight: "15px" }}>
                             {highlightText(h)}
                           </li>
                         ))}
@@ -450,7 +490,7 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
                 </h2>
                 <ul style={{ margin: "2px 0 0 0", paddingLeft: "20px", listStyleType: "disc" }}>
                   {certifications.map((cert, cidx) => (
-                    <li key={cidx} style={{ margin: "1px 0", fontSize: "10px", lineHeight: "1.4", paddingRight: "15px" }}>
+                    <li key={cidx} style={{ margin: "1px 0", fontSize: "10px", lineHeight: lineHeight, paddingRight: "15px" }}>
                       {cert}
                     </li>
                   ))}
