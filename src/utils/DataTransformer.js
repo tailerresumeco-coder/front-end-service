@@ -2,13 +2,14 @@
  * Transform backend API response to internal resume format
  * Handles nested projects under experience entries
  * FIXED: Safely handles missing/undefined dates to prevent .trim() errors
+ * UPDATED: Supports V2 API response with validation data
  */
 export function transformBackendResponse(backendData) {
   if (!backendData) {
     throw new Error("Backend data is empty");
   }
 
-  const { basic = {}, ats_score = {}, gap_analysis = {}, tailored_content = {} } = backendData;
+  const { basic = {}, ats_score = {}, gap_analysis = {}, tailored_content = {}, _validation = {} } = backendData;
 
   // Extract links from nested structure
   const links = basic.links ?? {};
@@ -27,25 +28,31 @@ export function transformBackendResponse(backendData) {
       // Check if this experience has nested projects array
       if (exp.projects && Array.isArray(exp.projects) && exp.projects.length > 0) {
         // Has nested projects - flatten them into separate experience entries
+        // But keep reference to parent for grouping later
         return exp.projects.map(project => ({
           role: exp.role ?? "",
           company: exp.company ?? "",
           location: exp.location ?? "",
-          // FIXED: Use project duration, fall back to parent experience duration, then empty string
+          // Use project duration, fall back to parent experience duration
           dates: sanitizeDateString(project.duration ?? exp.duration ?? ""),
           projectName: project.project_name ?? "",
-          highlights: Array.isArray(project.responsibilities) ? project.responsibilities : []
+          // Include technologies if available
+          technologies: Array.isArray(project.technologies) ? project.technologies : [],
+          highlights: Array.isArray(project.responsibilities) ? project.responsibilities : [],
+          // Store parent duration for grouping calculation
+          _parentDuration: sanitizeDateString(exp.duration ?? "")
         }));
       } else {
-        // Old format without nested projects
+        // Old format without nested projects - single project per experience
         return {
           role: exp.role ?? "",
           company: exp.company ?? "",
           location: exp.location ?? "",
-          // FIXED: Sanitize date string
           dates: sanitizeDateString(exp.duration ?? ""),
           projectName: exp.project_name ?? "",
-          highlights: Array.isArray(exp.responsibilities) ? exp.responsibilities : []
+          technologies: Array.isArray(exp.technologies) ? exp.technologies : [],
+          highlights: Array.isArray(exp.responsibilities) ? exp.responsibilities : [],
+          _parentDuration: sanitizeDateString(exp.duration ?? "")
         };
       }
     })
@@ -83,6 +90,13 @@ export function transformBackendResponse(backendData) {
         missingCertificationsOrEducation: gap_analysis.missing_certifications_or_education ?? [],
         experienceGap: gap_analysis.experience_gap ?? "",
         relatedSkillsFound: gap_analysis.related_skills_found ?? []
+      },
+      // V2 validation data
+      validation: {
+        inputBulletCount: _validation.input_bullet_count ?? null,
+        outputBulletCount: _validation.output_bullet_count ?? null,
+        dataIntegrityVerified: _validation.data_integrity_verified ?? true,
+        warnings: _validation.warnings ?? []
       }
     },
 

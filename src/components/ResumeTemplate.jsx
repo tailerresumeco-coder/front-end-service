@@ -31,18 +31,39 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
   const [zoomPx, setZoomPx] = useState(1);
   const [origin, setOrigin] = useState({ x: 50, y: 50 });
 
-  const changeToBold = () => {
-    resume?.highlight_keywords?.forEach(keyword => {
-      document.querySelectorAll("#experience-highlights").forEach(li => {
-        if (li.textContent.includes(keyword)) {
-          li.innerHTML = (li.innerHTML.trim()).replace(keyword, `<span style="font-weight: bold;">${keyword}</span>`);
-        }
-      });
-    })
-  }
+  // Get highlight keywords from resume
+  const highlightKeywords = resume?.highlight_keywords || [];
+
+  /**
+   * Highlight keywords in text using React (not DOM manipulation)
+   * Returns array of text/span elements
+   */
+  const highlightText = (text) => {
+    if (!text || highlightKeywords.length === 0) return text;
+
+    // Create regex pattern for all keywords (case-insensitive)
+    const pattern = highlightKeywords
+      .filter(k => k && k.length > 0)
+      .map(k => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')) // Escape regex chars
+      .join('|');
+
+    if (!pattern) return text;
+
+    const regex = new RegExp(`(${pattern})`, 'gi');
+    const parts = text.split(regex);
+
+    return parts.map((part, index) => {
+      const isKeyword = highlightKeywords.some(
+        k => k.toLowerCase() === part.toLowerCase()
+      );
+      if (isKeyword) {
+        return <strong key={index}>{part}</strong>;
+      }
+      return part;
+    });
+  };
 
   useEffect(() => {
-    changeToBold();
     const node = zoomRef.current;
     if (!node) return;
 
@@ -210,28 +231,39 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
 
                     {/* Multiple Projects under this company */}
                     {company.projects.map((project, pidx) => (
-                      <div key={pidx} style={{ marginBottom: "4px", marginLeft: "10px" }}>
-                        {/* Project Name and Duration */}
+                      <div key={pidx} style={{ marginBottom: "6px", marginLeft: "10px" }}>
+                        {/* Project Name and Technologies */}
                         {project.projectName && (
                           <div style={{
                             display: "flex",
                             justifyContent: "space-between",
+                            alignItems: "flex-start",
                             fontSize: "12px",
-                            fontStyle: "italic",
                             color: "#000",
                             margin: "2px 0"
                           }}>
-                            <span style={{fontWeight: "bold"}}>Project: {project.projectName}</span>
-                            {/* <span style={{fontWeight: "bold"}}>{project?.dates || ""}</span> */}
+                            <span>
+                              <span style={{fontWeight: "bold", fontStyle: "italic"}}>Project: {project.projectName}</span>
+                              {project.technologies && project.technologies.length > 0 && (
+                                <span style={{ marginLeft: "8px", fontWeight: "normal" }}>
+                                  | {project.technologies.join(", ")}
+                                </span>
+                              )}
+                            </span>
+                            {project.dates && (
+                              <span style={{fontWeight: "bold", fontSize: "11px", whiteSpace: "nowrap", marginLeft: "10px"}}>
+                                {project.dates}
+                              </span>
+                            )}
                           </div>
                         )}
 
                         {/* Project Responsibilities */}
                         {project.highlights && project.highlights.length > 0 && (
-                          <ul style={{ margin: "2px 0 0 0", paddingLeft: "20px", listStyleType: "disc" }}  id="experience-highlights">
+                          <ul style={{ margin: "2px 0 0 0", paddingLeft: "20px", listStyleType: "disc" }}>
                             {project.highlights.map((h, hidx) => (
                               <li key={hidx} style={{ margin: "1px 0", fontSize: "12px", lineHeight: "1.4", paddingRight: "15px" }}>
-                                {h}
+                                {highlightText(h)}
                               </li>
                             ))}
                           </ul>
@@ -269,10 +301,10 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
                     </div>
                 
                     {proj.highlights && proj.highlights.length > 0 && (
-                      <ul style={{ margin: "2px 0 0 0", paddingLeft: "20px", listStyleType: "disc" }} id="experience-highlights">
+                      <ul style={{ margin: "2px 0 0 0", paddingLeft: "20px", listStyleType: "disc" }}>
                         {proj.highlights.map((h, hidx) => (
                           <li key={hidx} style={{ margin: "1px 0", fontSize: "12px", lineHeight: "1.4", paddingRight: "15px" }}>
-                            {h}
+                            {highlightText(h)}
                           </li>
                         ))}
                       </ul>
@@ -394,7 +426,7 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
                       <ul style={{ margin: "2px 0 0 0", paddingLeft: "20px", listStyleType: "disc" }}>
                         {proj.highlights.map((h, hidx) => (
                           <li key={hidx} style={{ margin: "1px 0", fontSize: "10px", lineHeight: "1.4", paddingRight: "15px" }}>
-                            {h}
+                            {highlightText(h)}
                           </li>
                         ))}
                       </ul>
@@ -435,6 +467,7 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
 /**
  * Helper function to group experience entries by company
  * FIXED: Safely handles missing or undefined dates
+ * UPDATED: Includes technologies for each project
  */
 function groupExperienceByCompany(experience) {
   const grouped = {};
@@ -447,7 +480,7 @@ function groupExperienceByCompany(experience) {
         role: exp.role,
         company: exp.company,
         location: exp.location,
-        overallDuration: exp.dates || "",
+        overallDuration: exp._parentDuration || exp.dates || "",
         projects: []
       };
     }
@@ -455,6 +488,7 @@ function groupExperienceByCompany(experience) {
     grouped[key].projects.push({
       projectName: exp.projectName,
       dates: exp.dates || "",
+      technologies: exp.technologies || [],
       highlights: exp.highlights
     });
   });
@@ -469,21 +503,30 @@ function groupExperienceByCompany(experience) {
 
       if (dates.length > 0) {
         try {
-          // FIXED: Safely split and trim dates
-          const firstProjectDate = dates[dates.length - 1];
-          const lastProjectDate = dates[0];
+          // Sort dates to find earliest and latest
+          const parsedDates = dates.map(d => {
+            const parts = d.split('–').map(s => s.trim());
+            return { start: parts[0], end: parts[1] || parts[0] };
+          });
 
-          const firstPart = firstProjectDate.split('–')[0];
-          const lastPart = lastProjectDate.split('–')[1];
+          // Get all start dates and end dates
+          const allStarts = parsedDates.map(d => d.start).filter(Boolean);
+          const allEnds = parsedDates.map(d => d.end).filter(Boolean);
 
-          if (firstPart && lastPart) {
-            company.overallDuration = `${firstPart.trim()} – ${lastPart.trim()}`;
+          if (allStarts.length > 0 && allEnds.length > 0) {
+            // Use first project's start and last project's end (assuming chronological order)
+            const firstStart = allStarts[allStarts.length - 1]; // Earliest (last in array if reverse chrono)
+            const lastEnd = allEnds[0]; // Latest (first in array if reverse chrono)
+
+            // Check if any end is "Present"
+            const hasPresent = allEnds.some(e => e.toLowerCase().includes('present'));
+
+            company.overallDuration = `${firstStart} – ${hasPresent ? 'Present' : lastEnd}`;
           }
         } catch (error) {
           console.warn("Error calculating overall duration:", error);
-
-          company.overallDuration = dates[0] || "";          // Fallback: keep first project's duration
-        } 
+          company.overallDuration = company.projects[0]?.dates || "";
+        }
       }
     }
   });
