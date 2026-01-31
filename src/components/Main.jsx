@@ -156,7 +156,7 @@ export default function Main() {
             <div className="w-10 h-10 rounded-dot border-2 border-brand-primary flex items-center justify-center">
               <div className="w-6 h-6 rounded-dot bg-brand-primary"></div>
             </div>
-            <h1 className="text-nav font-bold text-text-primary">Tailer Resume</h1>
+            <h1 className="text-nav font-bold text-text-primary">Tailor Resume</h1>
           </div>
           <nav className="flex gap-8">
             {/* <a href="#" className="text-text-secondary hover:text-brand-primary text-badge font-medium transition">About Us</a> */}
@@ -317,7 +317,7 @@ export default function Main() {
         <div className="max-w-7xl mx-auto px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
-              <h3 className="text-nav font-bold text-text-primary mb-4">Tailer Resume</h3>
+              <h3 className="text-nav font-bold text-text-primary mb-4">Tailor Resume</h3>
               <p className="text-text-muted text-body-small leading-relaxed">
                 AI-powered resume tailoring for job seekers. Create ATS-friendly resumes that get results.
               </p>
@@ -340,7 +340,7 @@ export default function Main() {
           </div>
           <div className="border-t border-border-primary mt-8 pt-8 text-center">
             <p className="text-text-subtle text-badge">
-              © 2026 Tailer Resume. All rights reserved.
+              © 2026 Tailor Resume. All rights reserved.
             </p>
           </div>
         </div>

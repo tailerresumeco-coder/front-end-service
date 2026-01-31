@@ -105,7 +105,8 @@ export function transformBackendResponse(backendData) {
         experienceModifications: change_summary.experience_modifications ?? [],
         skillsChanges: change_summary.skills_changes ?? [],
         keywordsInjected: change_summary.keywords_injected ?? []
-      }
+      },
+      charecterLength: backendData ? JSON.stringify(backendData).length : 0
     },
 
     // Editable
