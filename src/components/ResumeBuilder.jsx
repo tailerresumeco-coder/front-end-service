@@ -5,13 +5,16 @@ import { useReactToPrint } from 'react-to-print';
 import { useResume } from '../context/ResumeContext';
 import DynamicForm from './DynamicForm';
 import ResumeTemplate from './ResumeTemplate';
+import AIInsightsPanel from './AIInsightsPanel';
+import BeforeAfterComparison from './BeforeAfterComparison';
 import updateByPath from '../utils/UpdateByPath';
 import { useNavigate } from 'react-router-dom';
 import { downloadPdfApi } from '../services/resumeService';
 
 export default function ResumeBuilder() {
-  const { resume, setResume } = useResume();
+  const { resume, setResume, uploadedResume } = useResume();
   const [showPreview, setShowPreview] = useState(false);
+  const [activeTab, setActiveTab] = useState("edit"); // "edit" | "insights" | "compare"
   const previewRef = useRef();
   const [downloadLoading, setDownloadLoading] = useState(false);
 
@@ -32,9 +35,12 @@ export default function ResumeBuilder() {
     setDownloadLoading(true);
     try {
       const payload = {
-        html: previewRef.current.outerHTML,   // real resume HTML
+        html: previewRef.current.outerHTML.replace('font-weight: bold', 'font-weight: 500px'),   // real resume HTML
         filename: `${resume?.basics?.name || 'Resume'}_Resume.pdf`,
       };
+
+      console.log('payload ', payload);
+      
 
       const res = await downloadPdfApi(payload);
 
@@ -121,15 +127,64 @@ export default function ResumeBuilder() {
       {/* Main Content */}
       <div className="mx-auto">
         <div className="flex gap-3">
-          {/* Left - Form */}
+          {/* Left - Form/Insights/Compare */}
           <div className={`${showPreview ? 'hidden lg:block' : 'block'} flex-1`}>
-            <div className="bg-white rounded-lg shadow-lg p-3 sticky top-20 max-h-[calc(100vh-7rem)] overflow-y-auto" style={{ borderRadius: '0px' }}>
-              <h2 className="text-xl font-bold mb-4 text-gray-800">Edit Resume</h2>
-              {resume ? (
-                <DynamicForm data={resume} onChange={handleChange} />
-              ) : (
-                <p>Loading...</p>
-              )}
+            <div className="bg-white rounded-lg shadow-lg sticky top-20 max-h-[calc(100vh-7rem)] overflow-hidden" style={{ borderRadius: '0px' }}>
+              {/* Tab Navigation */}
+              <div className="flex border-b border-gray-200">
+                <button
+                  onClick={() => setActiveTab("edit")}
+                  className={`flex-1 px-4 py-3 text-sm font-medium transition-colors ${
+                    activeTab === "edit"
+                      ? "text-blue-600 border-b-2 border-blue-600 bg-blue-50"
+                      : "text-gray-600 hover:text-gray-800 hover:bg-gray-50"
+                  }`}
+                >
+                  Edit Resume
+                </button>
+                <button
+                  onClick={() => setActiveTab("insights")}
+                  className={`flex-1 px-4 py-3 text-sm font-medium transition-colors ${
+                    activeTab === "insights"
+                      ? "text-blue-600 border-b-2 border-blue-600 bg-blue-50"
+                      : "text-gray-600 hover:text-gray-800 hover:bg-gray-50"
+                  }`}
+                >
+                  AI Insights
+                </button>
+                <button
+                  onClick={() => setActiveTab("compare")}
+                  className={`flex-1 px-4 py-3 text-sm font-medium transition-colors ${
+                    activeTab === "compare"
+                      ? "text-blue-600 border-b-2 border-blue-600 bg-blue-50"
+                      : "text-gray-600 hover:text-gray-800 hover:bg-gray-50"
+                  }`}
+                >
+                  Before/After
+                </button>
+              </div>
+
+              {/* Tab Content */}
+              <div className="overflow-y-auto max-h-[calc(100vh-11rem)]">
+                {activeTab === "edit" && (
+                  <div className="p-3">
+                    <h2 className="text-xl font-bold mb-4 text-gray-800">Edit Resume</h2>
+                    {resume ? (
+                      <DynamicForm data={resume} onChange={handleChange} />
+                    ) : (
+                      <p>Loading...</p>
+                    )}
+                  </div>
+                )}
+
+                {activeTab === "insights" && (
+                  <AIInsightsPanel metadata={resume?._metadata} />
+                )}
+
+                {activeTab === "compare" && (
+                  <BeforeAfterComparison original={uploadedResume} tailored={resume} />
+                )}
+              </div>
             </div>
           </div>
 

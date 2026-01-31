@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { Helmet } from "react-helmet-async";
 import { useNavigate } from "react-router-dom";
 import { useResume } from "../context/ResumeContext";
-import { uploadResumeAndJD } from "../services/resumeService";
+import { uploadResumeAndJD, uploadResumeAndJDLegacy } from "../services/resumeService";
 import { transformBackendResponse, isResumeValid } from "../utils/DataTransformer";
 
 export default function ProcessingScreen() {
@@ -70,7 +70,7 @@ const startAdaptiveProgress = () => {
         const controller = new AbortController();
         timeoutId = setTimeout(() => controller.abort(), 90000);
 
-        const response = await uploadResumeAndJD(uploadedResume, jobDescription, {
+        const response = await uploadResumeAndJDLegacy(uploadedResume, jobDescription, {
           signal: controller.signal,
         });
         console.log("📥 Backend response received",response);
