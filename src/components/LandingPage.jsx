@@ -11,10 +11,10 @@ export default function LandingPage() {
       <Helmet>
         <title>AI Resume Tailoring Tool - ATS Checker & Parser</title>
         <meta name="description" content="Tailor resumes with AI to match job descriptions. Get ATS scores, parse resumes, and build professional resumes that increase interview chances for job seekers." />
-        <link rel="canonical" href="https://tailer-resume.com/" />
+        <link rel="canonical" href="https://tailerresume.com/" />
         <meta property="og:title" content="AI Resume Tailoring Tool - ATS Checker & Parser" />
         <meta property="og:description" content="Tailor resumes with AI to match job descriptions. Get ATS scores, parse resumes, and build professional resumes that increase interview chances for job seekers." />
-        <meta property="og:url" content="https://tailer-resume.com/" />
+        <meta property="og:url" content="https://tailerresume.com/" />
         <meta property="og:type" content="website" />
       </Helmet>
       <div className="min-h-screen bg-gradient-to-br from-surface-dark via-surface-dark-mid to-brand-secondary-dark text-text-primary overflow-hidden">
