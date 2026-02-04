@@ -19,11 +19,10 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
 
   console.log('Character Length:', resume?._metadata?.charecterLength);
 
-  if (resume?._metadata?.charecterLength <= 35000) {
+  if (resume?._metadata?.charecterLength <= 5000) {
     lineHeight = "1.9";
-  } else if (resume?._metadata?.charecterLength <= 45000) {
-    lineHeight = "1.7";
   }
+
 
   const zoomRef = useRef(null);
   const [highlightSkills, setHighlightSkills] = useState();

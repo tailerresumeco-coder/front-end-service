@@ -19,7 +19,7 @@ function ATSScoreCard({ before, after, explanation }) {
             <div className="flex-1">
               <div className="flex justify-between text-sm text-gray-600 mb-1">
                 <span>Before: {before}%</span>
-                <span>After: {after}%</span>
+                <span>After: { after}%</span>
               </div>
               <div className="relative h-4 bg-gray-200 rounded-full overflow-hidden">
                 {/* Before score bar */}
@@ -272,8 +272,8 @@ export default function AIInsightsPanel({ metadata }) {
     <div className="p-4 space-y-4 max-h-[calc(100vh-10rem)] overflow-y-auto">
       {/* ATS Score */}
       <ATSScoreCard
-        before={atsScoreBefore}
-        after={atsScoreAfter}
+        before={ Math.min(atsScoreBefore, atsScoreAfter)}
+        after={ Math.max(atsScoreBefore, atsScoreAfter)}
         explanation={atsExplanation}
       />
 
