@@ -71,10 +71,10 @@ export default function ResumeBuilder() {
       <Helmet>
         <title>AI Resume Builder - Create Professional Resumes</title>
         <meta name="description" content="Build resumes section by section using AI writing assistant. Generate ATS-friendly resumes with live preview, editing tools, and PDF download capabilities." />
-        <link rel="canonical" href="https://tailer-resume.com/resume-builder" />
+        <link rel="canonical" href="https://tailerresume.com/resume-builder" />
         <meta property="og:title" content="AI Resume Builder - Create Professional Resumes" />
         <meta property="og:description" content="Build resumes section by section using AI writing assistant. Generate ATS-friendly resumes with live preview, editing tools, and PDF download capabilities." />
-        <meta property="og:url" content="https://tailer-resume.com/resume-builder" />
+        <meta property="og:url" content="https://tailerresume.com/resume-builder" />
         <meta property="og:type" content="website" />
       </Helmet>
       <div className="min-h-screen bg-gradient-to-br from-surface-dark via-surface-dark-mid to-brand-secondary-dark">

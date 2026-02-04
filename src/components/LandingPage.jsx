@@ -119,8 +119,8 @@ export default function LandingPage() {
             {/* <div>
               <h4 className="text-badge font-semibold text-text-primary mb-4">Resources</h4>
               <ul className="space-y-2">
-                <li><a href="https://tailer-resume.com/sitemap.xml" className="text-text-secondary hover:text-brand-primary transition">Sitemap</a></li>
-                <li><a href="https://tailer-resume.com/robots.txt" className="text-text-secondary hover:text-brand-primary transition">Robots.txt</a></li>
+                <li><a href="https://tailerresume.com/sitemap.xml" className="text-text-secondary hover:text-brand-primary transition">Sitemap</a></li>
+                <li><a href="https://tailerresume.com/robots.txt" className="text-text-secondary hover:text-brand-primary transition">Robots.txt</a></li>
               </ul>
             </div> */}
           </div>
