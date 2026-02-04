@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /processing
 
-Sitemap: https://tailer-resume.com/sitemap.xml
+Sitemap: https://tailerresume.com/sitemap.xml

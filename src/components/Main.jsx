@@ -142,10 +142,10 @@ export default function Main() {
       <Helmet>
         <title>ATS Resume Checker - Optimize for Job Matching</title>
         <meta name="description" content="Upload resume and job description to get ATS score, tailored resume, and parsing insights. Boost your resume's visibility with AI-powered optimization tools." />
-        <link rel="canonical" href="https://tailer-resume.com/generate" />
+        <link rel="canonical" href="https://tailerresume.com/generate" />
         <meta property="og:title" content="ATS Resume Checker - Optimize for Job Matching" />
         <meta property="og:description" content="Upload resume and job description to get ATS score, tailored resume, and parsing insights. Boost your resume's visibility with AI-powered optimization tools." />
-        <meta property="og:url" content="https://tailer-resume.com/generate" />
+        <meta property="og:url" content="https://tailerresume.com/generate" />
         <meta property="og:type" content="website" />
       </Helmet>
       <div className="min-h-screen bg-gradient-to-br from-surface-dark via-surface-dark-mid to-brand-secondary-dark">
@@ -333,8 +333,8 @@ export default function Main() {
             <div>
               <h4 className="text-badge font-semibold text-text-primary mb-4">Resources</h4>
               <ul className="space-y-2">
-                <li><a href="https://tailer-resume.com/sitemap.xml" className="text-text-secondary hover:text-brand-primary transition">Sitemap</a></li>
-                <li><a href="https://tailer-resume.com/robots.txt" className="text-text-secondary hover:text-brand-primary transition">Robots.txt</a></li>
+                <li><a href="https://tailerresume.com/sitemap.xml" className="text-text-secondary hover:text-brand-primary transition">Sitemap</a></li>
+                <li><a href="https://tailerresume.com/robots.txt" className="text-text-secondary hover:text-brand-primary transition">Robots.txt</a></li>
               </ul>
             </div>
           </div>
