@@ -67,3 +67,7 @@ export const activateKey=(payload)=>{
 export const deleteKey = (id) => {
   return axios.delete(`${BASE_PATH}/resume/token/delete/${id}`);
 };
+
+export const feedback = (payload) => {
+  return axios.post(`${BASE_PATH}/resume/feedback`, payload);
+}
