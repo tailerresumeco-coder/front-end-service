@@ -11,10 +11,10 @@ export default function LandingPage() {
       <Helmet>
         <title>AI Resume Tailoring Tool - ATS Checker & Parser</title>
         <meta name="description" content="Tailor resumes with AI to match job descriptions. Get ATS scores, parse resumes, and build professional resumes that increase interview chances for job seekers." />
-        <link rel="canonical" href="https://tailer-resume.com/" />
+        <link rel="canonical" href="https://tailerresume.com/" />
         <meta property="og:title" content="AI Resume Tailoring Tool - ATS Checker & Parser" />
         <meta property="og:description" content="Tailor resumes with AI to match job descriptions. Get ATS scores, parse resumes, and build professional resumes that increase interview chances for job seekers." />
-        <meta property="og:url" content="https://tailer-resume.com/" />
+        <meta property="og:url" content="https://tailerresume.com/" />
         <meta property="og:type" content="website" />
       </Helmet>
       <div className="min-h-screen bg-gradient-to-br from-surface-dark via-surface-dark-mid to-brand-secondary-dark text-text-primary overflow-hidden">
@@ -119,8 +119,8 @@ export default function LandingPage() {
             {/* <div>
               <h4 className="text-badge font-semibold text-text-primary mb-4">Resources</h4>
               <ul className="space-y-2">
-                <li><a href="https://tailer-resume.com/sitemap.xml" className="text-text-secondary hover:text-brand-primary transition">Sitemap</a></li>
-                <li><a href="https://tailer-resume.com/robots.txt" className="text-text-secondary hover:text-brand-primary transition">Robots.txt</a></li>
+                <li><a href="https://tailerresume.com/sitemap.xml" className="text-text-secondary hover:text-brand-primary transition">Sitemap</a></li>
+                <li><a href="https://tailerresume.com/robots.txt" className="text-text-secondary hover:text-brand-primary transition">Robots.txt</a></li>
               </ul>
             </div> */}
           </div>
