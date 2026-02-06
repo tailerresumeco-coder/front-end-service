@@ -9,6 +9,8 @@ import ProcessingScreen from "./components/ProcessingScreen";
 import ResumeBuilder from "./components/ResumeBuilder";
 import { ResumeProvider } from "./context/ResumeContext";
 import APIKeysManagement from "./components/APIKeysManagement";
+import HowToTailorResume from "./pages/HowToTailorResume";
+import ATSOptimizationGuide from "./pages/ATSOptimizationGuide";
 
 function AnalyticsTracker() {
   const location = useLocation();
@@ -29,7 +31,7 @@ export default function App() {
     <HelmetProvider>
       <ResumeProvider>
         <Router>
-          {/* 👇 MUST be inside Router */}
+          {/* Analytics Tracker - MUST be inside Router */}
           <AnalyticsTracker />
 
           <Routes>
@@ -38,6 +40,8 @@ export default function App() {
             <Route path="/processing" element={<ProcessingScreen />} />
             <Route path="/resume-builder" element={<ResumeBuilder />} />
             <Route path="/api-keys" element={<APIKeysManagement />} />
+            <Route path="/how-to-tailor-resume" element={<HowToTailorResume />} />
+            <Route path="/ats-optimization-guide" element={<ATSOptimizationGuide />} />
           </Routes>
         </Router>
       </ResumeProvider>
