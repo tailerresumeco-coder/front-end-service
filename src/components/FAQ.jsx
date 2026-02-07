@@ -112,38 +112,38 @@ const FAQ = ({ title = "Frequently Asked Questions", faqs = [], className = "", 
 
 export default FAQ;
 
-// Default FAQ data for Tailer Resume
+// Default FAQ data for Tailer Resume - Concise answers under 60 words for AI citations
 export const defaultFAQs = [
   {
     question: "How does AI resume tailoring work?",
-    answer: "AI resume tailoring analyzes job descriptions and automatically adjusts your resume content, keywords, and formatting to match what employers are looking for while maintaining ATS compatibility. Our AI identifies key requirements from the job posting and optimizes your resume to highlight relevant experience and skills."
+    answer: "AI resume tailoring analyzes job descriptions and automatically adjusts your resume content, keywords, and formatting to match employer requirements while maintaining ATS compatibility."
   },
   {
     question: "Is Tailer Resume ATS-friendly?",
-    answer: "Yes, Tailer Resume ensures all tailored resumes are optimized for Applicant Tracking Systems (ATS) by using proper formatting, relevant keywords, and industry-standard structure. We maintain clean formatting without tables or graphics that could confuse ATS parsers."
+    answer: "Yes. Tailer Resume optimizes all resumes for Applicant Tracking Systems using proper formatting, relevant keywords, and clean structure without tables or graphics."
   },
   {
     question: "How long does it take to tailor a resume?",
-    answer: "Our AI can tailor your resume in under 30 seconds. Simply upload your resume and paste the job description, and you'll receive an optimized version ready for application."
+    answer: "Our AI tailors resumes in under 30 seconds. Upload your resume, paste the job description, and receive an optimized version ready for application."
   },
   {
     question: "Can I tailor my resume for multiple jobs?",
-    answer: "Yes, you can tailor your resume for unlimited job applications. Each tailored version is saved and can be accessed from your account for easy management of multiple job applications."
+    answer: "Yes. Create unlimited tailored versions for different job applications. Each version is saved and accessible from your account for easy management."
   },
   {
     question: "What file formats are supported?",
-    answer: "We support PDF, DOCX, and TXT file formats for resume uploads. Your tailored resume can be downloaded in PDF or DOCX format for maximum compatibility with employer systems."
+    answer: "Upload PDF, DOCX, or TXT files. Download tailored resumes in PDF or DOCX format for maximum compatibility with employer ATS systems."
   },
   {
     question: "Does Tailer Resume store my personal information?",
-    answer: "Your resume data is encrypted and stored securely. You have full control to delete your data at any time from your account settings. We never share your information with third parties."
+    answer: "Your data is encrypted and stored securely. You control deletion from account settings. We never share information with third parties."
   },
   {
     question: "How accurate is the AI tailoring?",
-    answer: "Our AI has been trained on thousands of successful resumes and job descriptions, achieving 95% accuracy in keyword matching and relevance optimization. The system continuously learns from successful job applications."
+    answer: "Our AI achieves 95% accuracy in keyword matching, trained on thousands of successful resumes. The system continuously learns from successful applications."
   },
   {
     question: "Can I edit the AI-generated resume?",
-    answer: "Yes, you have full editing capabilities. The AI provides optimized suggestions, but you maintain complete control over the final content. Our editor allows you to customize every section of your tailored resume."
+    answer: "Yes. You have full editing control. The AI provides optimized suggestions, but you customize every section of your tailored resume."
   }
 ];
