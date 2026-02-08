@@ -96,6 +96,8 @@ export default function ResumeBuilder() {
         <FeedbackDialog
           onSubmit={(data) => console.log(data)}
           onClose={() => setShowFeedback(false)}
+          email={resume?.basics?.email}
+          name={resume?.basics?.name}
         />
       </Dialog>
       <Helmet>

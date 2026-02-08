@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { feedback } from '../services/resumeService.js';
 
-const FeedbackDialog = ({ onSubmit, onClose }) => {
+const FeedbackDialog = ({ onSubmit, onClose, email, name }) => {
   const [liked, setLiked] = useState(false);
   const [unLiked, setUnLiked] = useState(false)
   const [message, setMessage] = useState("");
   const [showThankYou, setShowThankYou] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleFeedbackSubmit = async () => {
     setTimeout(() => {
@@ -22,13 +23,17 @@ const FeedbackDialog = ({ onSubmit, onClose }) => {
   }
 
   const handleSubmit = async (e) => {
+    setIsSubmitting(true);
     e.preventDefault();
     const payload = {
       liked: liked,
       unLiked: unLiked,
-      message: message
+      message: message,
+      email: email,
+      name: name
     }
     await feedback(payload);
+    setIsSubmitting(false);
     setShowThankYou(true);
     handleFeedbackSubmit();
   };
@@ -77,19 +82,30 @@ const FeedbackDialog = ({ onSubmit, onClose }) => {
                 onChange={(e) => setMessage(e.target.value)}
                 placeholder="Write your feedback..."
               />
-
-              <button
-                type="submit"
-                className="bg-green-500 hover:bg-green-700 text-white py-2 rounded"
-              >
-                Submit
-              </button>
+              {
+                isSubmitting ? (
+                  <button
+                    type="submit"
+                    className="bg-green-500 hover:bg-green-700 text-white py-2 rounded"
+                    disabled
+                  >
+                    Submitting...
+                  </button>
+                ) : (
+                  <button
+                    type="submit"
+                    className="bg-green-500 hover:bg-green-700 text-white py-2 rounded"
+                  >
+                    Submit
+                  </button>
+                )
+              }
             </form>
           </div>
         )
       }
       {
-        showThankYou && 
+        showThankYou &&
         <div className="p-6 flex flex-col gap-4">
           <p className="text-center text-lg text-gray-700">Thank you for your valuable feedback!</p>
         </div>
