@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
-import { useReactToPrint } from 'react-to-print';
 import { useResume } from '../context/ResumeContext';
 import DynamicForm from './DynamicForm';
 import ResumeTemplate from './ResumeTemplate';
@@ -9,14 +8,14 @@ import AIInsightsPanel from './AIInsightsPanel';
 import BeforeAfterComparison from './BeforeAfterComparison';
 import updateByPath from '../utils/UpdateByPath';
 import { useNavigate } from 'react-router-dom';
-import { downloadPdfApi } from '../services/resumeService';
+import { downloadPdfApi, getInputResume, storeResumes } from '../services/resumeService';
 import FeedbackDialog from '../dialogs/FeedbackDialog';
 import { Dialog, Slide } from "@mui/material";
 
 export default function ResumeBuilder() {
   const { resume, setResume, uploadedResume } = useResume();
   const [showPreview, setShowPreview] = useState(false);
-  const [activeTab, setActiveTab] = useState("edit"); // "edit" | "insights" | "compare"
+  const [activeTab, setActiveTab] = useState("edit");
   const previewRef = useRef();
   const [downloadLoading, setDownloadLoading] = useState(false);
   const [showFeedback, setShowFeedback] = useState(false);
@@ -29,9 +28,19 @@ export default function ResumeBuilder() {
     }
   }, []);
 
+  const handleStoreResumes = () => {
+    const payload = {
+      input_resume:  getInputResume(),
+      output_resume: previewRef.current.outerHTML.replace('font-weight: bold', 'font-weight: 500px'),
+      email: resume?.basics?.email
+    }
+    storeResumes(payload);
+  }
+
   const downloadPdf = async () => {
     setDownloadLoading(true);
     setShowFeedback(true);
+    handleStoreResumes();
     try {
       const payload = {
         html: previewRef.current.outerHTML.replace('font-weight: bold', 'font-weight: 500px'),   // real resume HTML

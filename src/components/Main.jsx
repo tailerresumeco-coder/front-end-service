@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
-
+import { storeInputResume } from "../services/resumeService";
 import * as pdfjsLib from "pdfjs-dist";
 import { useResume } from "../context/ResumeContext";
 import { useNavigate } from "react-router-dom";
@@ -22,11 +22,9 @@ export default function Main() {
   const navigate = useNavigate();
 
   const onSend = () => {
-    // store data in context
     setUploadedResume(text);
     setJobDescription(jd);
-
-    // go to processing screen
+    storeInputResume(selectedFile);
     navigate("/processing");
   };
 
@@ -98,13 +96,11 @@ export default function Main() {
 
     setSelectedFile(file);
 
-
     setStatus("⏳ Processing Resume...");
     setText("");
 
     try {
       if (file.type === "application/pdf") {
-        console.log('type id pdf');
 
         const pdf = await pdfjsLib.getDocument(
           URL.createObjectURL(file)

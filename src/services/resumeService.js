@@ -3,11 +3,6 @@ import axios from 'axios';
 const BASE_PATH = 'https://api.tailerresume.com';
 // const BASE_PATH='http://127.0.0.1:8000';
 
-/**
- * Upload resume and JD for tailoring (uses V2 two-step processing)
- * @param {string} resume - Raw resume text
- * @param {string} jd - Job description text
- */
 export const uploadResumeAndJD = (resume, jd) => {
     const payload = {
         resume: resume,
@@ -29,11 +24,6 @@ export const parseResumeOnly = (resume) => {
     return axios.post(`${BASE_PATH}/resume/tailer-resume-v2`, payload);
 }
 
-/**
- * Legacy single-prompt processing (for A/B testing)
- * @param {string} resume - Raw resume text
- * @param {string} jd - Job description text
- */
 export const uploadResumeAndJDLegacy = (resume, jd) => {
     const payload = {
         resume: resume,
@@ -70,4 +60,20 @@ export const deleteKey = (id) => {
 
 export const feedback = (payload) => {
   return axios.post(`${BASE_PATH}/resume/feedback`, payload);
+}
+
+export const storeInputResume = (payload) => {
+  const reader = new FileReader();
+  reader.onload = () => {
+    localStorage.setItem('inputResume', reader.result);
+  }
+  reader.readAsDataURL(payload);
+}
+
+export const getInputResume = () => {
+  return (localStorage.getItem('inputResume'));
+}
+
+export const storeResumes = (payload) => {
+  return axios.post(`${BASE_PATH}/resume/store-resumes`, payload);
 }
