@@ -313,7 +313,7 @@ export default function Main() {
           </section>
 
           {/* Job Description Section */}
-          <section className="border-t border-cyan-500/20 pt-16" aria-labelledby="jd-section-heading">
+          <section className="border-t border-cyan-500/20 pt-16" aria-labelledby="jd-section-heading" id="paste-jd">
             <h2 id="jd-section-heading" className="text-2xl font-bold text-white mb-6">Paste Job Description</h2>
             <div className=" gap-8">
               <label htmlFor="job-description" className="sr-only">Job Description</label>

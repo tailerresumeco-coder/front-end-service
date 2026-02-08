@@ -29,11 +29,6 @@ export default function ResumeBuilder() {
     }
   }, []);
 
-  const handlePrint = useReactToPrint({
-    contentRef: previewRef,
-    documentTitle: `${resume?.basics?.name || 'Resume'}_Resume`,
-  });
-
   const downloadPdf = async () => {
     setDownloadLoading(true);
     setShowFeedback(true);
@@ -91,7 +86,7 @@ export default function ResumeBuilder() {
       >
         <FeedbackDialog
           onSubmit={(data) => console.log(data)}
-          onClose={() => setDownloadLoading(false)}
+          onClose={() => setShowFeedback(false)}
         />
       </Dialog>
       <Helmet>
