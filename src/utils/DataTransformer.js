@@ -73,7 +73,35 @@ export function transformBackendResponse(backendData) {
     ? tailored_content.certifications 
     : [];
 
+  // Transform internships (similar structure to experience)
+  const internships = (tailored_content.internships ?? [])
+    .map(intern => ({
+      role: intern.role ?? "",
+      company: intern.company ?? "",
+      location: intern.location ?? "",
+      dates: sanitizeDateString(intern.duration ?? intern.dates ?? ""),
+      highlights: Array.isArray(intern.responsibilities) ? intern.responsibilities : 
+                Array.isArray(intern.highlights) ? intern.highlights : []
+    }));
+
+  // Transform awards
+  const awards = (tailored_content.awards ?? [])
+    .map(award => ({
+      title: award.title ?? award.name ?? "",
+      issuer: award.issuer ?? award.organization ?? "",
+      date: award.date ?? "",
+      description: award.description ?? ""
+    }));
+
+  // Transform languages
+  const languages = (tailored_content.languages ?? [])
+    .map(lang => ({
+      language: lang.language ?? lang.name ?? "",
+      proficiency: lang.proficiency ?? lang.level ?? ""
+    }));
+
   const highlight_keywords = tailored_content.highlight_keywords || [];
+
 
   return {
     // Meta - Read-only
@@ -127,7 +155,11 @@ export function transformBackendResponse(backendData) {
     projects,
     skills,
     certifications,
+    internships,
+    awards,
+    languages,
     highlight_keywords
+
   };
 }
 function sanitizeDateString(dateStr) {
