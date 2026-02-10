@@ -1,5 +1,6 @@
 import React, { useMemo, useCallback, useState } from "react";
-import { ChevronDown, User, BookOpen, Briefcase, FolderOpen, Award } from 'lucide-react';
+import { ChevronDown, User, BookOpen, Briefcase, FolderOpen, Award, Medal, Globe } from 'lucide-react';
+
 import { FIELD_CONFIG, TEMPLATE_SECTIONS } from "../config/FieldConfig";
 
 /**
@@ -18,7 +19,11 @@ const SECTION_ICONS = {
   projects: FolderOpen,
   certifications: Award,
   skills: Award,
+  internships: Briefcase,
+  awards: Medal,
+  languages: Globe,
 };
+
 
 export default function DynamicForm({
   data,
@@ -627,8 +632,26 @@ function createEmptyItem(sectionKey) {
       category: "",
       items: []
     },
-    certifications: ""
+    certifications: "",
+    internships: {
+      role: "",
+      company: "",
+      location: "",
+      dates: "",
+      highlights: []
+    },
+    awards: {
+      title: "",
+      issuer: "",
+      date: "",
+      description: ""
+    },
+    languages: {
+      language: "",
+      proficiency: ""
+    }
   };
+
 
   const template = templates[sectionKey];
 

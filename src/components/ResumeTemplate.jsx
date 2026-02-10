@@ -31,7 +31,8 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
     window.location.href = `mailto:${resume.basics.email}`
   }
 
-  const { basics, education, experience, projects, skills, certifications } = resume;
+  const { basics, education, experience, projects, skills, certifications, internships, awards, languages } = resume;
+
 
   // Group experience entries by company to show them together
   const groupedExperience = groupExperienceByCompany(experience || []);
@@ -398,14 +399,102 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
                 <ul style={{ margin: "2px 0 0 0", paddingLeft: "20px", listStyleType: "disc" }}>
                   {certifications.map((cert, cidx) => (
                     <li key={cidx} style={{ margin: "1px 0", fontSize: "10px", lineHeight: lineHeight, paddingRight: "15px" }}>
-                      {cert}
+                      {cert.name} - {cert.issuing_organization} ({cert.date})
                     </li>
                   ))}
                 </ul>
               </div>
             )}
+
+            {/* INTERNSHIPS */}
+            {internships && internships.length > 0 && (
+              <div style={{ marginBottom: "10px" }}>
+                <h2 style={{
+                  fontSize: "14px",
+                  fontWeight: "bold",
+                  margin: "6px 0 4px 0",
+                  borderBottom: "1px solid #000",
+                  paddingBottom: "2px"
+                }}>
+                  INTERNSHIPS
+                </h2>
+                {internships.map((intern, iidx) => (
+                  <div key={iidx} style={{ marginBottom: "6px" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", margin: "0 0 2px 0" }}>
+                      <span style={{ fontWeight: "bold", fontSize: "12px" }}>
+                        {intern.role || ""} | {intern.company || ""}
+                        {intern.location && `, ${intern.location}`}
+                      </span>
+                      <span style={{ fontSize: "12px", fontWeight: "bold" }}>{intern.dates || ""}</span>
+                    </div>
+                    {intern.highlights && intern.highlights.length > 0 && (
+                      <ul style={{ margin: "2px 0 0 0", paddingLeft: "20px", listStyleType: "disc" }}>
+                        {intern.highlights.map((h, hidx) => (
+                          <li key={hidx} style={{ margin: "1px 0", fontSize: "12px", lineHeight: lineHeight, paddingRight: "15px" }}>
+                            {highlightText(h)}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* AWARDS */}
+            {awards && awards.length > 0 && (
+              <div style={{ marginBottom: "10px" }}>
+                <h2 style={{
+                  fontSize: "14px",
+                  fontWeight: "bold",
+                  margin: "6px 0 4px 0",
+                  borderBottom: "1px solid #000",
+                  paddingBottom: "2px"
+                }}>
+                  AWARDS & HONORS
+                </h2>
+                <ul style={{ margin: "2px 0 0 0", paddingLeft: "20px", listStyleType: "disc" }}>
+                  {awards.map((award, aidx) => (
+                    <li key={aidx} style={{ margin: "1px 0", fontSize: "12px", lineHeight: lineHeight, paddingRight: "15px" }}>
+                      <strong>{award.title}</strong> - {award.issuer}
+                      {award.date && ` (${award.date})`}
+                      {award.description && (
+                        <span style={{ display: "block", marginTop: "2px", fontSize: "11px" }}>
+                          {award.description}
+                        </span>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {/* LANGUAGES */}
+            {languages && languages.length > 0 && (
+              <div style={{ marginBottom: "10px" }}>
+                <h2 style={{
+                  fontSize: "14px",
+                  fontWeight: "bold",
+                  margin: "6px 0 4px 0",
+                  borderBottom: "1px solid #000",
+                  paddingBottom: "2px"
+                }}>
+                  LANGUAGES
+                </h2>
+                <div style={{ fontSize: "12px" }}>
+                  {languages.map((lang, lidx) => (
+                    <span key={lidx}>
+                      <strong>{lang.language}</strong>
+                      {lang.proficiency && ` (${lang.proficiency})`}
+                      {lidx < languages.length - 1 ? " • " : ""}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
           </>
         ) : (
+
           <>
             {/* EDUCATION */}
             {education && education.length > 0 && (
@@ -490,14 +579,102 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
                 <ul style={{ margin: "2px 0 0 0", paddingLeft: "20px", listStyleType: "disc" }}>
                   {certifications.map((cert, cidx) => (
                     <li key={cidx} style={{ margin: "1px 0", fontSize: "10px", lineHeight: lineHeight, paddingRight: "15px" }}>
-                      {cert}
+                      {cert.name} - {cert.issuing_organization} ({cert.date})
                     </li>
                   ))}
                 </ul>
               </div>
             )}
+
+            {/* INTERNSHIPS */}
+            {internships && internships.length > 0 && (
+              <div style={{ marginBottom: "10px" }}>
+                <h2 style={{
+                  fontSize: "14px",
+                  fontWeight: "bold",
+                  margin: "6px 0 4px 0",
+                  borderBottom: "1px solid #000",
+                  paddingBottom: "2px"
+                }}>
+                  INTERNSHIPS
+                </h2>
+                {internships.map((intern, iidx) => (
+                  <div key={iidx} style={{ marginBottom: "6px" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", margin: "0 0 2px 0" }}>
+                      <span style={{ fontWeight: "bold", fontSize: "12px" }}>
+                        {intern.role || ""} | {intern.company || ""}
+                        {intern.location && `, ${intern.location}`}
+                      </span>
+                      <span style={{ fontSize: "12px", fontWeight: "bold" }}>{intern.dates || ""}</span>
+                    </div>
+                    {intern.highlights && intern.highlights.length > 0 && (
+                      <ul style={{ margin: "2px 0 0 0", paddingLeft: "20px", listStyleType: "disc" }}>
+                        {intern.highlights.map((h, hidx) => (
+                          <li key={hidx} style={{ margin: "1px 0", fontSize: "12px", lineHeight: lineHeight, paddingRight: "15px" }}>
+                            {highlightText(h)}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* AWARDS */}
+            {awards && awards.length > 0 && (
+              <div style={{ marginBottom: "10px" }}>
+                <h2 style={{
+                  fontSize: "14px",
+                  fontWeight: "bold",
+                  margin: "6px 0 4px 0",
+                  borderBottom: "1px solid #000",
+                  paddingBottom: "2px"
+                }}>
+                  AWARDS & HONORS
+                </h2>
+                <ul style={{ margin: "2px 0 0 0", paddingLeft: "20px", listStyleType: "disc" }}>
+                  {awards.map((award, aidx) => (
+                    <li key={aidx} style={{ margin: "1px 0", fontSize: "12px", lineHeight: lineHeight, paddingRight: "15px" }}>
+                      <strong>{award.title}</strong> - {award.issuer}
+                      {award.date && ` (${award.date})`}
+                      {award.description && (
+                        <span style={{ display: "block", marginTop: "2px", fontSize: "11px" }}>
+                          {award.description}
+                        </span>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {/* LANGUAGES */}
+            {languages && languages.length > 0 && (
+              <div style={{ marginBottom: "10px" }}>
+                <h2 style={{
+                  fontSize: "14px",
+                  fontWeight: "bold",
+                  margin: "6px 0 4px 0",
+                  borderBottom: "1px solid #000",
+                  paddingBottom: "2px"
+                }}>
+                  LANGUAGES
+                </h2>
+                <div style={{ fontSize: "12px" }}>
+                  {languages.map((lang, lidx) => (
+                    <span key={lidx}>
+                      <strong>{lang.language}</strong>
+                      {lang.proficiency && ` (${lang.proficiency})`}
+                      {lidx < languages.length - 1 ? " • " : ""}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
           </>
         )}
+
       </div>
     </div>
   );
