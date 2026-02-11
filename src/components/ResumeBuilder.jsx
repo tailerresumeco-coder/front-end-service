@@ -25,6 +25,9 @@ export default function ResumeBuilder() {
   useEffect(() => {
     if ((resume && resume.length === 0) || !resume) {
       navigate("/generate");
+      console.warn("No resume data found, redirecting to /generate");
+    } else {
+      handleStoreResumes();
     }
   }, []);
 
@@ -40,7 +43,6 @@ export default function ResumeBuilder() {
   const downloadPdf = async () => {
     setDownloadLoading(true);
     setShowFeedback(true);
-    handleStoreResumes();
     try {
       const payload = {
         html: previewRef.current.outerHTML.replace('font-weight: bold', 'font-weight: 500px'),   // real resume HTML

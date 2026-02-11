@@ -6,7 +6,7 @@ import '../components/styles.css';
  * FIXED: Safely handles missing dates and prevents .trim() errors
  */
 const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
-  
+
   if (!resume?.basics) {
     return (
       <div ref={ref} style={{ padding: "40px", textAlign: "center", color: "#999" }}>
@@ -21,8 +21,9 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
 
   if (resume?._metadata?.charecterLength <= 5000) {
     lineHeight = "1.9";
+  } else if (resume?._metadata?.charecterLength <= 6500) {
+    lineHeight = "1.6";
   }
-
 
   const zoomRef = useRef(null);
   const [highlightSkills, setHighlightSkills] = useState();
@@ -166,7 +167,7 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
             {basics.name || "Your Name"}
           </h1>
 
-          <div style={{ fontSize: "14px", display: "flex", gap: "3px", flexWrap: "wrap", justifyContent: "center", margin: "4px 0 0 0" }}>
+          <div style={{ fontSize: "14px", display: "flex", gap: "3px", flexWrap: "wrap", justifyContent: "center", margin: "4px 0 0 0", marginBottom: "8px" }}>
             {basics.phone && <a href={`tel:${basics.phone}`} className="hyperlink"> {basics.phone} </a>}
             {basics.phone && basics.email && <span>|</span>}
             {basics.email && <a href={`mailto:${basics.email}`} className="hyperlink"> {basics.email} </a>}
@@ -384,28 +385,6 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
               </div>
             )}
 
-            {/* CERTIFICATIONS */}
-            {certifications && certifications.length > 0 && (
-              <div style={{ marginBottom: "10px" }}>
-                <h2 style={{
-                  fontSize: "14px",
-                  fontWeight: "bold",
-                  margin: "6px 0 4px 0",
-                  borderBottom: "1px solid #000",
-                  paddingBottom: "2px"
-                }}>
-                  CERTIFICATIONS
-                </h2>
-                <ul style={{ margin: "2px 0 0 0", paddingLeft: "20px", listStyleType: "disc" }}>
-                  {certifications.map((cert, cidx) => (
-                    <li key={cidx} style={{ margin: "1px 0", fontSize: "10px", lineHeight: lineHeight, paddingRight: "15px" }}>
-                      {cert.name} - {cert.issuing_organization} ({cert.date})
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
             {/* INTERNSHIPS */}
             {internships && internships.length > 0 && (
               <div style={{ marginBottom: "10px" }}>
@@ -438,6 +417,34 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
                     )}
                   </div>
                 ))}
+              </div>
+            )}
+
+            {/* CERTIFICATIONS */}
+            {certifications && certifications.length > 0 && (
+              <div style={{ marginBottom: "10px" }}>
+                <h2 style={{
+                  fontSize: "14px",
+                  fontWeight: "bold",
+                  margin: "6px 0 4px 0",
+                  borderBottom: "1px solid #000",
+                  paddingBottom: "2px"
+                }}>
+                  CERTIFICATIONS
+                </h2>
+                <ul style={{ margin: "2px 0 0 0", paddingLeft: "20px", listStyleType: "disc" }}>
+                  {certifications.map((cert, cidx) => (
+                    <li key={cidx} style={{ margin: "1px 0", fontSize: "12px", lineHeight: lineHeight, paddingRight: "15px" }}>
+                      <strong>{cert.name}</strong> - {cert.issuing_organization}
+                      {cert.date && ` (${cert.date})`}
+                      {cert.description && (
+                        <span style={{ display: "block", marginTop: "2px", fontSize: "11px" }}>
+                          {cert.description}
+                        </span>
+                      )}
+                    </li>
+                  ))}
+                </ul>
               </div>
             )}
 
