@@ -4,10 +4,12 @@ import { useNavigate } from "react-router-dom";
 import { useResume } from "../context/ResumeContext";
 import { uploadResumeAndJD, uploadResumeAndJDLegacy } from "../services/resumeService";
 import { transformBackendResponse, isResumeValid } from "../utils/DataTransformer";
+import { getInputResume } from "../services/resumeService";
 
 export default function ProcessingScreen() {
   const navigate = useNavigate();
-  const { setResume, setGeneratedResume, uploadedResume, jobDescription } = useResume();
+  const { setResume, setGeneratedResume, jobDescription } = useResume();
+  const [uploadedResume, setUploadedResume] = useState(getInputResume());
 
   const [error, setError] = useState(null);
   const [progress, setProgress] = useState(0);
