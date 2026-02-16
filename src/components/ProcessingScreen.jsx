@@ -1,17 +1,23 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Helmet } from "react-helmet-async";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useResume } from "../context/ResumeContext";
-import { uploadResumeAndJD, uploadResumeAndJDLegacy } from "../services/resumeService";
+import { uploadResumeAndJD, uploadResumeAndJDLegacy, checkATSScore } from "../services/resumeService";
 import { transformBackendResponse, isResumeValid } from "../utils/DataTransformer";
+
 
 export default function ProcessingScreen() {
   const navigate = useNavigate();
-  const { setResume, setGeneratedResume, uploadedResume, jobDescription } = useResume();
+  const location = useLocation();
+  const { setResume, setGeneratedResume, uploadedResume, jobDescription, setATSScoreData } = useResume();
 
   const [error, setError] = useState(null);
   const [progress, setProgress] = useState(0);
   const apiCalledRef = useRef(false);
+  
+  // Get mode from navigation state (default to 'tailor')
+  const mode = location.state?.mode || 'tailor';
+
 
   // Immediate redirect if missing data
   useEffect(() => {
@@ -70,34 +76,58 @@ const startAdaptiveProgress = () => {
         const controller = new AbortController();
         timeoutId = setTimeout(() => controller.abort(), 90000);
 
-        const response = await uploadResumeAndJDLegacy(uploadedResume, jobDescription, {
-          signal: controller.signal,
-        });
-        console.log("📥 Backend response received",response);
+        let response;
+        
+        if (mode === 'ats-check') {
+          // Call ATS score check API
+          response = await checkATSScore(uploadedResume, jobDescription, {
+            signal: controller.signal,
+          });
+          console.log("📥 ATS Score response received", response);
+          
+          clearInterval(animationInterval);
+          clearTimeout(timeoutId);
+          
+          // Store ATS score data in context
+          setATSScoreData(response.data.data);
+          
+          // Quick final fill to 100%
+          setProgress(100);
+          
+          // Navigate to ATS score result screen
+          setTimeout(() => {
+            navigate("/ats-score-result");
+          }, 600);
+        } else {
+          // Call full tailor API (existing behavior)
+          response = await uploadResumeAndJDLegacy(uploadedResume, jobDescription, {
+            signal: controller.signal,
+          });
+          console.log("📥 Backend response received", response);
 
-        clearInterval(animationInterval);
-        clearTimeout(timeoutId);
+          clearInterval(animationInterval);
+          clearTimeout(timeoutId);
 
-        console.log("📥 Backend response received");
+          const transformedResume = transformBackendResponse(response.data.data);
 
-        const transformedResume = transformBackendResponse(response.data.data);
+          if (!isResumeValid(transformedResume)) {
+            console.error("❌ Validation failed", transformedResume);
+            setError("Generated resume is incomplete. Please try again.");
+            return;
+          }
 
-        if (!isResumeValid(transformedResume)) {
-          console.error("❌ Validation failed", transformedResume);
-          setError("Generated resume is incomplete. Please try again.");
-          return;
+          // Quick final fill to 100%
+          setProgress(100);
+
+          setResume(transformedResume);
+          setGeneratedResume(transformedResume);
+
+          // Let user see 100% for a moment
+          setTimeout(() => {
+            navigate("/resume-builder");
+          }, 600);
         }
 
-        // Quick final fill to 100%
-        setProgress(100);
-
-        setResume(transformedResume);
-        setGeneratedResume(transformedResume);
-
-        // Let user see 100% for a moment
-        setTimeout(() => {
-          navigate("/resume-builder");
-        }, 600);
 
       } catch (err) {
         clearInterval(animationInterval);
@@ -132,11 +162,12 @@ const startAdaptiveProgress = () => {
           <h2 className="text-2xl font-bold mb-4 text-red-600">Processing Failed</h2>
           <p className="text-gray-700 mb-8 leading-relaxed">{error}</p>
           <button
-            onClick={() => navigate("/generate")}
+            onClick={() => navigate(mode === 'ats-check' ? "/ats-score" : "/tailor-resume")}
             className="bg-blue-600 text-white px-8 py-3 rounded-lg text-lg hover:bg-blue-700 transition"
           >
             Try Again
           </button>
+
         </div>
       </div>
     </>

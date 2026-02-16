@@ -78,15 +78,23 @@ export default function LandingPage() {
               </p>
 
               {/* Buttons */}
-              <div className="flex gap-4">
+              <div className="flex flex-col sm:flex-row gap-4">
                 <Link 
-                  to="/generate" 
-                  className="px-8 py-3 bg-gradient-to-r from-brand-primary to-brand-secondary rounded-button font-semibold hover:shadow-lg hover:shadow-brand-primary/50 transition transform hover:scale-105 inline-block"
+                  to="/tailor-resume" 
+                  className="px-8 py-3 bg-gradient-to-r from-brand-primary to-brand-secondary rounded-button font-semibold hover:shadow-lg hover:shadow-brand-primary/50 transition transform hover:scale-105 inline-block text-center"
                   aria-label="Start tailoring your resume with AI"
                 >
                   Tailor my Resume
                 </Link>
+                <Link 
+                  to="/ats-score" 
+                  className="px-8 py-3 bg-gradient-to-r from-cyan-600 to-blue-600 rounded-button font-semibold hover:shadow-lg hover:shadow-cyan-500/50 transition transform hover:scale-105 inline-block text-center text-white"
+                  aria-label="Check your resume ATS score"
+                >
+                  Check ATS Score
+                </Link>
               </div>
+
             </article>
 
             {/* Right Side - Animated Background */}
@@ -212,11 +220,13 @@ export default function LandingPage() {
                 <h4 className="text-badge font-semibold text-text-primary mb-4">Quick Links</h4>
                 <ul className="space-y-2">
                   <li><Link to="/" className="text-text-secondary hover:text-brand-primary transition">Home</Link></li>
-                  <li><Link to="/generate" className="text-text-secondary hover:text-brand-primary transition">AI Resume Generator</Link></li>
+                  <li><Link to="/tailor-resume" className="text-text-secondary hover:text-brand-primary transition">Tailor Resume</Link></li>
+                  <li><Link to="/ats-score" className="text-text-secondary hover:text-brand-primary transition">Check ATS Score</Link></li>
                   <li><Link to="/how-to-tailor-resume" className="text-text-secondary hover:text-brand-primary transition">How to Tailor Resume</Link></li>
                   <li><Link to="/ats-optimization-guide" className="text-text-secondary hover:text-brand-primary transition">ATS Optimization Guide</Link></li>
                 </ul>
               </nav>
+
               <nav aria-label="Resources">
                 <h4 className="text-badge font-semibold text-text-primary mb-4">Resources</h4>
                 <ul className="space-y-2">

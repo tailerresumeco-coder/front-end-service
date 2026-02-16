@@ -8,6 +8,8 @@ export function ResumeProvider({ children }) {
   const [jobDescription, setJobDescription] = useState("");
   const [selectedFormat, setSelectedFormat] = useState("pdf");
   const [generatedResume, setGeneratedResume] = useState(null);
+  const [atsScoreData, setATSScoreData] = useState(null);
+
 
   return (
     <ResumeContext.Provider
@@ -21,7 +23,10 @@ export function ResumeProvider({ children }) {
         selectedFormat,
         setSelectedFormat,
         generatedResume,
-        setGeneratedResume
+        setGeneratedResume,
+        atsScoreData,
+        setATSScoreData
+
       }}
     >
       {children}
