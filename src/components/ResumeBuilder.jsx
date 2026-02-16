@@ -24,7 +24,8 @@ export default function ResumeBuilder() {
 
   useEffect(() => {
     if ((resume && resume.length === 0) || !resume) {
-      navigate("/generate");
+      navigate("/tailor-resume");
+
       console.warn("No resume data found, redirecting to /generate");
     } else {
       handleStoreResumes();

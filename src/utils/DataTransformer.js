@@ -9,7 +9,16 @@ export function transformBackendResponse(backendData) {
     throw new Error("Backend data is empty");
   }
 
+  // Check if using new response structure (tailored_resume) or old structure (tailored_content)
+  const isNewStructure = backendData.tailored_resume !== undefined;
+  
+  if (isNewStructure) {
+    return transformNewStructure(backendData);
+  }
+
+  // Legacy structure handling
   const { basic = {}, ats_score = {}, gap_analysis = {}, tailored_content = {}, _validation = {}, change_summary = {} } = backendData;
+
 
   // Extract links from nested structure
   const links = basic.links ?? {};
@@ -108,6 +117,8 @@ export function transformBackendResponse(backendData) {
     _metadata: {
       atsScoreBefore: ats_score.before_tailoring ?? null,
       atsScoreAfter: ats_score.after_tailoring ?? null,
+      atsOverallScore: ats_score.overall_score ?? null,
+      atsBreakdown: ats_score.breakdown ?? {},
       atsExplanation: ats_score.score_explanation ?? "",
       keywordAdditions: {
         addedSkills: ats_score.keyword_additions?.added_skills ?? [],
@@ -117,8 +128,17 @@ export function transformBackendResponse(backendData) {
         missingTechnicalSkills: gap_analysis.missing_technical_skills ?? [],
         missingCertificationsOrEducation: gap_analysis.missing_certifications_or_education ?? [],
         experienceGap: gap_analysis.experience_gap ?? "",
-        relatedSkillsFound: gap_analysis.related_skills_found ?? []
+        relatedSkillsFound: gap_analysis.related_skills_found ?? [],
+        // New structure fields
+        missingCriticalSkills: gap_analysis.missing_critical_skills ?? [],
+        missingPreferredSkills: gap_analysis.missing_preferred_skills ?? [],
+        presentSkills: gap_analysis.present_skills ?? [],
+        transferableSkills: gap_analysis.transferable_skills ?? []
       },
+      recommendations: backendData.recommendations ?? {},
+      keywordOptimization: backendData.keyword_optimization ?? {},
+      nextSteps: backendData.next_steps ?? [],
+
       // V2 validation data
       validation: {
         inputBulletCount: _validation.input_bullet_count ?? null,
@@ -162,6 +182,191 @@ export function transformBackendResponse(backendData) {
 
   };
 }
+
+/**
+ * Transform new backend response structure to internal resume format
+ * Handles the new response with tailored_resume, recommendations, keyword_optimization, next_steps
+ */
+function transformNewStructure(backendData) {
+  const { 
+    ats_score = {}, 
+    gap_analysis = {}, 
+    recommendations = {},
+    tailored_resume = {},
+    keyword_optimization = {},
+    next_steps = []
+  } = backendData;
+
+  // Extract header info
+  const header = tailored_resume.header ?? {};
+  
+  // Transform technical_skills object to array format
+  const skills = transformTechnicalSkills(tailored_resume.technical_skills ?? {});
+
+  // Transform professional_experience with NESTED PROJECTS
+  const experience = (tailored_resume.professional_experience ?? [])
+    .map(exp => {
+      // Check if this experience has nested projects array
+      if (exp.projects && Array.isArray(exp.projects) && exp.projects.length > 0) {
+        // Has nested projects - flatten them into separate experience entries
+        return exp.projects.map(project => ({
+          role: exp.title ?? "",
+          company: exp.company ?? "",
+          location: exp.location ?? "",
+          // Use project duration if available, fall back to parent experience duration
+          dates: sanitizeDateString(project.duration ?? exp.duration ?? ""),
+          projectName: project.name ?? "",
+          // Extract technologies from project if available
+          technologies: Array.isArray(project.technologies) ? project.technologies : 
+                       typeof project.technologies === 'string' ? project.technologies.split(',').map(t => t.trim()) : [],
+          highlights: Array.isArray(project.achievements) ? project.achievements : [],
+          _parentDuration: sanitizeDateString(exp.duration ?? "")
+        }));
+      } else {
+        // No nested projects - single entry per experience
+        return {
+          role: exp.title ?? "",
+          company: exp.company ?? "",
+          location: exp.location ?? "",
+          dates: sanitizeDateString(exp.duration ?? ""),
+          projectName: "",
+          technologies: [],
+          highlights: Array.isArray(exp.achievements) ? exp.achievements : [],
+          _parentDuration: sanitizeDateString(exp.duration ?? "")
+        };
+      }
+    })
+    .flat(); // Flatten array in case of nested projects
+
+
+  // Transform projects
+  const projects = (tailored_resume.projects ?? []).map(proj => ({
+    name: proj.name ?? "",
+    technologies: Array.isArray(proj.technologies) ? proj.technologies : 
+                 typeof proj.technologies === 'string' ? [proj.technologies] : [],
+    highlights: Array.isArray(proj.description) ? proj.description : []
+  }));
+
+  // Transform education
+  const education = (tailored_resume.education ?? []).map(edu => ({
+    degree: edu.degree ?? "",
+    institution: edu.institution ?? "",
+    dates: edu.duration ?? "",
+    gpa: edu.gpa ? parseFloat(edu.gpa) : 0
+  }));
+
+  // Transform certifications
+  const certifications = (tailored_resume.certifications ?? []).map(cert => ({
+    name: cert.name ?? "",
+    issuing_organization: cert.issuing_organization ?? "",
+    date: cert.date ?? ""
+  }));
+
+  // Handle awards if present
+  const awards = (tailored_resume.awards ?? []).map(award => ({
+    title: award.title ?? "",
+    issuer: award.organization ?? "",
+    date: award.date ?? "",
+    description: award.description ?? ""
+  }));
+
+  // Handle languages if present
+  const languages = (tailored_resume.languages ?? []).map(lang => ({
+    language: lang.language ?? "",
+    proficiency: lang.proficiency ?? ""
+  }));
+
+  // Handle internships if present
+  const internships = (tailored_resume.internships ?? []).map(intern => ({
+    role: intern.title ?? "",
+    company: intern.company ?? "",
+    location: intern.location ?? "",
+    dates: sanitizeDateString(intern.duration ?? ""),
+    highlights: Array.isArray(intern.achievements) ? intern.achievements : []
+  }));
+
+  return {
+    _metadata: {
+      atsScoreBefore: ats_score.before_tailoring ?? null,
+      atsScoreAfter: ats_score.after_tailoring ?? null,
+      atsOverallScore: ats_score.overall_score ?? null,
+      atsBreakdown: ats_score.breakdown ?? {},
+      atsExplanation: ats_score.score_explanation ?? "",
+      keywordAdditions: {
+        addedSkills: keyword_optimization.critical_keywords_added ?? [],
+        reasoning: ""
+      },
+      gapAnalysis: {
+        missingTechnicalSkills: gap_analysis.missing_critical_skills ?? [],
+        missingCertificationsOrEducation: [],
+        experienceGap: "",
+        relatedSkillsFound: gap_analysis.transferable_skills ?? [],
+        missingCriticalSkills: gap_analysis.missing_critical_skills ?? [],
+        missingPreferredSkills: gap_analysis.missing_preferred_skills ?? [],
+        presentSkills: gap_analysis.present_skills ?? [],
+        transferableSkills: gap_analysis.transferable_skills ?? []
+      },
+      recommendations: recommendations,
+      keywordOptimization: keyword_optimization,
+      nextSteps: next_steps,
+      validation: {
+        inputBulletCount: null,
+        outputBulletCount: null,
+        dataIntegrityVerified: true,
+        warnings: []
+      },
+      changeSummary: {
+        totalModifications: 0,
+        summaryChanges: "",
+        experienceModifications: [],
+        skillsChanges: [],
+        keywordsInjected: []
+      },
+      charecterLength: backendData ? JSON.stringify(backendData).length : 0
+    },
+
+    basics: {
+      name: header.name ?? "",
+      email: header.email ?? "",
+      phone: header.phone ?? "",
+      location: header.location ?? "",
+      summary: tailored_resume.professional_summary ?? "",
+      github: header.github ?? "",
+      leetcode: "",
+      linkedin: header.linkedin ?? "",
+      other: ""
+    },
+
+    education,
+    experience,
+    projects,
+    skills,
+    certifications,
+    internships,
+    awards,
+    languages,
+    highlight_keywords: keyword_optimization.critical_keywords_added ?? []
+  };
+}
+
+/**
+ * Transform technical_skills object to array format
+ * Input: { "Frontend Technologies": ["React", "HTML"], "Backend Technologies": ["Node.js"] }
+ * Output: [{ category: "Frontend Technologies", items: ["React", "HTML"] }, ...]
+ */
+function transformTechnicalSkills(technicalSkills) {
+  if (!technicalSkills || typeof technicalSkills !== 'object') {
+    return [];
+  }
+
+  return Object.entries(technicalSkills)
+    .filter(([category, items]) => Array.isArray(items) && items.length > 0)
+    .map(([category, items]) => ({
+      category: category,
+      items: items
+    }));
+}
+
 function sanitizeDateString(dateStr) {
   if (!dateStr) return "";
   if (typeof dateStr !== 'string') return String(dateStr);

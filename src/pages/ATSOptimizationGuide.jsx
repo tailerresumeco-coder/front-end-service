@@ -79,7 +79,8 @@ export default function ATSOptimizationGuide() {
             </div>
             <nav aria-label="Main navigation" className="flex gap-8">
               <Link to="/" className="text-text-secondary hover:text-brand-primary text-badge font-medium transition">Home</Link>
-              <Link to="/generate" className="text-text-secondary hover:text-brand-primary text-badge font-medium transition">Tailor Resume</Link>
+              <Link to="/tailor-resume" className="text-text-secondary hover:text-brand-primary text-badge font-medium transition">Tailor Resume</Link>
+
             </nav>
           </div>
         </header>
@@ -216,11 +217,12 @@ export default function ATSOptimizationGuide() {
                   Upload your resume and job description to get an instant ATS optimization report. See exactly how to improve your resume.
                 </p>
                 <Link 
-                  to="/generate"
+                  to="/tailor-resume"
                   className="inline-block px-8 py-4 bg-gradient-to-r from-brand-primary to-brand-secondary rounded-button font-semibold hover:shadow-lg hover:shadow-brand-primary/50 transition transform hover:scale-105"
                 >
                   Check My Resume →
                 </Link>
+
               </div>
             </section>
 
@@ -237,13 +239,14 @@ export default function ATSOptimizationGuide() {
                   <h3 className="font-semibold text-text-primary group-hover:text-brand-primary transition">How to Tailor Your Resume</h3>
                   <p className="text-text-muted text-sm mt-1">Step-by-step guide to customizing your resume for any job</p>
                 </Link>
-                <a 
-                  href="/resume-statistics"
+                <Link 
+                  to="/ats-score"
                   className="p-4 bg-surface-dark/50 rounded-lg border border-border-primary hover:border-brand-primary transition group"
                 >
-                  <h3 className="font-semibold text-text-primary group-hover:text-brand-primary transition">Resume Statistics 2025</h3>
-                  <p className="text-text-muted text-sm mt-1">Data-driven insights on resume success rates</p>
-                </a>
+                  <h3 className="font-semibold text-text-primary group-hover:text-brand-primary transition">Check ATS Score</h3>
+                  <p className="text-text-muted text-sm mt-1">See how well your resume matches job descriptions</p>
+                </Link>
+
               </div>
             </section>
           </article>
@@ -266,7 +269,8 @@ export default function ATSOptimizationGuide() {
                 <h4 className="text-badge font-semibold text-text-primary mb-4">Quick Links</h4>
                 <ul className="space-y-2">
                   <li><Link to="/" className="text-text-secondary hover:text-brand-primary transition">Home</Link></li>
-                  <li><Link to="/generate" className="text-text-secondary hover:text-brand-primary transition">AI Resume Generator</Link></li>
+                  <li><Link to="/tailor-resume" className="text-text-secondary hover:text-brand-primary transition">AI Resume Generator</Link></li>
+
                   <li><Link to="/how-to-tailor-resume" className="text-text-secondary hover:text-brand-primary transition">How to Tailor Resume</Link></li>
                   <li><Link to="/ats-optimization-guide" className="text-text-secondary hover:text-brand-primary transition">ATS Optimization Guide</Link></li>
                 </ul>

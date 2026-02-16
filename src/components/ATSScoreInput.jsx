@@ -6,12 +6,11 @@ import * as pdfjsLib from "pdfjs-dist";
 import { useResume } from "../context/ResumeContext";
 import { useNavigate } from "react-router-dom";
 import mammoth from "mammoth";
-import HowToGuide, { resumeTailoringSteps } from "./HowToGuide";
 
 // Set PDF.js worker
 pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
 
-export default function Main() {
+export default function ATSScoreInput() {
   const [text, setText] = useState("");
   const [status, setStatus] = useState("");
   const [jd, setJd] = useState("");
@@ -28,11 +27,8 @@ export default function Main() {
     setUploadedResume(resumeData);
     setJobDescription(jd);
     storeInputResume(selectedFile);
-    navigate("/processing", { state: { mode: 'tailor' } });
-
-
+    navigate("/processing", { state: { mode: 'ats-check' } });
   };
-
 
 
   const handleDragOver = (e) => {
@@ -61,25 +57,9 @@ export default function Main() {
     }
   };
 
-  const fileToBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        resolve(reader.result);
-      };
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    });
-  };
-
   const validateJD = (value) => {
-
     if (!value.trim()) {
       return "Job description cannot be empty";
-    }
-
-    if (value === '###') {
-      return false;
     }
 
     if (value.trim().length < 100) {
@@ -111,6 +91,17 @@ export default function Main() {
     return "";
   };
 
+  const fileToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        resolve(reader.result);
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  };
+
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -126,7 +117,6 @@ export default function Main() {
       setBase64File(base64);
 
       if (file.type === "application/pdf") {
-
 
         const pdf = await pdfjsLib.getDocument(
           URL.createObjectURL(file)
@@ -171,8 +161,9 @@ export default function Main() {
         setStatus("✅ Resume scanned successfully");
         scrollToPasteJd();
       } else if (file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document") {
-        const arrayBuffer = await file.arrayBuffer();
+        console.log('type is docx');
 
+        const arrayBuffer = await file.arrayBuffer();
         const result = await mammoth.extractRawText({ arrayBuffer });
 
         if (!result.value.trim()) {
@@ -187,27 +178,26 @@ export default function Main() {
         setStatus("❌ Unsupported file format");
       }
     } catch (err) {
-      setStatus("❌ Failed to process Resume");
+      console.error(err);
+      setStatus("❌ Failed to process Resume", err);
+      console.log('errr', err);
     }
-
   };
 
   return (
     <>
       <Helmet>
-        <title>How to Tailor Your Resume for ATS | Upload & Optimize</title>
-        <meta name="description" content="Upload your resume and job description to get an ATS-optimized, tailored resume in 30 seconds. AI-powered keyword matching and formatting for maximum interview chances." />
-        <link rel="canonical" href="https://tailerresume.com/tailor-resume" />
-
-        <meta property="og:title" content="How to Tailor Your Resume for ATS | Upload & Optimize" />
-        <meta property="og:description" content="Upload your resume and job description to get an ATS-optimized, tailored resume in 30 seconds. AI-powered keyword matching." />
-        <meta property="og:url" content="https://tailerresume.com/tailor-resume" />
-
+        <title>Check Your Resume ATS Score | Free ATS Scanner</title>
+        <meta name="description" content="Check how well your resume matches the job description. Get your ATS score instantly and see what keywords you're missing." />
+        <link rel="canonical" href="https://tailerresume.com/ats-score" />
+        <meta property="og:title" content="Check Your Resume ATS Score | Free ATS Scanner" />
+        <meta property="og:description" content="Check how well your resume matches the job description. Get your ATS score instantly." />
+        <meta property="og:url" content="https://tailerresume.com/ats-score" />
         <meta property="og:type" content="website" />
         <meta property="og:image" content="https://tailerresume.com/tailer-resume-logo-1.svg" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="How to Tailor Your Resume for ATS | Upload & Optimize" />
-        <meta name="twitter:description" content="Upload your resume and job description to get an ATS-optimized, tailored resume in 30 seconds." />
+        <meta name="twitter:title" content="Check Your Resume ATS Score | Free ATS Scanner" />
+        <meta name="twitter:description" content="Check how well your resume matches the job description. Get your ATS score instantly." />
         <meta name="twitter:image" content="https://tailerresume.com/tailer-resume-logo-1.svg" />
       </Helmet>
       <div className="min-h-screen bg-gradient-to-br from-surface-dark via-surface-dark-mid to-brand-secondary-dark">
@@ -223,10 +213,11 @@ export default function Main() {
               <div className="w-10 h-10 rounded-dot border-2 border-brand-primary flex items-center justify-center" aria-hidden="true">
                 <div className="w-6 h-6 rounded-dot bg-brand-primary"></div>
               </div>
-              <h1 className="text-nav font-bold text-text-primary">Tailor Resume</h1>
+              <h1 className="text-nav font-bold text-text-primary">Check ATS Score</h1>
             </div>
             <nav aria-label="Main navigation" className="flex gap-8">
               <Link to="/" className="text-text-secondary hover:text-brand-primary text-badge font-medium transition">Home</Link>
+              <Link to="/tailor-resume" className="text-text-secondary hover:text-brand-primary text-badge font-medium transition">Tailor Resume</Link>
             </nav>
           </div>
         </header>
@@ -235,9 +226,9 @@ export default function Main() {
         <main id="main-content" className="max-w-7xl mx-auto px-8 py-20" role="main">
           {/* Answer-First Section */}
           <section className="mb-12" aria-labelledby="quick-answer-heading">
-            <div className="bg-brand-primary/10 border-l-4 border-brand-primary p-6 rounded-r-lg">
+            <div className="bg-cyan-600/10 border-l-4 border-cyan-600 p-6 rounded-r-lg">
               <p className="text-text-primary text-body leading-relaxed">
-                Upload your resume (PDF or DOCX), paste the job description, and our AI will tailor your resume with optimized keywords and ATS-friendly formatting in under 30 seconds. Increase your interview chances by matching exactly what employers are looking for.
+                Upload your resume and paste the job description to get your ATS compatibility score. See how well your resume matches the job requirements and identify missing keywords to improve your chances.
               </p>
             </div>
           </section>
@@ -248,23 +239,23 @@ export default function Main() {
             <div>
               {/* Step Label */}
               <div className="flex items-center gap-2 mb-8">
-                <div className="w-2 h-2 rounded-dot bg-brand-primary" aria-hidden="true"></div>
-                <p className="text-badge font-medium text-brand-primary uppercase tracking-widest">
-                  AI-native resume generation
+                <div className="w-2 h-2 rounded-dot bg-cyan-600" aria-hidden="true"></div>
+                <p className="text-badge font-medium text-cyan-600 uppercase tracking-widest">
+                  ATS Score Checker
                 </p>
               </div>
 
               {/* Main Heading */}
               <h2 className="text-heading font-bold text-text-primary mb-6 leading-tight">
-                Upload your resume to<br />
-                <span className="bg-gradient-to-r from-brand-primary to-brand-secondary bg-clip-text text-transparent">
-                  begin
+                Check your resume's<br />
+                <span className="bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent">
+                  ATS compatibility
                 </span>
               </h2>
 
               {/* Subtitle */}
               <p className="text-body text-text-muted mb-12 leading-relaxed">
-                We'll tailor it for your next job using neural intelligence.
+                See how well your resume matches the job description.
               </p>
 
               {/* Upload Area */}
@@ -358,15 +349,15 @@ export default function Main() {
             </div>
           </section>
 
-          {/* Action Buttons */}
-          <section className="flex gap-6 mt-12" aria-label="Action buttons">
+          {/* Action Button */}
+          <section className="flex flex-col sm:flex-row gap-4 mt-12" aria-label="Action buttons">
             <button
               onClick={onSend}
               disabled={!text || !jd || jdError}
-              className="px-8 py-4 bg-gradient-to-r from-brand-primary to-brand-secondary hover:from-brand-primary-hover hover:to-brand-secondary-hover disabled:from-surface-dark disabled:to-surface-dark disabled:opacity-50 disabled:cursor-not-allowed text-text-primary font-semibold rounded-button transition-all duration-300 shadow-lg hover:shadow-brand-primary/40 disabled:shadow-none"
-              aria-label="Generate tailored resume"
+              className="px-8 py-4 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 disabled:from-surface-dark disabled:to-surface-dark disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold rounded-button transition-all duration-300 shadow-lg hover:shadow-cyan-500/40 disabled:shadow-none"
+              aria-label="Check ATS Score"
             >
-              Generate my resume
+              Check ATS Score
             </button>
           </section>
 
@@ -375,14 +366,6 @@ export default function Main() {
             Trusted by <span className="text-text-primary font-semibold">millions of successful applications</span> to optimize your next move.
           </p>
         </main>
-
-        {/* HowTo Guide Section */}
-        <HowToGuide 
-          name="How to Tailor Your Resume for Any Job"
-          description="Follow these simple steps to get an optimized, ATS-friendly resume"
-          totalTime="PT5M"
-          steps={resumeTailoringSteps}
-        />
 
         {/* Footer */}
         <footer className="border-t border-border-primary backdrop-blur-sm bg-surface-dark/40 py-12" role="contentinfo">
@@ -398,8 +381,8 @@ export default function Main() {
                 <h4 className="text-badge font-semibold text-text-primary mb-4">Quick Links</h4>
                 <ul className="space-y-2">
                   <li><Link to="/" className="text-text-secondary hover:text-brand-primary transition">Home</Link></li>
-                  <li><Link to="/tailor-resume" className="text-text-secondary hover:text-brand-primary transition">AI Resume Generator</Link></li>
-
+                  <li><Link to="/tailor-resume" className="text-text-secondary hover:text-brand-primary transition">Tailor Resume</Link></li>
+                  <li><Link to="/ats-score" className="text-text-secondary hover:text-brand-primary transition">Check ATS Score</Link></li>
                   <li><Link to="/how-to-tailor-resume" className="text-text-secondary hover:text-brand-primary transition">How to Tailor Resume</Link></li>
                   <li><Link to="/ats-optimization-guide" className="text-text-secondary hover:text-brand-primary transition">ATS Optimization Guide</Link></li>
                 </ul>
