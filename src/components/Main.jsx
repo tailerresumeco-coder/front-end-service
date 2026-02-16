@@ -29,6 +29,8 @@ export default function Main() {
     setJobDescription(jd);
     storeInputResume(selectedFile);
     navigate("/processing", { state: { mode: 'tailor' } });
+
+
   };
 
 
@@ -169,9 +171,8 @@ export default function Main() {
         setStatus("✅ Resume scanned successfully");
         scrollToPasteJd();
       } else if (file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document") {
-        console.log('type is docx');
-
         const arrayBuffer = await file.arrayBuffer();
+
         const result = await mammoth.extractRawText({ arrayBuffer });
 
         if (!result.value.trim()) {
@@ -186,10 +187,9 @@ export default function Main() {
         setStatus("❌ Unsupported file format");
       }
     } catch (err) {
-      console.error(err);
-      setStatus("❌ Failed to process Resume", err);
-      console.log('errr', err);
+      setStatus("❌ Failed to process Resume");
     }
+
   };
 
   return (
@@ -197,10 +197,12 @@ export default function Main() {
       <Helmet>
         <title>How to Tailor Your Resume for ATS | Upload & Optimize</title>
         <meta name="description" content="Upload your resume and job description to get an ATS-optimized, tailored resume in 30 seconds. AI-powered keyword matching and formatting for maximum interview chances." />
-        <link rel="canonical" href="https://tailerresume.com/generate" />
+        <link rel="canonical" href="https://tailerresume.com/tailor-resume" />
+
         <meta property="og:title" content="How to Tailor Your Resume for ATS | Upload & Optimize" />
         <meta property="og:description" content="Upload your resume and job description to get an ATS-optimized, tailored resume in 30 seconds. AI-powered keyword matching." />
-        <meta property="og:url" content="https://tailerresume.com/generate" />
+        <meta property="og:url" content="https://tailerresume.com/tailor-resume" />
+
         <meta property="og:type" content="website" />
         <meta property="og:image" content="https://tailerresume.com/tailer-resume-logo-1.svg" />
         <meta name="twitter:card" content="summary_large_image" />
@@ -396,7 +398,8 @@ export default function Main() {
                 <h4 className="text-badge font-semibold text-text-primary mb-4">Quick Links</h4>
                 <ul className="space-y-2">
                   <li><Link to="/" className="text-text-secondary hover:text-brand-primary transition">Home</Link></li>
-                  <li><Link to="/generate" className="text-text-secondary hover:text-brand-primary transition">AI Resume Generator</Link></li>
+                  <li><Link to="/tailor-resume" className="text-text-secondary hover:text-brand-primary transition">AI Resume Generator</Link></li>
+
                   <li><Link to="/how-to-tailor-resume" className="text-text-secondary hover:text-brand-primary transition">How to Tailor Resume</Link></li>
                   <li><Link to="/ats-optimization-guide" className="text-text-secondary hover:text-brand-primary transition">ATS Optimization Guide</Link></li>
                 </ul>

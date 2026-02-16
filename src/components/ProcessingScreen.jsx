@@ -2,7 +2,9 @@ import React, { useEffect, useState, useRef } from "react";
 import { Helmet } from "react-helmet-async";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useResume } from "../context/ResumeContext";
-import { uploadResumeAndJD, uploadResumeAndJDLegacy, checkATSScore } from "../services/resumeService";
+import { uploadResumeAndJDLegacy, checkATSScore } from "../services/resumeService";
+
+
 import { transformBackendResponse, isResumeValid } from "../utils/DataTransformer";
 
 
@@ -11,6 +13,7 @@ export default function ProcessingScreen() {
   const location = useLocation();
   const { setResume, setGeneratedResume, uploadedResume, jobDescription, setATSScoreData } = useResume();
 
+
   const [error, setError] = useState(null);
   const [progress, setProgress] = useState(0);
   const apiCalledRef = useRef(false);
@@ -18,8 +21,9 @@ export default function ProcessingScreen() {
   // Get mode from navigation state (default to 'tailor')
   const mode = location.state?.mode || 'tailor';
 
-
   // Immediate redirect if missing data
+
+
   useEffect(() => {
     if (!uploadedResume || !jobDescription) {
       console.warn("Missing resume or job description");
@@ -83,7 +87,6 @@ const startAdaptiveProgress = () => {
           response = await checkATSScore(uploadedResume, jobDescription, {
             signal: controller.signal,
           });
-          console.log("📥 ATS Score response received", response);
           
           clearInterval(animationInterval);
           clearTimeout(timeoutId);
@@ -103,7 +106,6 @@ const startAdaptiveProgress = () => {
           response = await uploadResumeAndJDLegacy(uploadedResume, jobDescription, {
             signal: controller.signal,
           });
-          console.log("📥 Backend response received", response);
 
           clearInterval(animationInterval);
           clearTimeout(timeoutId);
@@ -111,7 +113,6 @@ const startAdaptiveProgress = () => {
           const transformedResume = transformBackendResponse(response.data.data);
 
           if (!isResumeValid(transformedResume)) {
-            console.error("❌ Validation failed", transformedResume);
             setError("Generated resume is incomplete. Please try again.");
             return;
           }
@@ -127,6 +128,8 @@ const startAdaptiveProgress = () => {
             navigate("/resume-builder");
           }, 600);
         }
+
+
 
 
       } catch (err) {
@@ -167,6 +170,8 @@ const startAdaptiveProgress = () => {
           >
             Try Again
           </button>
+
+
 
         </div>
       </div>

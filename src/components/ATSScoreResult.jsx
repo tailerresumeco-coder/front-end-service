@@ -19,11 +19,12 @@ export default function ATSScoreResult() {
           <h2 className="text-2xl font-bold mb-4 text-gray-800">No ATS Score Data</h2>
           <p className="text-gray-600 mb-8">Please upload your resume and job description to check your ATS score.</p>
           <button
-            onClick={() => navigate("/generate")}
+            onClick={() => navigate("/ats-score")}
             className="bg-blue-600 text-white px-8 py-3 rounded-lg text-lg hover:bg-blue-700 transition"
           >
             Get Started
           </button>
+
         </div>
       </div>
     );
@@ -371,7 +372,7 @@ export default function ATSScoreResult() {
           )}
 
           {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          {/* <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button
               onClick={handleTailorNow}
               className="px-8 py-4 bg-gradient-to-r from-brand-primary to-brand-secondary hover:from-brand-primary-hover hover:to-brand-secondary-hover text-white font-semibold rounded-button transition-all duration-300 shadow-lg hover:shadow-brand-primary/40"
@@ -384,7 +385,7 @@ export default function ATSScoreResult() {
             >
               Upload Different Resume
             </button>
-          </div>
+          </div> */}
 
           {/* Footer Note */}
           <p className="text-center text-gray-400 text-sm mt-8">

@@ -132,18 +132,19 @@ export const resumeTailoringSteps = [
   {
     name: "Upload Your Resume",
     text: "Upload your existing resume in PDF, DOCX, or TXT format to the Tailer Resume platform. Our system will parse and analyze your current experience, skills, and qualifications.",
-    url: "https://tailerresume.com/generate"
+    url: "https://tailerresume.com/tailor-resume"
   },
   {
     name: "Paste Job Description",
     text: "Copy and paste the complete job description from the job posting you want to apply for. Include all requirements, responsibilities, and qualifications listed by the employer.",
-    url: "https://tailerresume.com/generate"
+    url: "https://tailerresume.com/tailor-resume"
   },
   {
     name: "AI Analysis",
     text: "Our AI analyzes the job requirements and identifies key skills, keywords, and qualifications needed. It compares these against your resume to find optimization opportunities.",
-    url: "https://tailerresume.com/generate"
+    url: "https://tailerresume.com/tailor-resume"
   },
+
   {
     name: "Review Tailored Resume",
     text: "Review the AI-tailored resume with optimized keywords and restructured content highlighting your relevant experience. Compare before and after versions to see the improvements.",

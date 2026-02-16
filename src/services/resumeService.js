@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-// const ?BASE_PATH = 'https://api.tailerresume.com';
-const BASE?_PATH='http://127.0.0.1:8000';
+const BASE_PATH = 'https://api.tailerresume.com';
+// const BASE_PATH='http://127.0.0.1:8000';
 
 export const uploadResumeAndJD = (resume, jd) => {
     const payload = {
@@ -78,6 +78,10 @@ export const storeResumes = (payload) => {
   return axios.post(`${BASE_PATH}/resume/store-resumes`, payload);
 }
 
-export const getATSScore = (payload) => {
-  return axios.post(`${BASE_PATH}/resume/check-ats-score`, payload)
+export const checkATSScore = (resume, jd, options = {}) => {
+    const payload = {
+        resume: resume,
+        jd: jd
+    }
+    return axios.post(`${BASE_PATH}/resume/check-ats-score`, payload, options);
 }
