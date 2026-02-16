@@ -118,6 +118,7 @@ export default function ResumeBuilder() {
             <div className="flex items-center gap-4">
               <Link to="/" className="text-text-secondary hover:text-brand-primary transition">← Home</Link>
               <h1 className="text-nav font-bold text-text-primary">Resume Builder</h1>
+              <span style={{ color: '#bdbbb8' }}> * For trust cross-check the ATS score in the chatGPT or any other AI tool </span>
             </div>
             <div className="flex gap-2">
               <button

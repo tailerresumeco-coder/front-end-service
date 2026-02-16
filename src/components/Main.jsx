@@ -76,6 +76,10 @@ export default function Main() {
       return "Job description cannot be empty";
     }
 
+    if (value === '###') {
+      return false;
+    }
+
     if (value.trim().length < 100) {
       return "Job description is not valid";
     }
@@ -104,8 +108,6 @@ export default function Main() {
 
     return "";
   };
-
-
 
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
@@ -142,7 +144,6 @@ export default function Main() {
               hyperlinksMap[hyperlink.overlaidText] = hyperlink.url;
             }
           });
-
 
           content.items.forEach((item) => {
             if (hyperlinksMap[item.str]) {
@@ -188,7 +189,6 @@ export default function Main() {
       console.error(err);
       setStatus("❌ Failed to process Resume", err);
       console.log('errr', err);
-
     }
   };
 
