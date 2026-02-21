@@ -112,15 +112,15 @@ const FAQ = ({ title = "Frequently Asked Questions", faqs = [], className = "", 
 
 export default FAQ;
 
-// Default FAQ data for Tailer Resume - Concise answers under 60 words for AI citations
+// Default FAQ data for Tailor Resume - Concise answers under 60 words for AI citations
 export const defaultFAQs = [
   {
     question: "How does AI resume tailoring work?",
     answer: "AI resume tailoring analyzes job descriptions and automatically adjusts your resume content, keywords, and formatting to match employer requirements while maintaining ATS compatibility."
   },
   {
-    question: "Is Tailer Resume ATS-friendly?",
-    answer: "Yes. Tailer Resume optimizes all resumes for Applicant Tracking Systems using proper formatting, relevant keywords, and clean structure without tables or graphics."
+    question: "Is Tailor Resume ATS-friendly?",
+    answer: "Yes. Tailor Resume optimizes all resumes for Applicant Tracking Systems using proper formatting, relevant keywords, and clean structure without tables or graphics."
   },
   {
     question: "How long does it take to tailor a resume?",
@@ -135,7 +135,7 @@ export const defaultFAQs = [
     answer: "Upload PDF, DOCX, or TXT files. Download tailored resumes in PDF or DOCX format for maximum compatibility with employer ATS systems."
   },
   {
-    question: "Does Tailer Resume store my personal information?",
+    question: "Does Tailor Resume store my personal information?",
     answer: "Your data is encrypted and stored securely. You control deletion from account settings. We never share information with third parties."
   },
   {

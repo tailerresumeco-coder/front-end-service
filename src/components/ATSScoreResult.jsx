@@ -69,7 +69,7 @@ export default function ATSScoreResult() {
   return (
     <>
       <Helmet>
-        <title>ATS Score Analysis | Tailer Resume</title>
+        <title>ATS Score Analysis | Tailor Resume</title>
         <meta name="description" content="View your ATS compatibility score and get recommendations to improve your resume for specific job descriptions." />
         <meta name="robots" content="noindex,nofollow" />
       </Helmet>

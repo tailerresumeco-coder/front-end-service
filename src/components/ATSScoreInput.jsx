@@ -372,7 +372,7 @@ export default function ATSScoreInput() {
           <div className="max-w-7xl mx-auto px-8">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div>
-                <h3 className="text-nav font-bold text-text-primary mb-4">Tailer Resume</h3>
+                <h3 className="text-nav font-bold text-text-primary mb-4">Tailor Resume</h3>
                 <p className="text-text-muted text-body-small leading-relaxed">
                   AI-powered resume tailoring for job seekers. Create ATS-friendly resumes that get results.
                 </p>

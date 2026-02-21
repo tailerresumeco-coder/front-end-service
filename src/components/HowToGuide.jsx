@@ -131,7 +131,7 @@ export default HowToGuide;
 export const resumeTailoringSteps = [
   {
     name: "Upload Your Resume",
-    text: "Upload your existing resume in PDF, DOCX, or TXT format to the Tailer Resume platform. Our system will parse and analyze your current experience, skills, and qualifications.",
+    text: "Upload your existing resume in PDF, DOCX, or TXT format to the Tailor Resume platform. Our system will parse and analyze your current experience, skills, and qualifications.",
     url: "https://tailerresume.com/tailor-resume"
   },
   {

@@ -95,7 +95,7 @@ export default function HowToTailorResume() {
               <div className="bg-brand-primary/10 border-l-4 border-brand-primary p-6 rounded-r-lg">
              
                 <p className="text-text-primary text-body leading-relaxed" itemProp="articleBody">
-                  <strong>To tailor your resume for any job:</strong> Upload your resume to an AI tool like Tailer Resume, paste the job description, and let the AI optimize keywords, skills, and formatting for ATS compatibility. This process takes under 30 seconds and can <strong>triple your interview chances</strong> by matching exactly what employers seek.
+                  <strong>To tailor your resume for any job:</strong> Upload your resume to an AI tool like Tailor Resume, paste the job description, and let the AI optimize keywords, skills, and formatting for ATS compatibility. This process takes under 30 seconds and can <strong>triple your interview chances</strong> by matching exactly what employers seek.
                 </p>
               </div>
             </section>
@@ -268,7 +268,7 @@ export default function HowToTailorResume() {
           <div className="max-w-7xl mx-auto px-8">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div>
-                <h3 className="text-nav font-bold text-text-primary mb-4">Tailer Resume</h3>
+                <h3 className="text-nav font-bold text-text-primary mb-4">Tailor Resume</h3>
                 <p className="text-text-muted text-body-small leading-relaxed">
                   AI-powered resume tailoring for job seekers. Create ATS-friendly resumes that get results.
                 </p>

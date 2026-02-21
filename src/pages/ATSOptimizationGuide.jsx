@@ -15,7 +15,7 @@ export default function ATSOptimizationGuide() {
     },
     {
       question: "How do I know if my resume is ATS-compatible?",
-      answer: "Test your resume by copying and pasting it into a plain text editor. If the information appears in the correct order and is readable, it's likely ATS-compatible. You can also use online ATS scanners or tools like Tailer Resume that provide ATS compatibility scores."
+      answer: "Test your resume by copying and pasting it into a plain text editor. If the information appears in the correct order and is readable, it's likely ATS-compatible. You can also use online ATS scanners or tools like Tailor Resume that provide ATS compatibility scores."
     },
     {
       question: "What file format is best for ATS?",
@@ -118,7 +118,7 @@ export default function ATSOptimizationGuide() {
                 <span className="text-brand-primary font-bold">TR</span>
               </div>
               <div>
-                <p className="font-semibold text-text-primary" itemProp="name">Tailer Resume Team</p>
+                <p className="font-semibold text-text-primary" itemProp="name">Tailor Resume Team</p>
                 <p className="text-text-muted text-sm">ATS Optimization Experts</p>
               </div>
               <meta itemProp="url" content="https://tailerresume.com" />
@@ -260,7 +260,7 @@ export default function ATSOptimizationGuide() {
           <div className="max-w-7xl mx-auto px-8">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div>
-                <h3 className="text-nav font-bold text-text-primary mb-4">Tailer Resume</h3>
+                <h3 className="text-nav font-bold text-text-primary mb-4">Tailor Resume</h3>
                 <p className="text-text-muted text-body-small leading-relaxed">
                   AI-powered resume tailoring for job seekers. Create ATS-friendly resumes that get results.
                 </p>
