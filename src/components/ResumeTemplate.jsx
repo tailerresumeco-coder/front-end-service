@@ -110,16 +110,16 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
     if (basics.other && basics.other.length > 0) {
       const others = basics.other.split(',').map(item => {
         const linkPattern = /^(https?:\/\/|www\.)/i;
-
+    
         if (linkPattern.test(item.trim())) {
           const displayName = (item.trim())
             .replace(/^https?:\/\//, '')
             .replace(/^www\./, '')
             .split('/')[0]?.split('.')[0]
             ?.replace(/^./, c => c.toUpperCase());
-          return (
+      return (
             <>
-              <span>|</span>
+          <span>|</span>
               <a
                 href={item.trim()}
                 className="hyperlink"
@@ -132,11 +132,11 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
             </>
           );
         } else {
-          return (
+      return (
             <span key={item}>{item}</span>
-          );
+      );
         }
-      });
+    });
       return others
     }
   }
@@ -291,13 +291,15 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
                                 </span>
                               )}
                             </span>
-                            {project.dates && (
+                            {/* Only show project dates if there's no overall duration for the company */}
+                            {project.dates && !company.overallDuration && (
                               <span style={{ fontWeight: "bold", fontSize: "11px", whiteSpace: "nowrap", marginLeft: "10px" }}>
                                 {project.dates}
                               </span>
                             )}
                           </div>
                         )}
+
 
                         {/* Project Responsibilities */}
                         {project.highlights && project.highlights.length > 0 && (
