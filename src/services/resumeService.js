@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const BASE_PATH = 'https://api.tailerresume.com';
-// const BASE_PATH='http://127.0.0.1:8000';
+// const BASE_PATH = 'https://api.tailerresume.com';
+const BASE_PATH='http://127.0.0.1:8000';
 
 export const uploadResumeAndJD = (resume, jd) => {
     const payload = {
@@ -84,4 +84,31 @@ export const checkATSScore = (resume, jd, options = {}) => {
         jd: jd
     }
     return axios.post(`${BASE_PATH}/resume/check-ats-score`, payload, options);
+}
+
+export const getUsers = (page = 1, size = 10,search) => {
+  return axios.get(`${BASE_PATH}/mails/get-user-details`, {
+    params: {
+      page
+      , size
+      , search
+    }
+  });
+}
+
+export const sendMail = (recipients, subject, body, attachment = null) => {
+  const formData = new FormData();
+  formData.append('recipients', JSON.stringify(recipients));
+  formData.append('subject', subject);
+  formData.append('body', body);
+  
+  if (attachment) {
+    formData.append('attachment', attachment);
+  }
+
+  return axios.post(`${BASE_PATH}/mails/send`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  });
 }

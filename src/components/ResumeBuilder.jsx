@@ -111,6 +111,11 @@ export default function ResumeBuilder() {
         <meta property="og:description" content="Build resumes section by section using AI writing assistant. Generate ATS-friendly resumes with live preview, editing tools, and PDF download capabilities." />
         <meta property="og:url" content="https://tailerresume.com/resume-builder" />
         <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://tailerresume.com/tailer-resume-logo-1.svg" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="AI Resume Builder - Create Professional Resumes" />
+        <meta name="twitter:description" content="Build resumes section by section using AI writing assistant. Generate ATS-friendly resumes with live preview, editing tools, and PDF download capabilities." />
+        <meta name="twitter:image" content="https://tailerresume.com/tailer-resume-logo-1.svg" />
       </Helmet>
       <div className="min-h-screen bg-gradient-to-br from-surface-dark via-surface-dark-mid to-brand-secondary-dark">
         {/* Header */}
