@@ -69,9 +69,19 @@ export default function ATSScoreResult() {
   return (
     <>
       <Helmet>
-        <title>ATS Score Analysis | Tailor Resume</title>
+        <title>ATS Score Analysis | Tailer Resume</title>
         <meta name="description" content="View your ATS compatibility score and get recommendations to improve your resume for specific job descriptions." />
+        <link rel="canonical" href="https://tailerresume.com/ats-score-result" />
         <meta name="robots" content="noindex,nofollow" />
+        <meta property="og:title" content="ATS Score Analysis | Tailer Resume" />
+        <meta property="og:description" content="View your ATS compatibility score and get recommendations to improve your resume for specific job descriptions." />
+        <meta property="og:image" content="https://tailerresume.com/tailer-resume-logo-1.svg" />
+        <meta property="og:url" content="https://tailerresume.com/ats-score-result" />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="ATS Score Analysis | Tailer Resume" />
+        <meta name="twitter:description" content="View your ATS compatibility score and get recommendations to improve your resume for specific job descriptions." />
+        <meta name="twitter:image" content="https://tailerresume.com/tailer-resume-logo-1.svg" />
       </Helmet>
       
       <div className="min-h-screen bg-gradient-to-br from-surface-dark via-surface-dark-mid to-brand-secondary-dark py-12 px-4">

@@ -13,6 +13,7 @@ import APIKeysManagement from "./components/APIKeysManagement";
 import HowToTailorResume from "./pages/HowToTailorResume";
 import ATSOptimizationGuide from "./pages/ATSOptimizationGuide";
 import ATSScoreInput from "./components/ATSScoreInput";
+import UserManagement from "./components/UserManagement";
 
 
 function AnalyticsTracker() {
@@ -50,6 +51,7 @@ export default function App() {
 
             <Route path="/how-to-tailor-resume" element={<HowToTailorResume />} />
             <Route path="/ats-optimization-guide" element={<ATSOptimizationGuide />} />
+            <Route path="/user-management" element={<UserManagement />} />
           </Routes>
         </Router>
       </ResumeProvider>
