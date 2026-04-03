@@ -77,10 +77,28 @@ export default function ATSOptimizationGuide() {
               </div>
               <Link to="/" className="text-nav font-bold text-text-primary hover:text-brand-primary transition">Tailer Resume</Link>
             </div>
-            <nav aria-label="Main navigation" className="flex gap-8">
+            <nav aria-label="Main navigation" className="flex gap-8  items-center">
               <Link to="/" className="text-text-secondary hover:text-brand-primary text-badge font-medium transition">Home</Link>
               <Link to="/tailor-resume" className="text-text-secondary hover:text-brand-primary text-badge font-medium transition">Tailor Resume</Link>
-
+              <Link to="/profile" className="flex items-center gap-2">
+                <div className="w-9 h-9 rounded-full border border-cyan-400/40 flex items-center justify-center bg-white/5 hover:bg-white/10 transition">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5 text-cyan-400"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    {/* head */}
+                    <circle cx="12" cy="8" r="4" />
+                    {/* shoulders */}
+                    <path d="M4 20c0-4 4-6 8-6s8 2 8 6" />
+                  </svg>
+                </div>
+              </Link>
             </nav>
           </div>
         </header>
@@ -128,7 +146,7 @@ export default function ATSOptimizationGuide() {
             <section className="mb-12" aria-labelledby="quick-answer-heading">
               <div className="bg-green-500/10 border-l-4 border-green-500 p-6 rounded-r-lg">
                 <h2 id="quick-answer-heading" className="text-lg font-semibold text-green-400 mb-3">
-                 How to Create an ATS-Friendly Resume
+                  How to Create an ATS-Friendly Resume
                 </h2>
                 <p className="text-text-primary text-body leading-relaxed" itemProp="articleBody">
                   <strong>To pass ATS screening:</strong> Use a simple, single-column format with standard fonts (Arial, Calibri). Include exact keywords from the job description in your skills and experience sections. Save as DOCX or text-based PDF. Avoid tables, graphics, headers/footers, and complex formatting. <strong>75% of resumes fail ATS</strong> due to formatting issues - follow this guide to be in the top 25%.
@@ -163,7 +181,7 @@ export default function ATSOptimizationGuide() {
               <h2 id="formatting-heading" className="text-2xl font-bold text-text-primary mb-6">
                 ATS-Friendly Resume Formatting
               </h2>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                 <div className="bg-green-500/10 border border-green-500/30 p-6 rounded-xl">
                   <h3 className="text-lg font-semibold text-green-400 mb-4">✅ DO: ATS-Friendly</h3>
@@ -216,7 +234,7 @@ export default function ATSOptimizationGuide() {
                 <p className="text-text-secondary mb-6">
                   Upload your resume and job description to get an instant ATS optimization report. See exactly how to improve your resume.
                 </p>
-                <Link 
+                <Link
                   to="/tailor-resume"
                   className="inline-block px-8 py-4 bg-gradient-to-r from-brand-primary to-brand-secondary rounded-button font-semibold hover:shadow-lg hover:shadow-brand-primary/50 transition transform hover:scale-105"
                 >
@@ -232,14 +250,14 @@ export default function ATSOptimizationGuide() {
                 Related Guides
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Link 
+                <Link
                   to="/how-to-tailor-resume"
                   className="p-4 bg-surface-dark/50 rounded-lg border border-border-primary hover:border-brand-primary transition group"
                 >
                   <h3 className="font-semibold text-text-primary group-hover:text-brand-primary transition">How to Tailor Your Resume</h3>
                   <p className="text-text-muted text-sm mt-1">Step-by-step guide to customizing your resume for any job</p>
                 </Link>
-                <Link 
+                <Link
                   to="/ats-score"
                   className="p-4 bg-surface-dark/50 rounded-lg border border-border-primary hover:border-brand-primary transition group"
                 >

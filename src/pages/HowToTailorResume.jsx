@@ -43,7 +43,7 @@ export default function HowToTailorResume() {
               </div>
               <Link to="/" className="text-nav font-bold text-text-primary hover:text-brand-primary transition">Tailer Resume</Link>
             </div>
-            <nav aria-label="Main navigation" className="flex gap-8">
+            <nav aria-label="Main navigation" className="flex gap-8  items-center">
               <Link to="/" className="text-text-secondary hover:text-brand-primary text-badge font-medium transition">Home</Link>
               <Link to="/tailor-resume" className="text-text-secondary hover:text-brand-primary text-badge font-medium transition">Tailor Resume</Link>
 

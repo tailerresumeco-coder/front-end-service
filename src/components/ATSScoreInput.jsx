@@ -215,9 +215,28 @@ export default function ATSScoreInput() {
               </div>
               <h1 className="text-nav font-bold text-text-primary">Check ATS Score</h1>
             </div>
-            <nav aria-label="Main navigation" className="flex gap-8">
+            <nav aria-label="Main navigation" className="flex gap-8  items-center">
               <Link to="/" className="text-text-secondary hover:text-brand-primary text-badge font-medium transition">Home</Link>
               <Link to="/tailor-resume" className="text-text-secondary hover:text-brand-primary text-badge font-medium transition">Tailor Resume</Link>
+              <Link to="/profile" className="flex items-center gap-2">
+                <div className="w-9 h-9 rounded-full border border-cyan-400/40 flex items-center justify-center bg-white/5 hover:bg-white/10 transition">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5 text-cyan-400"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    {/* head */}
+                    <circle cx="12" cy="8" r="4" />
+                    {/* shoulders */}
+                    <path d="M4 20c0-4 4-6 8-6s8 2 8 6" />
+                  </svg>
+                </div>
+              </Link>
             </nav>
           </div>
         </header>

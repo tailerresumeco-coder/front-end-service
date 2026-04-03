@@ -1,7 +1,16 @@
 import axios from 'axios';
+import API from '../api/axios';
 
 const BASE_PATH = 'https://api.tailerresume.com';
 // const BASE_PATH='http://127.0.0.1:8000';
+
+export const signup = (payload) => {
+  return API.post(`${BASE_PATH}/auth/sign-up`, payload);
+}
+
+export const login = (payload) => {
+  return axios.post(`${BASE_PATH}/auth/login`, payload);
+}
 
 export const uploadResumeAndJD = (resume, jd) => {
     const payload = {
@@ -29,7 +38,7 @@ export const uploadResumeAndJDLegacy = (resume, jd) => {
         resume: resume,
         jd: jd
     }
-    return axios.post(`${BASE_PATH}/resume/tailer-resume-legacy`, payload);
+    return API.post(`${BASE_PATH}/resume/tailer-resume-legacy`, payload);
 }
 
 export const downloadPdfApi = (payload) => {
