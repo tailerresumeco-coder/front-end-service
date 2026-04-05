@@ -15,6 +15,9 @@ import HowToTailorResume from "./pages/HowToTailorResume";
 import ATSOptimizationGuide from "./pages/ATSOptimizationGuide";
 import ATSScoreInput from "./components/ATSScoreInput";
 import UserManagement from "./components/UserManagement";
+import Signup from "./components/Signup";
+import Login from "./components/Login";
+import Profile from "./components/Profile";
 import JobsPage from "./pages/JobsPage";
 import JobDetailPage from "./pages/JobDetailPage";
 
@@ -43,6 +46,9 @@ export default function App() {
           <AnalyticsTracker />
 
           <Routes>
+            <Route path="/sign-up" element={<Signup />} />
+            <Route path="/login" element={<Login />} />
+            
             <Route path="/" element={<LandingPage />} />
             <Route path="/processing" element={<ProcessingScreen />} />
 
@@ -56,6 +62,7 @@ export default function App() {
             <Route path="/how-to-tailor-resume" element={<HowToTailorResume />} />
             <Route path="/ats-optimization-guide" element={<ATSOptimizationGuide />} />
             <Route path="/user-management" element={<UserManagement />} />
+            <Route path="/profile" element={<Profile />} />
             <Route path="/jobs"            element={<JobsPage />} />
             <Route path="/jobs/:id"        element={<JobDetailPage />} />
           </Routes>

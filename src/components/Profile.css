@@ -1,0 +1,119 @@
+.profile-page {
+  min-height: 100vh;
+  background: #0f172a;
+  color: white;
+  font-family: "Inter", sans-serif;
+}
+
+/* 🔥 Header */
+.profile-header {
+  height: 200px;
+  background: linear-gradient(135deg, #06b6d4, #6366f1);
+  display: flex;
+  align-items: flex-end;
+  padding: 20px 40px;
+}
+
+.profile-header-content {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+/* Avatar */
+.profile-avatar {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: white;
+  color: #0f172a;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 32px;
+  font-weight: bold;
+
+  border: 4px solid #0f172a;
+}
+
+/* Info */
+.profile-details h2 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.profile-details p {
+  margin: 0;
+  color: #e2e8f0;
+}
+
+/* 📊 Stats */
+.profile-stats {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+
+  margin-top: 40px;
+}
+
+.stat-box {
+  background: #1e293b;
+  padding: 20px 30px;
+  border-radius: 12px;
+  text-align: center;
+
+  min-width: 120px;
+}
+
+.stat-box h3 {
+  margin: 0;
+  color: #22d3ee;
+}
+
+.stat-box p {
+  margin: 5px 0 0;
+  font-size: 13px;
+  color: #94a3b8;
+}
+
+/* 📄 Content */
+.profile-content {
+  margin: 40px auto;
+  width: 80%;
+}
+
+.profile-content h3 {
+  margin-bottom: 20px;
+}
+
+.activity-card {
+  background: #1e293b;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+/* 🔥 Logout button */
+.logout-btn {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+
+  padding: 8px 16px;
+  border-radius: 8px;
+
+  color: white;
+  font-size: 13px;
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+.logout-btn:hover {
+  background: rgba(0, 0, 0, 0.5);
+}
