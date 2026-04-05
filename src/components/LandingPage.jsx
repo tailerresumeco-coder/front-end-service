@@ -39,6 +39,9 @@ export default function LandingPage() {
               </div>
               <span className="text-nav font-semibold">Tailor Resume</span>
             </div>
+            <div className="flex gap-8">
+              <Link to="/jobs" className="text-text-secondary hover:text-brand-primary text-badge font-medium transition">Jobs</Link>
+            </div>
           </nav>
         </header>
 
@@ -221,6 +224,7 @@ export default function LandingPage() {
                 <ul className="space-y-2">
                   <li><Link to="/" className="text-text-secondary hover:text-brand-primary transition">Home</Link></li>
                   <li><Link to="/tailor-resume" className="text-text-secondary hover:text-brand-primary transition">Tailor Resume</Link></li>
+                  <li><Link to="/jobs" className="text-text-secondary hover:text-brand-primary transition">Jobs</Link></li>
                   <li><Link to="/ats-score" className="text-text-secondary hover:text-brand-primary transition">Check ATS Score</Link></li>
                   <li><Link to="/how-to-tailor-resume" className="text-text-secondary hover:text-brand-primary transition">How to Tailor Resume</Link></li>
                   <li><Link to="/ats-optimization-guide" className="text-text-secondary hover:text-brand-primary transition">ATS Optimization Guide</Link></li>

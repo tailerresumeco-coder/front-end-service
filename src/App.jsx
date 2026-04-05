@@ -9,11 +9,14 @@ import ProcessingScreen from "./components/ProcessingScreen";
 import ResumeBuilder from "./components/ResumeBuilder";
 import ATSScoreResult from "./components/ATSScoreResult";
 import { ResumeProvider } from "./context/ResumeContext";
+import { JobProvider } from "./context/JobContext";
 import APIKeysManagement from "./components/APIKeysManagement";
 import HowToTailorResume from "./pages/HowToTailorResume";
 import ATSOptimizationGuide from "./pages/ATSOptimizationGuide";
 import ATSScoreInput from "./components/ATSScoreInput";
 import UserManagement from "./components/UserManagement";
+import JobsPage from "./pages/JobsPage";
+import JobDetailPage from "./pages/JobDetailPage";
 
 
 function AnalyticsTracker() {
@@ -34,6 +37,7 @@ export default function App() {
   return (
     <HelmetProvider>
       <ResumeProvider>
+        <JobProvider>
         <Router>
           {/* Analytics Tracker - MUST be inside Router */}
           <AnalyticsTracker />
@@ -52,8 +56,11 @@ export default function App() {
             <Route path="/how-to-tailor-resume" element={<HowToTailorResume />} />
             <Route path="/ats-optimization-guide" element={<ATSOptimizationGuide />} />
             <Route path="/user-management" element={<UserManagement />} />
+            <Route path="/jobs"            element={<JobsPage />} />
+            <Route path="/jobs/:id"        element={<JobDetailPage />} />
           </Routes>
         </Router>
+        </JobProvider>
       </ResumeProvider>
     </HelmetProvider>
   );

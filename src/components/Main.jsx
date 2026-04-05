@@ -227,6 +227,7 @@ export default function Main() {
             </div>
             <nav aria-label="Main navigation" className="flex gap-8">
               <Link to="/" className="text-text-secondary hover:text-brand-primary text-badge font-medium transition">Home</Link>
+              <Link to="/jobs" className="text-text-secondary hover:text-brand-primary text-badge font-medium transition">Jobs</Link>
             </nav>
           </div>
         </header>
@@ -399,7 +400,7 @@ export default function Main() {
                 <ul className="space-y-2">
                   <li><Link to="/" className="text-text-secondary hover:text-brand-primary transition">Home</Link></li>
                   <li><Link to="/tailor-resume" className="text-text-secondary hover:text-brand-primary transition">AI Resume Generator</Link></li>
-
+                  <li><Link to="/jobs" className="text-text-secondary hover:text-brand-primary transition">Jobs</Link></li>
                   <li><Link to="/how-to-tailor-resume" className="text-text-secondary hover:text-brand-primary transition">How to Tailor Resume</Link></li>
                   <li><Link to="/ats-optimization-guide" className="text-text-secondary hover:text-brand-primary transition">ATS Optimization Guide</Link></li>
                 </ul>
