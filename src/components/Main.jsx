@@ -323,6 +323,7 @@ export default function Main() {
             <div className=" gap-8">
               <label htmlFor="job-description" className="sr-only">Job Description</label>
               <textarea
+              style={{color: 'black'}}
                 id="job-description"
                 value={jd}
                 onChange={(e) => {
