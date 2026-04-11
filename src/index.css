@@ -2,39 +2,50 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Work Sans Font - Applied Globally */
+/* ── Theme tokens ────────────────────────────────────────────────────────────
+   CSS variables used by plain .css files (Login, Profile, ResumePickerModal).
+   Tailwind config drives the Tailwind classes; these variables keep both
+   systems in sync from one place.
+   To switch themes, update ONLY this block + tailwind.config.js.
+────────────────────────────────────────────────────────────────────────── */
 :root {
-  --font-primary: 'Work Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  /* Brand accent — cyan-400, matches tailwind.config.js brand-primary */
+  --brand-primary:        #06b6d4;          /* cyan-400             */
+  --brand-primary-hover:  #0891b2;          /* cyan-600             */
+  --brand-primary-light:  #67e8f9;          /* cyan-300 — highlights */
+
+  /* RGB split (for rgba() usage) */
+  --brand-primary-rgb:    6, 182, 212;      /* cyan-400 as r,g,b   */
+
+  /* Gradient used on buttons / header banners */
+  --brand-gradient:       linear-gradient(90deg, #06b6d4, #9333ea);
+
+  /* Surfaces */
+  --surface-dark:         #0f172a;
+  --surface-dark-mid:     #1e293b;
+  --surface-dark-light:   #334155;
+
+  /* Text */
+  --text-primary:         #ffffff;
+  --text-secondary:       #d1d5db;
+  --text-muted:           #9ca3af;
+
+  /* Border */
+  --border-primary:       rgba(var(--brand-primary-rgb), 0.3);
+
+  /* Font */
+  --font-primary: 'Work Sans', system-ui, -apple-system, BlinkMacSystemFont,
+                  'Segoe UI', Roboto, sans-serif;
 }
 
+/* ── Base ──────────────────────────────────────────────────────────────────── */
 body {
   font-family: var(--font-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Ensure all text elements inherit Work Sans */
-h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, label, li {
+/* All elements inherit font — CSS-file components pick this up automatically */
+*, *::before, *::after {
   font-family: inherit;
-}
-
-/* Custom font weights for Work Sans */
-.font-light {
-  font-weight: 300;
-}
-
-.font-normal {
-  font-weight: 400;
-}
-
-.font-medium {
-  font-weight: 500;
-}
-
-.font-semibold {
-  font-weight: 600;
-}
-
-.font-bold {
-  font-weight: 700;
 }

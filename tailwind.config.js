@@ -55,6 +55,15 @@ export default {
       backgroundImage: {
         'gradient-main': 'linear-gradient(to bottom right, var(--tw-gradient-stops))',
       },
+      animation: {
+        shimmer: 'shimmer 1.4s infinite',
+      },
+      keyframes: {
+        shimmer: {
+          '0%':   { backgroundPosition: '200% 0' },
+          '100%': { backgroundPosition: '-200% 0' },
+        },
+      },
     },
   },
   plugins: [],

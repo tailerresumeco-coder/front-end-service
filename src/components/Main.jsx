@@ -210,48 +210,14 @@ export default function Main() {
         <meta name="twitter:description" content="Upload your resume and job description to get an ATS-optimized, tailored resume in 30 seconds." />
         <meta name="twitter:image" content="https://tailerresume.com/tailer-resume-logo-1.svg" />
       </Helmet>
-      <div className="min-h-screen bg-gradient-to-br from-surface-dark via-surface-dark-mid to-brand-secondary-dark">
+      <>
         {/* Skip Navigation */}
         <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-brand-primary text-white px-4 py-2 rounded z-50">
           Skip to main content
         </a>
 
-        {/* Header */}
-        <header className="border-b border-border-primary backdrop-blur-sm bg-surface-dark/40" role="banner">
-          <div className="max-w-7xl mx-auto flex items-center justify-between px-8 py-6">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-dot border-2 border-brand-primary flex items-center justify-center" aria-hidden="true">
-                <div className="w-6 h-6 rounded-dot bg-brand-primary"></div>
-              </div>
-              <h1 className="text-nav font-bold text-text-primary">Tailor Resume</h1>
-            </div>
-            <nav aria-label="Main navigation" className="flex gap-8  items-center">
-              <Link to="/" className="text-text-secondary hover:text-brand-primary text-badge font-medium transition">Home</Link>
-              <Link to="/profile" className="flex items-center gap-2">
-                <div className="w-9 h-9 rounded-full border border-cyan-400/40 flex items-center justify-center bg-white/5 hover:bg-white/10 transition">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-5 w-5 text-cyan-400"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    {/* head */}
-                    <circle cx="12" cy="8" r="4" />
-                    {/* shoulders */}
-                    <path d="M4 20c0-4 4-6 8-6s8 2 8 6" />
-                  </svg>
-                </div>
-              </Link>
-            </nav>
-          </div>
-        </header>
-
         {/* Main Content */}
-        <main id="main-content" className="max-w-7xl mx-auto px-8 py-20" role="main">
+        <main id="main-content" className="max-w-7xl mx-auto px-4 sm:px-8 py-16 sm:py-20" role="main">
           {/* Answer-First Section */}
           <section className="mb-12" aria-labelledby="quick-answer-heading">
             <div className="bg-brand-primary/10 border-l-4 border-brand-primary p-6 rounded-r-lg">
@@ -357,6 +323,7 @@ export default function Main() {
             <div className=" gap-8">
               <label htmlFor="job-description" className="sr-only">Job Description</label>
               <textarea
+              style={{color: 'black'}}
                 id="job-description"
                 value={jd}
                 onChange={(e) => {
@@ -366,9 +333,9 @@ export default function Main() {
                 }}
                 placeholder="Paste your job description here..."
                 className={`w-full h-40 bg-gradient-to-br from-cyan-900/10 to-purple-900/10 
-                  border rounded-xl px-4 py-3 text-black placeholder-gray-600 focus:outline-none
+                  border rounded-xl px-4 py-3 text-text-primary placeholder-text-muted focus:outline-none
                   transition-all backdrop-blur-sm
-                  ${jdError ? "border-red-500" : "border-cyan-500/30 focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400/30"}`}
+                  ${jdError ? "border-red-500" : "border-border-primary focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/30"}`}
                 aria-describedby={jdError ? "jd-error" : undefined}
               />
               {jdError && (
@@ -402,43 +369,7 @@ export default function Main() {
           totalTime="PT5M"
           steps={resumeTailoringSteps}
         />
-
-        {/* Footer */}
-        <footer className="border-t border-border-primary backdrop-blur-sm bg-surface-dark/40 py-12" role="contentinfo">
-          <div className="max-w-7xl mx-auto px-8">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div>
-                <h3 className="text-nav font-bold text-text-primary mb-4">Tailer Resume</h3>
-                <p className="text-text-muted text-body-small leading-relaxed">
-                  AI-powered resume tailoring for job seekers. Create ATS-friendly resumes that get results.
-                </p>
-              </div>
-              <nav aria-label="Footer navigation">
-                <h4 className="text-badge font-semibold text-text-primary mb-4">Quick Links</h4>
-                <ul className="space-y-2">
-                  <li><Link to="/" className="text-text-secondary hover:text-brand-primary transition">Home</Link></li>
-                  <li><Link to="/tailor-resume" className="text-text-secondary hover:text-brand-primary transition">AI Resume Generator</Link></li>
-
-                  <li><Link to="/how-to-tailor-resume" className="text-text-secondary hover:text-brand-primary transition">How to Tailor Resume</Link></li>
-                  <li><Link to="/ats-optimization-guide" className="text-text-secondary hover:text-brand-primary transition">ATS Optimization Guide</Link></li>
-                </ul>
-              </nav>
-              <nav aria-label="Resources">
-                <h4 className="text-badge font-semibold text-text-primary mb-4">Resources</h4>
-                <ul className="space-y-2">
-                  <li><a href="https://tailerresume.com/sitemap.xml" className="text-text-secondary hover:text-brand-primary transition">Sitemap</a></li>
-                  <li><a href="https://tailerresume.com/robots.txt" className="text-text-secondary hover:text-brand-primary transition">Robots.txt</a></li>
-                </ul>
-              </nav>
-            </div>
-            <div className="border-t border-border-primary mt-8 pt-8 text-center">
-              <p className="text-text-subtle text-badge">
-                © 2026 Tailor Resume. All rights reserved.
-              </p>
-            </div>
-          </div>
-        </footer>
-      </div>
+      </>
     </>
   );
 }

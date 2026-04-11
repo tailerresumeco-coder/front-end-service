@@ -154,104 +154,97 @@ const startAdaptiveProgress = () => {
   }, [uploadedResume, jobDescription]);
 
   if (error) {
-  return (
-    <>
-      <Helmet>
-        <meta name="robots" content="noindex,nofollow" />
-      </Helmet>
-      <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-        <div className="text-center bg-white p-10 rounded-xl shadow-xl max-w-md">
-          <div className="text-6xl mb-6">❌</div>
-          <h2 className="text-2xl font-bold mb-4 text-red-600">Processing Failed</h2>
-          <p className="text-gray-700 mb-8 leading-relaxed">{error}</p>
-          <button
-            onClick={() => navigate(mode === 'ats-check' ? "/ats-score" : "/tailor-resume")}
-            className="bg-blue-600 text-white px-8 py-3 rounded-lg text-lg hover:bg-blue-700 transition"
-          >
-            Try Again
-          </button>
-
-
-
+    return (
+      <>
+        <Helmet><meta name="robots" content="noindex,nofollow" /></Helmet>
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-surface-dark via-surface-dark-mid to-brand-secondary-dark px-4">
+          <div className="text-center bg-surface-dark-mid border border-border-primary p-10 rounded-2xl shadow-2xl max-w-md w-full">
+            <div className="w-16 h-16 rounded-full bg-red-500/10 border border-red-500/25 flex items-center justify-center mx-auto mb-6">
+              <svg className="w-8 h-8 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </div>
+            <h2 className="text-2xl font-bold text-text-primary mb-3">Processing Failed</h2>
+            <p className="text-text-secondary mb-8 leading-relaxed">{error}</p>
+            <button
+              onClick={() => navigate(mode === 'ats-check' ? '/ats-score' : '/tailor-resume')}
+              className="bg-gradient-to-r from-brand-primary to-brand-secondary text-white px-8 py-3 rounded-button font-semibold hover:shadow-lg hover:shadow-brand-primary/30 transition"
+            >
+              Try Again
+            </button>
+          </div>
         </div>
-      </div>
-    </>
-    );   
+      </>
+    );
   }
 
   return (
     <>
-      <Helmet>
-        <meta name="robots" content="noindex,nofollow" />
-      </Helmet>
-      <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-      <div className="w-full max-w-2xl">
-        {/* Header */}
-        <div className="text-center mb-10">
-          <h2 className="text-3xl font-bold text-gray-800 mb-3">
-            Tailoring Your Resume
-          </h2>
-          <p className="text-lg text-gray-600">
-            We're carefully analyzing the job description and optimizing your experience
-          </p>
-          <p className="text-sm text-gray-500 mt-4">
-            This can take 3-4 seconds for the best results. Please wait...
-          </p>
-        </div>
+      <Helmet><meta name="robots" content="noindex,nofollow" /></Helmet>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-surface-dark via-surface-dark-mid to-brand-secondary-dark px-4">
+        <div className="w-full max-w-2xl">
 
-        {/* Resume Card with Reveal Effect */}
-        <div className="bg-white rounded-2xl shadow-2xl p-10 relative overflow-hidden">
-          {/* Header Skeleton */}
-          <div className="text-center mb-8">
-            <div className="h-12 bg-gray-200 rounded-lg w-64 mx-auto mb-4 animate-pulse"></div>
-            <div className="h-5 bg-gray-200 rounded w-48 mx-auto animate-pulse"></div>
+          {/* Header */}
+          <div className="text-center mb-10">
+            <h2 className="text-3xl font-bold text-text-primary mb-3">
+              {mode === 'ats-check' ? 'Analyzing Your Resume' : 'Tailoring Your Resume'}
+            </h2>
+            <p className="text-text-secondary">
+              We're carefully analyzing the job description and optimizing your experience
+            </p>
+            <p className="text-text-muted text-sm mt-3">
+              This can take 15–30 seconds for the best results. Please wait…
+            </p>
           </div>
 
-          {/* Main Progress Bar */}
-          <div className="relative h-6 bg-gray-200 rounded-full overflow-hidden mb-8">
-            <div
-              className="absolute left-0 top-0 h-full bg-gradient-to-r from-blue-500 to-blue-700 transition-all duration-1000 ease-out flex items-center justify-end pr-4"
-              style={{ width: `${progress}%` }}
-            >
-              <span className="text-white text-sm font-bold">{Math.round(progress)}%</span>
+          {/* Card */}
+          <div className="bg-surface-dark-mid border border-border-primary rounded-2xl p-8 sm:p-10 relative overflow-hidden">
+
+            {/* Skeleton header */}
+            <div className="text-center mb-8">
+              <div className="h-10 bg-surface-dark-light rounded-lg w-64 mx-auto mb-3 animate-pulse"></div>
+              <div className="h-4 bg-surface-dark-light rounded w-48 mx-auto animate-pulse"></div>
+            </div>
+
+            {/* Progress bar */}
+            <div className="relative h-5 bg-surface-dark-light rounded-full overflow-hidden mb-8">
+              <div
+                className="absolute left-0 top-0 h-full bg-gradient-to-r from-brand-primary to-brand-secondary transition-all duration-1000 ease-out flex items-center justify-end pr-3 rounded-full"
+                style={{ width: `${progress}%` }}
+              >
+                <span className="text-white text-xs font-bold">{Math.round(progress)}%</span>
+              </div>
+            </div>
+
+            {/* Animated resume lines */}
+            <div className="space-y-3">
+              {[1, 2, 3, 4, 5, 6, 7].map((i) => (
+                <div key={i} className="h-3.5 bg-surface-dark-light rounded-full overflow-hidden relative">
+                  <div
+                    className="absolute inset-y-0 left-0 bg-surface-dark rounded-full transition-all duration-[1500ms] ease-out"
+                    style={{ width: progress > 12 * i ? '100%' : progress > 10 * i ? `${(progress - 10 * i) * 10}%` : '0%' }}
+                  />
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-6 space-y-2 opacity-50">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="h-2.5 bg-surface-dark-light rounded overflow-hidden relative">
+                  <div
+                    className="absolute inset-y-0 left-0 bg-surface-dark transition-all duration-[2000ms]"
+                    style={{ width: progress > 30 + i * 15 ? '80%' : '0%' }}
+                  />
+                </div>
+              ))}
             </div>
           </div>
 
-          {/* Simulated Resume Content Lines - Reveal Gradually */}
-          <div className="space-y-4">
-            {[1, 2, 3, 4, 5, 6, 7].map((i) => (
-              <div
-                key={i}
-                className="h-4 bg-gray-200 rounded-full overflow-hidden relative"
-              >
-                <div
-                  className="absolute inset-y-0 left-0 bg-gray-300 transition-all duration-1500 ease-out"
-                  style={{
-                    width: progress > 12 * i ? "100%" : progress > 10 * i ? `${(progress - 10 * i) * 10}%` : "0%",
-                  }}
-                />
-              </div>
-            ))}
-          </div>
-
-          {/* Extra subtle lines for realism */}
-          <div className="mt-8 space-y-3 opacity-60">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="h-3 bg-gray-100 rounded overflow-hidden relative">
-                <div
-                  className="absolute inset-y-0 left-0 bg-gray-200 transition-all duration-2000"
-                  style={{ width: progress > 30 + i * 15 ? "80%" : "0%" }}
-                />
-              </div>
-            ))}
-          </div>
+          <p className="text-center text-text-muted text-sm mt-6">
+            Advanced AI processing in progress…
+          </p>
         </div>
-
-        <p className="text-center text-sm text-gray-500 mt-8">
-          Advanced AI processing in progress...
-        </p>
       </div>
-    </div>
     </>
   );
 }
