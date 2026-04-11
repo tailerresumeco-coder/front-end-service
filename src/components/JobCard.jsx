@@ -1,12 +1,15 @@
-import { MapPin, Clock, DollarSign, Bookmark } from 'lucide-react';
+import { useState } from 'react';
+import { MapPin, Clock, DollarSign, Bookmark, Wand2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useJobs } from '../context/JobContext';
 import { timeAgo, formatSalary, JOB_TYPE_BADGE, JOB_TYPE_LABEL } from '../utils/jobUtils';
+import TailorModal from './TailorModal';
 
 export default function JobCard({ job }) {
   const navigate = useNavigate();
   const { saveJob, unsaveJob, isJobSaved } = useJobs();
   const saved = isJobSaved(job._id);
+  const [showTailorModal, setShowTailorModal] = useState(false);
 
   const handleSaveToggle = (e) => {
     e.stopPropagation();
@@ -80,16 +83,33 @@ export default function JobCard({ job }) {
         )}
       </div>
 
-      {/* CTA */}
-      <button
-        onClick={() => navigate(`/jobs/${job._id}`)}
-        className="w-full py-2 rounded-button text-sm font-semibold
-                   border border-brand-primary text-brand-primary
-                   hover:bg-brand-primary hover:text-white
-                   transition-all duration-150"
-      >
-        View Details
-      </button>
+      {/* CTA row */}
+      <div className="flex gap-2">
+        <button
+          onClick={() => navigate(`/jobs/${job._id}`)}
+          className="flex-1 py-2 rounded-button text-sm font-semibold
+                     border border-brand-primary text-brand-primary
+                     hover:bg-brand-primary hover:text-white
+                     transition-all duration-150"
+        >
+          View Details
+        </button>
+        <button
+          onClick={(e) => { e.stopPropagation(); setShowTailorModal(true); }}
+          aria-label="Tailor resume for this job"
+          title="Tailor Resume"
+          className="py-2 px-3 rounded-button text-sm font-semibold
+                     border border-border-primary text-text-muted
+                     hover:border-brand-primary hover:text-brand-primary
+                     transition-all duration-150"
+        >
+          <Wand2 size={15} />
+        </button>
+      </div>
+
+      {showTailorModal && (
+        <TailorModal job={job} onClose={() => setShowTailorModal(false)} />
+      )}
     </div>
   );
 }

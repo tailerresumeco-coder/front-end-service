@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Link } from 'react-router-dom';
 import { Briefcase, Loader2, Check, X, ChevronUp, Bookmark } from 'lucide-react';
 
 import { getJobs } from '../services/jobService';
@@ -159,22 +158,8 @@ export default function JobsPage() {
   // ── Render ─────────────────────────────────────────────────────────────
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-surface-dark via-surface-dark-mid to-brand-secondary-dark">
-
-      {/* ── Header ── */}
-      <header className="border-b border-border-primary bg-surface-dark/60 backdrop-blur-sm sticky top-0 z-20">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <Link to="/" className="text-brand-primary font-bold text-lg tracking-tight">
-            TailerResume
-          </Link>
-          <div className="flex items-center gap-2 text-text-muted text-sm">
-            <Briefcase size={15} />
-            <span>Job Board</span>
-          </div>
-        </div>
-      </header>
-
-      <main className="max-w-7xl mx-auto px-6 py-10">
+    <div>
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
 
         {/* ── Page title ── */}
         <div className="mb-8">
