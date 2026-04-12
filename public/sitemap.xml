@@ -17,7 +17,7 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- Add back after C-01 Phase 1 (CloudFront Custom Error Pages) is confirmed live:
+  
   <url>
     <loc>https://tailerresume.com/tailor-resume</loc>
     <lastmod>2026-04-12</lastmod>
@@ -42,12 +42,5 @@
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
-  -->
-
-  <!-- Permanently excluded — app state screens, not standalone pages:
-    /resume-builder
-    /ats-score-result
-    /processing
-  -->
 
 </urlset>
