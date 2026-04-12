@@ -12,6 +12,10 @@ export const login = (payload) => {
   return axios.post(`${BASE_PATH}/auth/login`, payload);
 }
 
+export const OAuthGoogleSignup = (payload) => {
+  return axios.post(`${BASE_PATH}/auth/oauth/google-signup`, payload);
+}
+
 export const uploadResumeAndJD = (resume, jd) => {
     const payload = {
         resume: resume,

@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./Login.css";
 import { useNavigate } from "react-router-dom";
-import { signup } from "../services/resumeService";
+import { signup, OAuthGoogleSignup } from "../services/resumeService";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -12,6 +12,8 @@ const Signup = () => {
     confirmPassword: ""
   });
 
+  const googleButtonRef = useRef(null); // Ref for the Google button
+
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -20,6 +22,34 @@ const Signup = () => {
     setError(""); // clear error while typing
     setForm({ ...form, [e.target.name]: e.target.value });
   };
+
+  const handleCallbackResponse = async (obj) => {
+    const res = await OAuthGoogleSignup({credential: obj.credential});
+    if (res && res?.data?.access_token) {
+      localStorage.setItem("access_token", res?.data?.access_token);
+      navigate("/");
+    }
+  };
+
+  useEffect(() => {
+    /* global google */
+    // Initialize Google SDK
+    if (window.google) {
+      google.accounts.id.initialize({
+        client_id: "918373638000-sftdttmalfbclcnk8g9ss3fnk7pm8gg4.apps.googleusercontent.com",
+        callback: handleCallbackResponse,
+      });
+
+      // Render the official button into our ref
+      google.accounts.id.renderButton(googleButtonRef.current, {
+        theme: "outline",
+        size: "ams",
+        text: "continue_with", // Displays "Sign up with Google"
+        shape: "rectangular",
+        width: "220", // Adjust to match your form width
+      });
+    }
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -104,6 +134,9 @@ const Signup = () => {
         >
           {showPassword ? "Hide Password" : "Show Password"}
         </p>
+        <div className="google-signup-wrapper" style={{ marginTop: "20px", display: "flex", justifyContent: "center" }}>
+          <div ref={googleButtonRef}></div>
+        </div>
       </div>
     </div>
   );
