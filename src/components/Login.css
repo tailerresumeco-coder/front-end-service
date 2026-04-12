@@ -3,30 +3,25 @@
   display: flex;
   justify-content: center;
   align-items: center;
-
-  background: linear-gradient(135deg, #0f172a, #1e293b, #3b0764);
-  color: white;
-  font-family: "Inter", sans-serif;
+  background: linear-gradient(135deg, var(--surface-dark), var(--surface-dark-mid), #1c0a00);
+  color: var(--text-primary);
 }
 
-/* 🔥 Card */
+/* Card */
 .auth-card {
   width: 380px;
   padding: 32px 28px;
   border-radius: 18px;
-
   background: rgba(255, 255, 255, 0.04);
   backdrop-filter: blur(12px);
-
-  border: 1px solid rgba(0, 255, 255, 0.15);
+  border: 1px solid rgba(var(--brand-primary-rgb), 0.18);
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
-
   display: flex;
   flex-direction: column;
   gap: 18px;
 }
 
-/* 🧠 Title */
+/* Title */
 .auth-card h2 {
   font-size: 24px;
   font-weight: 600;
@@ -35,12 +30,12 @@
 
 /* Subtitle */
 .auth-card p {
-  color: #94a3b8;
+  color: var(--text-muted);
   text-align: center;
   font-size: 14px;
 }
 
-/* 🔴 Error */
+/* Error */
 .error-box {
   background: rgba(255, 0, 0, 0.08);
   color: #f87171;
@@ -50,7 +45,7 @@
   font-size: 13px;
 }
 
-/* 🧾 Form */
+/* Form */
 .auth-card form {
   display: flex;
   flex-direction: column;
@@ -61,62 +56,52 @@
 .auth-card input {
   width: 100%;
   padding: 12px 14px;
-
   border-radius: 10px;
-  border: 1px solid #334155;
-
+  border: 1px solid var(--surface-dark-light);
   background: rgba(255, 255, 255, 0.02);
-  color: white;
-
+  color: var(--text-primary);
   font-size: 14px;
   transition: all 0.2s ease;
 }
 
-/* Focus effect */
 .auth-card input:focus {
   outline: none;
-  border-color: #22d3ee;
-  box-shadow: 0 0 0 1px rgba(34, 211, 238, 0.4);
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 0 1px rgba(var(--brand-primary-rgb), 0.4);
 }
 
 /* Button */
 .auth-card button {
   width: 100%;
   padding: 12px;
-
-  background: linear-gradient(90deg, #06b6d4, #6366f1);
+  background: var(--brand-gradient);
   border: none;
   border-radius: 10px;
-
-  color: white;
+  color: var(--text-primary);
   font-weight: 600;
   font-size: 15px;
-
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
-/* Hover */
 .auth-card button:hover {
   transform: translateY(-1px);
   opacity: 0.95;
 }
 
-/* Disabled */
 .auth-card button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
 
-/* Switch login */
+/* Switch */
 .switch {
   text-align: center;
   font-size: 14px;
 }
 
-/* Link */
 .switch span {
-  color: #22d3ee;
+  color: var(--brand-primary);
   cursor: pointer;
   font-weight: 500;
 }
@@ -125,6 +110,6 @@
 .toggle-password {
   text-align: center;
   font-size: 13px;
-  color: #38bdf8;
+  color: var(--brand-primary-light);
   cursor: pointer;
 }

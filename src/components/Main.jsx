@@ -4,9 +4,10 @@ import { Link } from "react-router-dom";
 import { storeInputResume } from "../services/resumeService";
 import * as pdfjsLib from "pdfjs-dist";
 import { useResume } from "../context/ResumeContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import mammoth from "mammoth";
 import HowToGuide, { resumeTailoringSteps } from "./HowToGuide";
+import FormatPickerModal from "./FormatPickerModal";
 
 // Set PDF.js worker
 pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
@@ -18,19 +19,69 @@ export default function Main() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [base64File, setBase64File] = useState(null);
   const fileInputRef = useRef(null);
-  const { setUploadedResume, setJobDescription } = useResume();
+  const { setUploadedResume, setJobDescription, setLayoutPreference, setDetectedSectionOrder } = useResume();
   const [jdError, setJdError] = useState("");
+  const [showFormatPicker, setShowFormatPicker] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+  const sessionError = location.state?.error || null;
+
+  const SECTION_DEFS = [
+    { key: 'skills',          patterns: ['skills', 'technical skills', 'core competencies', 'competencies', 'expertise'] },
+    { key: 'experience',      patterns: ['experience', 'work experience', 'professional experience', 'employment history', 'work history'] },
+    { key: 'education',       patterns: ['education', 'academic background', 'qualifications', 'academics'] },
+    { key: 'projects',        patterns: ['projects', 'personal projects', 'key projects', 'side projects'] },
+    { key: 'internships',     patterns: ['internships', 'internship'] },
+    { key: 'certifications',  patterns: ['certifications', 'certification', 'certificates', 'licenses & certifications'] },
+    { key: 'awards',          patterns: ['awards', 'honors', 'achievements', 'recognition', 'accomplishments'] },
+    { key: 'languages',       patterns: ['languages', 'language proficiency', 'linguistic skills'] },
+  ];
+
+  const DEFAULT_ORDER = ['skills', 'experience', 'projects', 'education', 'internships', 'certifications', 'awards', 'languages'];
+
+  const detectSectionOrder = (rawText) => {
+    const lines = rawText.toLowerCase().split('\n');
+    const found = [];
+
+    lines.forEach((line, lineIdx) => {
+      const trimmed = line.trim();
+      if (!trimmed) return;
+      SECTION_DEFS.forEach(({ key, patterns }) => {
+        if (found.find(f => f.key === key)) return;
+        if (patterns.some(p => trimmed === p || trimmed.startsWith(p + ' ') || trimmed.startsWith(p + ':'))) {
+          found.push({ key, idx: lineIdx });
+        }
+      });
+    });
+
+    found.sort((a, b) => a.idx - b.idx);
+    const detectedKeys = found.map(f => f.key);
+    const remaining = DEFAULT_ORDER.filter(k => !detectedKeys.includes(k));
+    return [...detectedKeys, ...remaining];
+  };
 
   const onSend = () => {
-    // Keep the full data URL prefix so backend can detect file type (PDF vs DOCX)
-    let resumeData = base64File || text;
+    const error = validateJD(jd);
+    if (error) {
+      setJdError(error);
+      return;
+    }
+    setShowFormatPicker(true);
+  };
+
+  const handleFormatSelect = (format) => {
+    const resumeData = base64File || text;
+    setLayoutPreference(format);
+    if (format === 'adaptive') {
+      setDetectedSectionOrder(detectSectionOrder(text));
+    } else {
+      setDetectedSectionOrder(null);
+    }
     setUploadedResume(resumeData);
     setJobDescription(jd);
     storeInputResume(selectedFile);
+    setShowFormatPicker(false);
     navigate("/processing", { state: { mode: 'tailor' } });
-
-
   };
 
 
@@ -114,6 +165,11 @@ export default function Main() {
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
+
+    if (file.size > 10 * 1024 * 1024) {
+      setStatus("❌ File too large. Maximum size is 10 MB.");
+      return;
+    }
 
     setSelectedFile(file);
 
@@ -210,48 +266,28 @@ export default function Main() {
         <meta name="twitter:description" content="Upload your resume and job description to get an ATS-optimized, tailored resume in 30 seconds." />
         <meta name="twitter:image" content="https://tailerresume.com/tailer-resume-logo-1.svg" />
       </Helmet>
-      <div className="min-h-screen bg-gradient-to-br from-surface-dark via-surface-dark-mid to-brand-secondary-dark">
+      <>
+        {showFormatPicker && (
+          <FormatPickerModal
+            onSelect={handleFormatSelect}
+            onClose={() => setShowFormatPicker(false)}
+          />
+        )}
+
         {/* Skip Navigation */}
         <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-brand-primary text-white px-4 py-2 rounded z-50">
           Skip to main content
         </a>
 
-        {/* Header */}
-        <header className="border-b border-border-primary backdrop-blur-sm bg-surface-dark/40" role="banner">
-          <div className="max-w-7xl mx-auto flex items-center justify-between px-8 py-6">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-dot border-2 border-brand-primary flex items-center justify-center" aria-hidden="true">
-                <div className="w-6 h-6 rounded-dot bg-brand-primary"></div>
-              </div>
-              <h1 className="text-nav font-bold text-text-primary">Tailor Resume</h1>
-            </div>
-            <nav aria-label="Main navigation" className="flex gap-8  items-center">
-              <Link to="/" className="text-text-secondary hover:text-brand-primary text-badge font-medium transition">Home</Link>
-              <Link to="/profile" className="flex items-center gap-2">
-                <div className="w-9 h-9 rounded-full border border-cyan-400/40 flex items-center justify-center bg-white/5 hover:bg-white/10 transition">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-5 w-5 text-cyan-400"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    {/* head */}
-                    <circle cx="12" cy="8" r="4" />
-                    {/* shoulders */}
-                    <path d="M4 20c0-4 4-6 8-6s8 2 8 6" />
-                  </svg>
-                </div>
-              </Link>
-            </nav>
-          </div>
-        </header>
-
         {/* Main Content */}
-        <main id="main-content" className="max-w-7xl mx-auto px-8 py-20" role="main">
+        <main id="main-content" className="max-w-7xl mx-auto px-4 sm:px-8 py-16 sm:py-20" role="main">
+          {/* Session Error Banner */}
+          {sessionError && (
+            <div className="mb-6 bg-red-500/10 border border-red-500/40 text-red-400 px-5 py-4 rounded-xl text-sm" role="alert">
+              {sessionError}
+            </div>
+          )}
+
           {/* Answer-First Section */}
           <section className="mb-12" aria-labelledby="quick-answer-heading">
             <div className="bg-brand-primary/10 border-l-4 border-brand-primary p-6 rounded-r-lg">
@@ -357,6 +393,7 @@ export default function Main() {
             <div className=" gap-8">
               <label htmlFor="job-description" className="sr-only">Job Description</label>
               <textarea
+              style={{color: 'black'}}
                 id="job-description"
                 value={jd}
                 onChange={(e) => {
@@ -366,9 +403,9 @@ export default function Main() {
                 }}
                 placeholder="Paste your job description here..."
                 className={`w-full h-40 bg-gradient-to-br from-cyan-900/10 to-purple-900/10 
-                  border rounded-xl px-4 py-3 text-black placeholder-gray-600 focus:outline-none
+                  border rounded-xl px-4 py-3 text-text-primary placeholder-text-muted focus:outline-none
                   transition-all backdrop-blur-sm
-                  ${jdError ? "border-red-500" : "border-cyan-500/30 focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400/30"}`}
+                  ${jdError ? "border-red-500" : "border-border-primary focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/30"}`}
                 aria-describedby={jdError ? "jd-error" : undefined}
               />
               {jdError && (
@@ -402,43 +439,7 @@ export default function Main() {
           totalTime="PT5M"
           steps={resumeTailoringSteps}
         />
-
-        {/* Footer */}
-        <footer className="border-t border-border-primary backdrop-blur-sm bg-surface-dark/40 py-12" role="contentinfo">
-          <div className="max-w-7xl mx-auto px-8">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div>
-                <h3 className="text-nav font-bold text-text-primary mb-4">Tailer Resume</h3>
-                <p className="text-text-muted text-body-small leading-relaxed">
-                  AI-powered resume tailoring for job seekers. Create ATS-friendly resumes that get results.
-                </p>
-              </div>
-              <nav aria-label="Footer navigation">
-                <h4 className="text-badge font-semibold text-text-primary mb-4">Quick Links</h4>
-                <ul className="space-y-2">
-                  <li><Link to="/" className="text-text-secondary hover:text-brand-primary transition">Home</Link></li>
-                  <li><Link to="/tailor-resume" className="text-text-secondary hover:text-brand-primary transition">AI Resume Generator</Link></li>
-
-                  <li><Link to="/how-to-tailor-resume" className="text-text-secondary hover:text-brand-primary transition">How to Tailor Resume</Link></li>
-                  <li><Link to="/ats-optimization-guide" className="text-text-secondary hover:text-brand-primary transition">ATS Optimization Guide</Link></li>
-                </ul>
-              </nav>
-              <nav aria-label="Resources">
-                <h4 className="text-badge font-semibold text-text-primary mb-4">Resources</h4>
-                <ul className="space-y-2">
-                  <li><a href="https://tailerresume.com/sitemap.xml" className="text-text-secondary hover:text-brand-primary transition">Sitemap</a></li>
-                  <li><a href="https://tailerresume.com/robots.txt" className="text-text-secondary hover:text-brand-primary transition">Robots.txt</a></li>
-                </ul>
-              </nav>
-            </div>
-            <div className="border-t border-border-primary mt-8 pt-8 text-center">
-              <p className="text-text-subtle text-badge">
-                © 2026 Tailor Resume. All rights reserved.
-              </p>
-            </div>
-          </div>
-        </footer>
-      </div>
+      </>
     </>
   );
 }

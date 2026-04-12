@@ -35,7 +35,7 @@ export default function ResumeBuilder() {
   const handleStoreResumes = () => {
     const payload = {
       input_resume:  getInputResume(),
-      output_resume: previewRef.current.outerHTML.replace('font-weight: bold', 'font-weight: 500px'),
+      output_resume: previewRef.current.outerHTML.replace('font-weight: bold', 'font-weight: 700'),
       email: resume?.basics?.email
     }
     storeResumes(payload);
@@ -46,7 +46,7 @@ export default function ResumeBuilder() {
     setShowFeedback(true);
     try {
       const payload = {
-        html: previewRef.current.outerHTML.replace('font-weight: bold', 'font-weight: 500px'),   // real resume HTML
+        html: previewRef.current.outerHTML.replace('font-weight: bold', 'font-weight: 700'),   // real resume HTML
         filename: `${resume?.basics?.name || 'Resume'}_Resume.pdf`,
       };
 
@@ -119,12 +119,12 @@ export default function ResumeBuilder() {
       </Helmet>
       <div className="min-h-screen bg-gradient-to-br from-surface-dark via-surface-dark-mid to-brand-secondary-dark">
         {/* Header */}
-        <header className="border-b border-border-primary top-0 z-10">
+        <header className="border-b border-border-primary bg-surface-dark/60 backdrop-blur-sm sticky top-0 z-20">
           <div className="container mx-auto px-4 py-4 flex justify-between items-center">
             <div className="flex items-center gap-4">
-              <Link to="/" className="text-text-secondary hover:text-brand-primary transition">← Home</Link>
+              <Link to="/" className="text-text-secondary hover:text-brand-primary transition text-sm">← Home</Link>
               <h1 className="text-nav font-bold text-text-primary">Resume Builder</h1>
-              <span style={{ color: '#bdbbb8' }}> * For trust cross-check the ATS score in the chatGPT or any other AI tool </span>
+              <span className="text-text-muted text-xs hidden sm:inline"> * Cross-check ATS score in ChatGPT or another AI tool for confidence </span>
             </div>
             <div className="flex gap-2">
               <button
@@ -167,43 +167,33 @@ export default function ResumeBuilder() {
           <div className="flex gap-3">
             {/* Left - Form/Insights/Compare */}
             <div className={`${showPreview ? 'hidden lg:block' : 'block'} flex-1`}>
-              <div className="bg-white rounded-lg shadow-lg sticky top-20 max-h-[calc(100vh-7rem)] overflow-hidden" style={{ borderRadius: '0px' }}>
+              <div className="bg-surface-dark-mid border border-border-primary rounded-none sticky top-[61px] max-h-[calc(100vh-4rem)] overflow-hidden">
                 {/* Tab Navigation */}
-                <div className="flex border-b border-gray-200">
-                  <button
-                    onClick={() => setActiveTab("edit")}
-                    className={`flex-1 px-4 py-3 text-sm font-medium transition-colors ${activeTab === "edit"
-                        ? "text-blue-600 border-b-2 border-blue-600 bg-blue-50"
-                        : "text-gray-600 hover:text-gray-800 hover:bg-gray-50"
+                <div className="flex border-b border-border-primary bg-surface-dark/40">
+                  {[
+                    { id: 'edit',     label: 'Edit Resume' },
+                    { id: 'insights', label: 'AI Insights' },
+                    { id: 'compare',  label: 'Before/After' },
+                  ].map(({ id, label }) => (
+                    <button
+                      key={id}
+                      onClick={() => setActiveTab(id)}
+                      className={`flex-1 px-4 py-3 text-sm font-medium transition-colors ${
+                        activeTab === id
+                          ? 'text-brand-primary border-b-2 border-brand-primary bg-brand-primary/5'
+                          : 'text-text-muted hover:text-text-secondary hover:bg-white/5'
                       }`}
-                  >
-                    Edit Resume
-                  </button>
-                  <button
-                    onClick={() => setActiveTab("insights")}
-                    className={`flex-1 px-4 py-3 text-sm font-medium transition-colors ${activeTab === "insights"
-                        ? "text-blue-600 border-b-2 border-blue-600 bg-blue-50"
-                        : "text-gray-600 hover:text-gray-800 hover:bg-gray-50"
-                      }`}
-                  >
-                    AI Insights
-                  </button>
-                  <button
-                    onClick={() => setActiveTab("compare")}
-                    className={`flex-1 px-4 py-3 text-sm font-medium transition-colors ${activeTab === "compare"
-                        ? "text-blue-600 border-b-2 border-blue-600 bg-blue-50"
-                        : "text-gray-600 hover:text-gray-800 hover:bg-gray-50"
-                      }`}
-                  >
-                    Before/After
-                  </button>
+                    >
+                      {label}
+                    </button>
+                  ))}
                 </div>
 
                 {/* Tab Content */}
-                <div className="overflow-y-auto max-h-[calc(100vh-11rem)]">
+                <div className="overflow-y-auto max-h-[calc(100vh-8rem)]">
                   {activeTab === "edit" && (
                     <div className="p-3">
-                      <h2 className="text-xl font-bold mb-4 text-gray-800">Edit Resume</h2>
+                      <h2 className="text-xl font-bold mb-4 text-text-primary">Edit Resume</h2>
                       {resume ? (
                         <DynamicForm data={resume} onChange={handleChange} />
                       ) : (

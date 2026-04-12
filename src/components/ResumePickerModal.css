@@ -1,0 +1,340 @@
+/* Overlay */
+.rpm-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+/* Modal card */
+.rpm-card {
+  width: 100%;
+  max-width: 520px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: var(--surface-dark);
+  border: 1px solid rgba(var(--brand-primary-rgb), 0.2);
+  border-radius: 18px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* Header */
+.rpm-header {
+  padding: 24px 24px 0;
+}
+
+.rpm-header h2 {
+  margin: 0 0 4px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #f1f5f9;
+}
+
+.rpm-header p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* Divider */
+.rpm-divider {
+  height: 1px;
+  background: var(--surface-dark-mid);
+  margin: 20px 0 0;
+}
+
+/* Body */
+.rpm-body {
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Section label */
+.rpm-section-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #475569;
+  margin: 0 0 10px;
+}
+
+/* Resume list */
+.rpm-resume-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Resume row */
+.rpm-resume-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--surface-dark-mid);
+  background: var(--surface-dark);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.rpm-resume-row:hover {
+  border-color: var(--surface-dark-light);
+  background: var(--surface-dark-mid);
+}
+
+.rpm-resume-row.selected {
+  border-color: var(--brand-primary);
+  background: rgba(var(--brand-primary-rgb), 0.06);
+}
+
+/* Radio */
+.rpm-radio {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--surface-dark-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: border-color 0.15s;
+}
+
+.rpm-resume-row.selected .rpm-radio {
+  border-color: var(--brand-primary);
+}
+
+.rpm-radio-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--brand-primary);
+}
+
+/* Resume info */
+.rpm-resume-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.rpm-resume-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #e2e8f0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rpm-resume-meta {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* Active badge */
+.rpm-active-badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 20px;
+  background: rgba(var(--brand-primary-rgb), 0.15);
+  color: var(--brand-primary);
+  border: 1px solid rgba(var(--brand-primary-rgb), 0.3);
+  white-space: nowrap;
+}
+
+/* Upload section */
+.rpm-upload-section {
+  background: #0a1628;
+  border: 1px dashed var(--surface-dark-mid);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.rpm-upload-section.open {
+  border-color: var(--surface-dark-light);
+}
+
+.rpm-upload-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  color: var(--brand-primary);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.15s;
+}
+
+.rpm-upload-toggle:hover {
+  color: var(--brand-primary-light);
+}
+
+.rpm-upload-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.rpm-input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--surface-dark-light);
+  background: rgba(255, 255, 255, 0.02);
+  color: white;
+  font-size: 14px;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+
+.rpm-input:focus {
+  outline: none;
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 0 1px rgba(var(--brand-primary-rgb), 0.3);
+}
+
+/* File drop zone */
+.rpm-file-zone {
+  border: 1px dashed var(--surface-dark-light);
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.rpm-file-zone:hover,
+.rpm-file-zone.dragover {
+  border-color: var(--brand-primary);
+  background: rgba(var(--brand-primary-rgb), 0.04);
+}
+
+.rpm-file-zone p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.rpm-file-zone span {
+  color: var(--brand-primary);
+  font-weight: 500;
+}
+
+.rpm-file-selected {
+  font-size: 13px;
+  color: var(--brand-primary);
+  text-align: center;
+}
+
+/* Upload button */
+.rpm-upload-btn {
+  padding: 9px 16px;
+  border-radius: 8px;
+  border: none;
+  background: var(--brand-gradient);
+  color: white;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  align-self: flex-end;
+}
+
+.rpm-upload-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Error */
+.rpm-error {
+  font-size: 13px;
+  color: #f87171;
+  background: rgba(248, 113, 113, 0.08);
+  border: 1px solid rgba(248, 113, 113, 0.2);
+  padding: 8px 12px;
+  border-radius: 8px;
+}
+
+/* Footer */
+.rpm-footer {
+  padding: 16px 24px 24px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.rpm-skip-btn {
+  padding: 11px 20px;
+  border-radius: 10px;
+  border: 1px solid var(--surface-dark-light);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.rpm-skip-btn:hover {
+  border-color: #64748b;
+  color: #cbd5e1;
+}
+
+.rpm-confirm-btn {
+  padding: 11px 28px;
+  border-radius: 10px;
+  border: none;
+  background: var(--brand-gradient);
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s;
+}
+
+.rpm-confirm-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  opacity: 0.92;
+}
+
+.rpm-confirm-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* Loading spinner */
+.rpm-spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: rpm-spin 0.6s linear infinite;
+  vertical-align: middle;
+  margin-right: 6px;
+}
+
+@keyframes rpm-spin {
+  to { transform: rotate(360deg); }
+}

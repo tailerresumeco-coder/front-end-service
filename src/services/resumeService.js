@@ -91,6 +91,39 @@ export const storeResumes = (payload) => {
   return axios.post(`${BASE_PATH}/resume/store-resumes`, payload);
 }
 
+// ── User resume management ─────────────────────────────────────────────────
+
+export const getActiveResume = () => {
+  return API.get(`${BASE_PATH}/resume/my-resumes/active`);
+};
+
+export const listMyResumes = () => {
+  return API.get(`${BASE_PATH}/resume/my-resumes`);
+};
+
+export const uploadMyResume = (file, name) => {
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('name', name);
+  return API.post(`${BASE_PATH}/resume/my-resumes/upload`, formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
+};
+
+export const activateMyResume = (resumeId) => {
+  return API.patch(`${BASE_PATH}/resume/my-resumes/${resumeId}/activate`);
+};
+
+export const deleteMyResume = (resumeId) => {
+  return API.delete(`${BASE_PATH}/resume/my-resumes/${resumeId}`);
+};
+
+export const tailorFromJob = (jobId) => {
+  return API.post(`${BASE_PATH}/resume/tailor-from-job/${jobId}`);
+};
+
+// ──────────────────────────────────────────────────────────────────────────
+
 export const checkATSScore = (resume, jd, options = {}) => {
     const payload = {
         resume: resume,

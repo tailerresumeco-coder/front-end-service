@@ -500,7 +500,7 @@ export function calculateYearsOfExperience(experience) {
         // FIXED: Safely handle date parsing
         if (!dateStr || typeof dateStr !== 'string') return null;
         
-        const parts = dateStr.split('–').map(s => s.trim()).filter(Boolean);
+        const parts = dateStr.split(/\s*[–\-]\s*(?=[A-Za-z])/).map(s => s.trim()).filter(Boolean);
         if (parts.length < 2) return null;
 
         const start = parseDate(parts[0]);
