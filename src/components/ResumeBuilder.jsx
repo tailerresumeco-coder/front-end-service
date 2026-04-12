@@ -35,7 +35,7 @@ export default function ResumeBuilder() {
   const handleStoreResumes = () => {
     const payload = {
       input_resume:  getInputResume(),
-      output_resume: previewRef.current.outerHTML.replace('font-weight: bold', 'font-weight: 500px'),
+      output_resume: previewRef.current.outerHTML.replace('font-weight: bold', 'font-weight: 700'),
       email: resume?.basics?.email
     }
     storeResumes(payload);
@@ -46,7 +46,7 @@ export default function ResumeBuilder() {
     setShowFeedback(true);
     try {
       const payload = {
-        html: previewRef.current.outerHTML.replace('font-weight: bold', 'font-weight: 500px'),   // real resume HTML
+        html: previewRef.current.outerHTML.replace('font-weight: bold', 'font-weight: 700'),   // real resume HTML
         filename: `${resume?.basics?.name || 'Resume'}_Resume.pdf`,
       };
 
