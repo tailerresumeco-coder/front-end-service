@@ -4,9 +4,10 @@ import { Link } from "react-router-dom";
 import { storeInputResume } from "../services/resumeService";
 import * as pdfjsLib from "pdfjs-dist";
 import { useResume } from "../context/ResumeContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import mammoth from "mammoth";
 import HowToGuide, { resumeTailoringSteps } from "./HowToGuide";
+import FormatPickerModal from "./FormatPickerModal";
 
 // Set PDF.js worker
 pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
@@ -18,19 +19,69 @@ export default function Main() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [base64File, setBase64File] = useState(null);
   const fileInputRef = useRef(null);
-  const { setUploadedResume, setJobDescription } = useResume();
+  const { setUploadedResume, setJobDescription, setLayoutPreference, setDetectedSectionOrder } = useResume();
   const [jdError, setJdError] = useState("");
+  const [showFormatPicker, setShowFormatPicker] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+  const sessionError = location.state?.error || null;
+
+  const SECTION_DEFS = [
+    { key: 'skills',          patterns: ['skills', 'technical skills', 'core competencies', 'competencies', 'expertise'] },
+    { key: 'experience',      patterns: ['experience', 'work experience', 'professional experience', 'employment history', 'work history'] },
+    { key: 'education',       patterns: ['education', 'academic background', 'qualifications', 'academics'] },
+    { key: 'projects',        patterns: ['projects', 'personal projects', 'key projects', 'side projects'] },
+    { key: 'internships',     patterns: ['internships', 'internship'] },
+    { key: 'certifications',  patterns: ['certifications', 'certification', 'certificates', 'licenses & certifications'] },
+    { key: 'awards',          patterns: ['awards', 'honors', 'achievements', 'recognition', 'accomplishments'] },
+    { key: 'languages',       patterns: ['languages', 'language proficiency', 'linguistic skills'] },
+  ];
+
+  const DEFAULT_ORDER = ['skills', 'experience', 'projects', 'education', 'internships', 'certifications', 'awards', 'languages'];
+
+  const detectSectionOrder = (rawText) => {
+    const lines = rawText.toLowerCase().split('\n');
+    const found = [];
+
+    lines.forEach((line, lineIdx) => {
+      const trimmed = line.trim();
+      if (!trimmed) return;
+      SECTION_DEFS.forEach(({ key, patterns }) => {
+        if (found.find(f => f.key === key)) return;
+        if (patterns.some(p => trimmed === p || trimmed.startsWith(p + ' ') || trimmed.startsWith(p + ':'))) {
+          found.push({ key, idx: lineIdx });
+        }
+      });
+    });
+
+    found.sort((a, b) => a.idx - b.idx);
+    const detectedKeys = found.map(f => f.key);
+    const remaining = DEFAULT_ORDER.filter(k => !detectedKeys.includes(k));
+    return [...detectedKeys, ...remaining];
+  };
 
   const onSend = () => {
-    // Keep the full data URL prefix so backend can detect file type (PDF vs DOCX)
-    let resumeData = base64File || text;
+    const error = validateJD(jd);
+    if (error) {
+      setJdError(error);
+      return;
+    }
+    setShowFormatPicker(true);
+  };
+
+  const handleFormatSelect = (format) => {
+    const resumeData = base64File || text;
+    setLayoutPreference(format);
+    if (format === 'adaptive') {
+      setDetectedSectionOrder(detectSectionOrder(text));
+    } else {
+      setDetectedSectionOrder(null);
+    }
     setUploadedResume(resumeData);
     setJobDescription(jd);
     storeInputResume(selectedFile);
+    setShowFormatPicker(false);
     navigate("/processing", { state: { mode: 'tailor' } });
-
-
   };
 
 
@@ -114,6 +165,11 @@ export default function Main() {
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
+
+    if (file.size > 10 * 1024 * 1024) {
+      setStatus("❌ File too large. Maximum size is 10 MB.");
+      return;
+    }
 
     setSelectedFile(file);
 
@@ -211,6 +267,13 @@ export default function Main() {
         <meta name="twitter:image" content="https://tailerresume.com/tailer-resume-logo-1.svg" />
       </Helmet>
       <>
+        {showFormatPicker && (
+          <FormatPickerModal
+            onSelect={handleFormatSelect}
+            onClose={() => setShowFormatPicker(false)}
+          />
+        )}
+
         {/* Skip Navigation */}
         <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-brand-primary text-white px-4 py-2 rounded z-50">
           Skip to main content
@@ -218,6 +281,13 @@ export default function Main() {
 
         {/* Main Content */}
         <main id="main-content" className="max-w-7xl mx-auto px-4 sm:px-8 py-16 sm:py-20" role="main">
+          {/* Session Error Banner */}
+          {sessionError && (
+            <div className="mb-6 bg-red-500/10 border border-red-500/40 text-red-400 px-5 py-4 rounded-xl text-sm" role="alert">
+              {sessionError}
+            </div>
+          )}
+
           {/* Answer-First Section */}
           <section className="mb-12" aria-labelledby="quick-answer-heading">
             <div className="bg-brand-primary/10 border-l-4 border-brand-primary p-6 rounded-r-lg">

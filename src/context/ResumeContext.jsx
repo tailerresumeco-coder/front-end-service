@@ -8,6 +8,8 @@ export function ResumeProvider({ children }) {
   const [jobDescription, setJobDescription] = useState("");
   const [selectedFormat, setSelectedFormat] = useState("pdf");
   const [generatedResume, setGeneratedResume] = useState(null);
+  const [layoutPreference, setLayoutPreference] = useState("professional");
+  const [detectedSectionOrder, setDetectedSectionOrder] = useState(null);
   const [atsScoreData, setATSScoreData] = useState(null);
   const [activeResume, setActiveResume] = useState(null);
 
@@ -29,6 +31,10 @@ export function ResumeProvider({ children }) {
         setATSScoreData,
         activeResume,
         setActiveResume,
+        layoutPreference,
+        setLayoutPreference,
+        detectedSectionOrder,
+        setDetectedSectionOrder,
       }}
     >
       {children}

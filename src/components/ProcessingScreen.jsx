@@ -26,8 +26,9 @@ export default function ProcessingScreen() {
 
   useEffect(() => {
     if (!uploadedResume || !jobDescription) {
-      console.warn("Missing resume or job description");
-      navigate("/");
+      navigate("/tailor-resume", {
+        state: { error: "Session expired. Please upload your resume again." }
+      });
     }
   }, [uploadedResume, jobDescription, navigate]);
 
@@ -140,7 +141,7 @@ const startAdaptiveProgress = () => {
         setError(
           err.name === "AbortError"
             ? "Processing took too long. Please try again."
-            : err.message || "Failed to process resume. Please try again."
+            : "Something went wrong. Please try again."
         );
       }
     };

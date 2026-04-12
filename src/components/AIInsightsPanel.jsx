@@ -4,38 +4,39 @@ import React from 'react';
  * ATSScoreCard - Visual display of ATS score improvement
  */
 function ATSScoreCard({ before, after, explanation }) {
-  const improvement = after - before;
-  const hasImprovement = before !== null && after !== null;
+  const hasScores = before !== null && after !== null && !isNaN(before) && !isNaN(after);
+  const improved = hasScores && after > before;
+  const improvement = hasScores ? after - before : 0;
 
   return (
     <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-4 border border-blue-100">
       <h3 className="text-lg font-semibold text-gray-800 mb-3 flex items-center gap-2">
-        <span className="text-xl">📈</span> ATS Score Improvement
+        <span className="text-xl">📈</span> ATS Score
       </h3>
 
-      {hasImprovement ? (
+      {!hasScores ? (
+        <p className="text-gray-500 text-sm">ATS score data not available</p>
+      ) : improved ? (
         <>
           <div className="flex items-center gap-4 mb-3">
             <div className="flex-1">
               <div className="flex justify-between text-sm text-gray-600 mb-1">
                 <span>Before: {before}%</span>
-                <span>After: { after}%</span>
+                <span>After: {after}%</span>
               </div>
               <div className="relative h-4 bg-gray-200 rounded-full overflow-hidden">
-                {/* Before score bar */}
                 <div
                   className="absolute h-full bg-gray-400 rounded-full transition-all"
                   style={{ width: `${before}%` }}
                 />
-                {/* After score bar (overlay) */}
                 <div
                   className="absolute h-full bg-gradient-to-r from-green-400 to-green-500 rounded-full transition-all"
                   style={{ width: `${after}%` }}
                 />
               </div>
             </div>
-            <div className={`text-lg font-bold ${improvement >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-              {improvement >= 0 ? '+' : ''}{improvement}%
+            <div className="text-lg font-bold text-green-600">
+              +{improvement}%
             </div>
           </div>
           {explanation && (
@@ -43,7 +44,25 @@ function ATSScoreCard({ before, after, explanation }) {
           )}
         </>
       ) : (
-        <p className="text-gray-500 text-sm">ATS score data not available</p>
+        <>
+          <div className="flex items-center gap-4 mb-3">
+            <div className="flex-1">
+              <div className="flex justify-between text-sm text-gray-600 mb-1">
+                <span>ATS Score: {after}%</span>
+              </div>
+              <div className="relative h-4 bg-gray-200 rounded-full overflow-hidden">
+                <div
+                  className="absolute h-full bg-gradient-to-r from-blue-400 to-indigo-500 rounded-full transition-all"
+                  style={{ width: `${after}%` }}
+                />
+              </div>
+            </div>
+          </div>
+          <p className="text-sm text-gray-600">Your resume has been optimized for this role.</p>
+          {explanation && (
+            <p className="text-sm text-gray-600 italic mt-1">"{explanation}"</p>
+          )}
+        </>
       )}
     </div>
   );
@@ -272,8 +291,8 @@ export default function AIInsightsPanel({ metadata }) {
     <div className="p-4 space-y-4 max-h-[calc(100vh-10rem)] overflow-y-auto">
       {/* ATS Score */}
       <ATSScoreCard
-        before={ Math.min(atsScoreBefore, atsScoreAfter)}
-        after={ Math.max(atsScoreBefore, atsScoreAfter)}
+        before={atsScoreBefore}
+        after={atsScoreAfter}
         explanation={atsExplanation}
       />
 
