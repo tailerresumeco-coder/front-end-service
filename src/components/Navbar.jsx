@@ -3,9 +3,9 @@ import { Link, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 
 const NAV_LINKS = [
-  { to: '/',              label: 'Home'   },
+  { to: '/', label: 'Home' },
   { to: '/tailor-resume', label: 'Tailor' },
-  { to: '/jobs',          label: 'Jobs'   },
+  { to: '/jobs', label: 'Jobs' },
 ];
 
 export default function Navbar() {
@@ -15,8 +15,7 @@ export default function Navbar() {
   const isActive = (to) => pathname === to;
 
   const linkClass = (to) =>
-    `text-badge font-medium transition ${
-      isActive(to) ? 'text-brand-primary' : 'text-text-secondary hover:text-brand-primary'
+    `text-badge font-medium transition ${isActive(to) ? 'text-brand-primary' : 'text-text-secondary hover:text-brand-primary'
     }`;
 
   return (
@@ -46,26 +45,39 @@ export default function Navbar() {
 
         {/* Right — profile + mobile toggle */}
         <div className="flex items-center gap-3">
-          <Link
-            to="/profile"
-            className="w-9 h-9 rounded-full border border-cyan-400/40 flex items-center justify-center bg-white/5 hover:bg-white/10 transition"
-            aria-label="Profile"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5 text-cyan-400"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
+          {
+            localStorage.getItem('access_token') &&
+            <Link
+              to="/profile"
+              className="w-9 h-9 rounded-full border border-cyan-400/40 flex items-center justify-center bg-white/5 hover:bg-white/10 transition"
+              aria-label="Profile"
             >
-              <circle cx="12" cy="8" r="4" />
-              <path d="M4 20c0-4 4-6 8-6s8 2 8 6" />
-            </svg>
-          </Link>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5 text-cyan-400"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <circle cx="12" cy="8" r="4" />
+                <path d="M4 20c0-4 4-6 8-6s8 2 8 6" />
+              </svg>
+            </Link>
+          }
+          {
+            !localStorage.getItem('access_token') && 
+              <Link
+                to="/login"
+                aria-label="Login"
+              >
+                <button className="text-cyan-400">Login/ Signup</button>
+              </Link>
+           
+          }
 
           {/* Mobile hamburger */}
           <button
@@ -90,11 +102,10 @@ export default function Navbar() {
               key={to}
               to={to}
               onClick={() => setMobileOpen(false)}
-              className={`px-4 py-3 rounded-lg text-sm font-medium transition ${
-                isActive(to)
-                  ? 'text-brand-primary bg-brand-primary/10'
-                  : 'text-text-secondary hover:text-text-primary hover:bg-white/5'
-              }`}
+              className={`px-4 py-3 rounded-lg text-sm font-medium transition ${isActive(to)
+                ? 'text-brand-primary bg-brand-primary/10'
+                : 'text-text-secondary hover:text-text-primary hover:bg-white/5'
+                }`}
             >
               {label}
             </Link>
