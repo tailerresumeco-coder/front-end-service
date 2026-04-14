@@ -97,8 +97,6 @@ export default function JobsPage() {
     [filters.search, activeTab],
   );
 
-  // ── Reset + refetch whenever fetchJobs identity changes (filter/tab changed) ──
-
   useEffect(() => {
     if (activeTab === 'saved') return; // saved tab is local-only
 
@@ -113,7 +111,7 @@ export default function JobsPage() {
 
     fetchJobs(1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fetchJobs]);
+  }, []);
 
   // Reset initial state when switching to saved tab
   useEffect(() => {
