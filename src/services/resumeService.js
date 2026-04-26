@@ -37,10 +37,12 @@ export const parseResumeOnly = (resume) => {
     return axios.post(`${BASE_PATH}/resume/tailer-resume-v2`, payload);
 }
 
-export const uploadResumeAndJDLegacy = (resume, jd) => {
+export const uploadResumeAndJDLegacy = (resume, jd, resumeId) => {
     const payload = {
         resume: resume,
-        jd: jd
+        jd: jd,
+        resume_id: resumeId,
+        email: localStorage.getItem('email')
     }
     return API.post(`${BASE_PATH}/resume/tailer-resume-legacy`, payload);
 }

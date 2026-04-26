@@ -104,7 +104,7 @@ const startAdaptiveProgress = () => {
           }, 600);
         } else {
           // Call full tailor API (existing behavior)
-          response = await uploadResumeAndJDLegacy(uploadedResume, jobDescription, {
+          response = await uploadResumeAndJDLegacy(uploadedResume, jobDescription, '697e4041793bac6a42d2cd3c', {
             signal: controller.signal,
           });
 

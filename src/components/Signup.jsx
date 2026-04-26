@@ -27,6 +27,7 @@ const Signup = () => {
     const res = await OAuthGoogleSignup({credential: obj.credential});
     if (res && res?.data?.access_token) {
       localStorage.setItem("access_token", res?.data?.access_token);
+      localStorage.setItem("email", res?.data?.user?.email);
       navigate("/");
     }
   };
