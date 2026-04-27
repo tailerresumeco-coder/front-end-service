@@ -112,20 +112,34 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
     return () => node.removeEventListener('wheel', handleOnWheel);
   }, []);
 
+  const formatUrl = (url) => {
+    if (!url) return "";
+
+    url = url.trim();
+
+    // If already valid (http/https), return as is
+    if (url.startsWith("http://") || url.startsWith("https://")) {
+      return url;
+    }
+
+    // Otherwise, prepend https
+    return `https://${url}`;
+  };
+
   const handleBasicsOthers = () => {
     if (basics.other && basics.other.length > 0) {
       const others = basics.other.split(',').map(item => {
         const linkPattern = /^(https?:\/\/|www\.)/i;
-    
+
         if (linkPattern.test(item.trim())) {
           const displayName = (item.trim())
             .replace(/^https?:\/\//, '')
             .replace(/^www\./, '')
             .split('/')[0]?.split('.')[0]
             ?.replace(/^./, c => c.toUpperCase());
-      return (
+          return (
             <>
-          <span>|</span>
+              <span>|</span>
               <a
                 href={item.trim()}
                 className="hyperlink"
@@ -138,11 +152,11 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
             </>
           );
         } else {
-      return (
+          return (
             <span key={item}>{item}</span>
-      );
+          );
         }
-    });
+      });
       return others
     }
   }
@@ -202,8 +216,13 @@ const ResumeTemplate = React.forwardRef(({ resume }, ref) => {
             {basics.linkedin && (
               <>
                 <span>|</span>
-                <a href={basics.linkedin} className="hyperlink" target="_blank">
-                  Linkedin
+                <a
+                  href={formatUrl(basics.linkedin)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hyperlink"
+                >
+                  LinkedIn
                 </a>
               </>
             )}

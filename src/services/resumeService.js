@@ -2,7 +2,7 @@ import axios from 'axios';
 import API from '../api/axios';
 
 const BASE_PATH = 'https://api.tailerresume.com';
-// const BASE_PATH='http://127.0.0.1:8000';
+// const BASE_PATH = 'http://127.0.0.1:8000';
 
 export const signup = (payload) => {
   return API.post(`${BASE_PATH}/auth/sign-up`, payload);
@@ -17,12 +17,12 @@ export const OAuthGoogleSignup = (payload) => {
 }
 
 export const uploadResumeAndJD = (resume, jd) => {
-    const payload = {
-        resume: resume,
-        jd: jd
-    }
-    // Default endpoint now uses V2 processing internally
-    return axios.post(`${BASE_PATH}/resume/tailer-resume`, payload);
+  const payload = {
+    resume: resume,
+    jd: jd
+  }
+  // Default endpoint now uses V2 processing internally
+  return axios.post(`${BASE_PATH}/resume/tailer-resume`, payload);
 }
 
 /**
@@ -30,21 +30,33 @@ export const uploadResumeAndJD = (resume, jd) => {
  * @param {string} resume - Raw resume text
  */
 export const parseResumeOnly = (resume) => {
-    const payload = {
-        resume: resume,
-        jd: null  // No JD = parse-only mode
-    }
-    return axios.post(`${BASE_PATH}/resume/tailer-resume-v2`, payload);
+  const payload = {
+    resume: resume,
+    jd: null  // No JD = parse-only mode
+  }
+  return axios.post(`${BASE_PATH}/resume/tailer-resume-v2`, payload);
 }
 
-export const uploadResumeAndJDLegacy = (resume, jd, resumeId) => {
-    const payload = {
-        resume: resume,
-        jd: jd,
-        resume_id: resumeId,
-        email: localStorage.getItem('email')
-    }
-    return API.post(`${BASE_PATH}/resume/tailer-resume-legacy`, payload);
+export const uploadResumeAndJDLegacy = (
+  resume,
+  jd,
+  resumeId = '',
+  resumeName,
+  config = {}
+) => {
+  const payload = {
+    resume: resume,
+    jd: jd,
+    resume_id: resumeId,
+    email: localStorage.getItem('email'),
+    resume_name: resumeName
+  }
+
+  return API.post(
+    `${BASE_PATH}/resume/tailer-resume-legacy`,
+    payload,
+    config   // ✅ pass signal here
+  );
 }
 
 export const downloadPdfApi = (payload) => {
@@ -57,16 +69,16 @@ export const downloadPdfApi = (payload) => {
   );
 };
 
-export const apikeySave=(payload)=>{
-  return axios.post(`${BASE_PATH}/resume/token/save`,payload);
+export const apikeySave = (payload) => {
+  return axios.post(`${BASE_PATH}/resume/token/save`, payload);
 }
 
-export const getKeys=()=>{
+export const getKeys = () => {
   return axios.get(`${BASE_PATH}/resume/tokens`);
 }
 
-export const activateKey=(payload)=>{
-  return axios.patch(`${BASE_PATH}/resume/token/activate`,payload);
+export const activateKey = (payload) => {
+  return axios.patch(`${BASE_PATH}/resume/token/activate`, payload);
 }
 
 export const deleteKey = (id) => {
@@ -127,14 +139,14 @@ export const tailorFromJob = (jobId) => {
 // ──────────────────────────────────────────────────────────────────────────
 
 export const checkATSScore = (resume, jd, options = {}) => {
-    const payload = {
-        resume: resume,
-        jd: jd
-    }
-    return axios.post(`${BASE_PATH}/resume/check-ats-score`, payload, options);
+  const payload = {
+    resume: resume,
+    jd: jd
+  }
+  return axios.post(`${BASE_PATH}/resume/check-ats-score`, payload, options);
 }
 
-export const getUsers = (page = 1, size = 10,search) => {
+export const getUsers = (page = 1, size = 10, search) => {
   return axios.get(`${BASE_PATH}/mails/get-user-details`, {
     params: {
       page
@@ -149,7 +161,7 @@ export const sendMail = (recipients, subject, body, attachment = null) => {
   formData.append('recipients', JSON.stringify(recipients));
   formData.append('subject', subject);
   formData.append('body', body);
-  
+
   if (attachment) {
     formData.append('attachment', attachment);
   }
@@ -159,4 +171,9 @@ export const sendMail = (recipients, subject, body, attachment = null) => {
       'Content-Type': 'multipart/form-data'
     }
   });
+}
+
+export const myResumesLists = () => {
+  const email = localStorage.getItem('email');
+  return API.get(`${BASE_PATH}/resume/my-resumes-lists/${email}`);
 }

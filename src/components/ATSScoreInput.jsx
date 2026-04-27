@@ -17,7 +17,7 @@ export default function ATSScoreInput() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [base64File, setBase64File] = useState(null);
   const fileInputRef = useRef(null);
-  const { setUploadedResume, setJobDescription } = useResume();
+  const { setUploadedResume, setJobDescription, setResumeName, setResumeId } = useResume();
   const [jdError, setJdError] = useState("");
   const navigate = useNavigate();
 

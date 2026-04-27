@@ -1,7 +1,7 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
-import { storeInputResume } from "../services/resumeService";
+import { storeInputResume, myResumesLists } from "../services/resumeService";
 import * as pdfjsLib from "pdfjs-dist";
 import { useResume } from "../context/ResumeContext";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -19,22 +19,24 @@ export default function Main() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [base64File, setBase64File] = useState(null);
   const fileInputRef = useRef(null);
-  const { setUploadedResume, setJobDescription, setLayoutPreference, setDetectedSectionOrder } = useResume();
+  const { setUploadedResume, setJobDescription, setLayoutPreference, setDetectedSectionOrder, setResumeName, setResumeId } = useResume();
   const [jdError, setJdError] = useState("");
+  const [selectedResume, setSelectedResume] = useState(null);
+  const [allMyResumes, setAllMyResumes] = useState([]);
   const [showFormatPicker, setShowFormatPicker] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const sessionError = location.state?.error || null;
 
   const SECTION_DEFS = [
-    { key: 'skills',          patterns: ['skills', 'technical skills', 'core competencies', 'competencies', 'expertise'] },
-    { key: 'experience',      patterns: ['experience', 'work experience', 'professional experience', 'employment history', 'work history'] },
-    { key: 'education',       patterns: ['education', 'academic background', 'qualifications', 'academics'] },
-    { key: 'projects',        patterns: ['projects', 'personal projects', 'key projects', 'side projects'] },
-    { key: 'internships',     patterns: ['internships', 'internship'] },
-    { key: 'certifications',  patterns: ['certifications', 'certification', 'certificates', 'licenses & certifications'] },
-    { key: 'awards',          patterns: ['awards', 'honors', 'achievements', 'recognition', 'accomplishments'] },
-    { key: 'languages',       patterns: ['languages', 'language proficiency', 'linguistic skills'] },
+    { key: 'skills', patterns: ['skills', 'technical skills', 'core competencies', 'competencies', 'expertise'] },
+    { key: 'experience', patterns: ['experience', 'work experience', 'professional experience', 'employment history', 'work history'] },
+    { key: 'education', patterns: ['education', 'academic background', 'qualifications', 'academics'] },
+    { key: 'projects', patterns: ['projects', 'personal projects', 'key projects', 'side projects'] },
+    { key: 'internships', patterns: ['internships', 'internship'] },
+    { key: 'certifications', patterns: ['certifications', 'certification', 'certificates', 'licenses & certifications'] },
+    { key: 'awards', patterns: ['awards', 'honors', 'achievements', 'recognition', 'accomplishments'] },
+    { key: 'languages', patterns: ['languages', 'language proficiency', 'linguistic skills'] },
   ];
 
   const DEFAULT_ORDER = ['skills', 'experience', 'projects', 'education', 'internships', 'certifications', 'awards', 'languages'];
@@ -69,6 +71,22 @@ export default function Main() {
     setShowFormatPicker(true);
   };
 
+  useEffect(() => {
+    const fetchResumes = async () => {
+      const data = await myResumesLists();
+      setAllMyResumes(data?.data?.resumes || []);
+    };
+
+    fetchResumes();
+  }, []);
+
+  useEffect(() => {
+    if (allMyResumes.length > 0) {
+      setSelectedResume(prev => prev || allMyResumes[0]);
+      setResumeId(allMyResumes[0].id);
+    }
+  }, [allMyResumes]);
+
   const handleFormatSelect = (format) => {
     const resumeData = base64File || text;
     setLayoutPreference(format);
@@ -81,10 +99,18 @@ export default function Main() {
     setJobDescription(jd);
     storeInputResume(selectedFile);
     setShowFormatPicker(false);
+    setResumeName(selectedFile.name);
     navigate("/processing", { state: { mode: 'tailor' } });
   };
 
-
+  useEffect(() => {
+    if (selectedFile) {
+      setResumeName(selectedFile.name);
+      setResumeId(null);
+    } else {
+      setResumeName(selectedResume?.name || '');
+    }
+  }, [selectedFile]);
 
   const handleDragOver = (e) => {
     e.preventDefault();
@@ -321,37 +347,71 @@ export default function Main() {
               <p className="text-body text-text-muted mb-12 leading-relaxed">
                 We'll tailor it for your next job using neural intelligence.
               </p>
-
-              {/* Upload Area */}
-              <div
-                onDragOver={handleDragOver}
-                onDragLeave={handleDragLeave}
-                onDrop={handleDrop}
-                onClick={() => fileInputRef.current?.click()}
-                className="border-2 border-dashed border-cyan-500/40 rounded-2xl bg-gradient-to-br from-cyan-900/10 to-purple-900/10 hover:border-cyan-400 transition-all duration-300 py-16 px-8 text-center cursor-pointer group backdrop-blur-sm"
-                role="button"
-                tabIndex={0}
-                aria-label="Upload resume file"
-              >
-                {/* Upload Icon */}
-                <div className="flex justify-center mb-6">
-                  <div className="w-20 h-20 bg-gradient-to-br from-cyan-400 to-cyan-600 rounded-full flex items-center justify-center shadow-2xl shadow-cyan-500/40 group-hover:shadow-cyan-500/60 transition-shadow">
-                    <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3v-6" />
-                    </svg>
+              <div className="flex gap-4 justify-evenly">
+                {/* Upload Area */}
+                <div
+                  onDragOver={handleDragOver}
+                  onDragLeave={handleDragLeave}
+                  onDrop={handleDrop}
+                  onClick={() => fileInputRef.current?.click()}
+                  className="border-2 border-dashed border-cyan-500/40 rounded-2xl bg-gradient-to-br from-cyan-900/10 to-purple-900/10 hover:border-cyan-400 transition-all duration-300 py-16 px-8 text-center cursor-pointer group backdrop-blur-sm"
+                  role="button"
+                  tabIndex={0}
+                  aria-label="Upload resume file"
+                >
+                  {/* Upload Icon */}
+                  <div className="flex justify-center mb-6">
+                    <div className="w-20 h-20 bg-gradient-to-br from-cyan-400 to-cyan-600 rounded-full flex items-center justify-center shadow-2xl shadow-cyan-500/40 group-hover:shadow-cyan-500/60 transition-shadow">
+                      <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3v-6" />
+                      </svg>
+                    </div>
                   </div>
+
+                  <p className="text-white font-semibold text-xl mb-2">
+                    Drag & drop your resume here
+                  </p>
+                  <p className="text-gray-400 text-base mb-6">
+                    or click to browse files
+                  </p>
+
+                  <p className="text-gray-500 text-sm uppercase tracking-wider">
+                    Supported formats: PDF, DOCX · Max 10 MB
+                  </p>
                 </div>
+                {allMyResumes.length > 0 &&
 
-                <p className="text-white font-semibold text-xl mb-2">
-                  Drag & drop your resume here
-                </p>
-                <p className="text-gray-400 text-base mb-6">
-                  or click to browse files
-                </p>
+                  <div className="space-y-3 overflow-y-auto" style={{
+                    maxHeight: "24rem",
+                    overflowY: "auto",
+                    scrollbarWidth: "none",       // Firefox
+                    msOverflowStyle: "none"       // IE/Edge
+                  }}>
+                    {allMyResumes.map((resume) => {
+                      const isSelected = selectedResume?._id === resume._id;
 
-                <p className="text-gray-500 text-sm uppercase tracking-wider">
-                  Supported formats: PDF, DOCX · Max 10 MB
-                </p>
+                      return (
+                        <div
+                          key={resume._id}
+                          onClick={() => {setSelectedResume(resume); setResumeId(resume._id);}}
+                          className={`p-4 rounded-xl cursor-pointer border transition-all duration-200
+                          ${isSelected
+                              ? "border-cyan-400 bg-cyan-500/10 shadow-md shadow-cyan-500/20"
+                              : "border-gray-700 hover:border-cyan-500/40"
+                            }`}
+                        >
+                          <p className="text-white font-medium truncate">
+                            {resume.resume_name}
+                          </p>
+
+                          <p className="text-gray-400 text-sm">
+                            {new Date(resume.created_on + "Z").toLocaleDateString()}
+                          </p>
+                        </div>
+                      );
+                    })}
+                  </div>
+                }
               </div>
 
               {/* Hidden File Input */}
@@ -393,7 +453,7 @@ export default function Main() {
             <div className=" gap-8">
               <label htmlFor="job-description" className="sr-only">Job Description</label>
               <textarea
-              style={{color: 'black'}}
+                style={{ color: 'black' }}
                 id="job-description"
                 value={jd}
                 onChange={(e) => {

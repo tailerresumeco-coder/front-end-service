@@ -12,7 +12,8 @@ export function ResumeProvider({ children }) {
   const [detectedSectionOrder, setDetectedSectionOrder] = useState(null);
   const [atsScoreData, setATSScoreData] = useState(null);
   const [activeResume, setActiveResume] = useState(null);
-
+  const [resumeName, setResumeName] = useState('');
+  const [resumeId, setResumeId] = useState('');
 
   return (
     <ResumeContext.Provider
@@ -35,6 +36,10 @@ export function ResumeProvider({ children }) {
         setLayoutPreference,
         detectedSectionOrder,
         setDetectedSectionOrder,
+        resumeName,
+        setResumeName,
+        resumeId,
+        setResumeId
       }}
     >
       {children}

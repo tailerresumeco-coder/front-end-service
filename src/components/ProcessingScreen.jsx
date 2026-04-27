@@ -11,13 +11,13 @@ import { transformBackendResponse, isResumeValid } from "../utils/DataTransforme
 export default function ProcessingScreen() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { setResume, setGeneratedResume, uploadedResume, jobDescription, setATSScoreData } = useResume();
+  const { setResume, setGeneratedResume, uploadedResume, jobDescription, setATSScoreData, resumeName } = useResume();
 
 
   const [error, setError] = useState(null);
   const [progress, setProgress] = useState(0);
   const apiCalledRef = useRef(false);
-  
+
   // Get mode from navigation state (default to 'tailor')
   const mode = location.state?.mode || 'tailor';
 
@@ -40,37 +40,37 @@ export default function ProcessingScreen() {
     let animationInterval;
     let timeoutId;
 
-const startAdaptiveProgress = () => {
-  setProgress(0);
+    const startAdaptiveProgress = () => {
+      setProgress(0);
 
-  let baseProgress = 0;
-  const startTime = Date.now();
+      let baseProgress = 0;
+      const startTime = Date.now();
 
-  animationInterval = setInterval(() => {
-    const elapsedSeconds = (Date.now() - startTime) / 1000;
+      animationInterval = setInterval(() => {
+        const elapsedSeconds = (Date.now() - startTime) / 1000;
 
-    // Target curve: reaches ~90% around 70 seconds, but can accelerate if needed
-    let targetProgress = 0;
+        // Target curve: reaches ~90% around 70 seconds, but can accelerate if needed
+        let targetProgress = 0;
 
-    if (elapsedSeconds < 10) {
-      targetProgress = elapsedSeconds * 3;              // 0–30% in first 10s
-    } else if (elapsedSeconds < 30) {
-      targetProgress = 30 + (elapsedSeconds - 10) * 2;  // 30–70% next 20s
-    } else if (elapsedSeconds < 60) {
-      targetProgress = 70 + (elapsedSeconds - 30) * 0.6; // Slow to 88%
-    } else {
-      targetProgress = 88 + (elapsedSeconds - 60) * 0.15; // Crawl to ~92–95%
-      if (targetProgress > 92) targetProgress = 92;
-    }
+        if (elapsedSeconds < 10) {
+          targetProgress = elapsedSeconds * 3;              // 0–30% in first 10s
+        } else if (elapsedSeconds < 30) {
+          targetProgress = 30 + (elapsedSeconds - 10) * 2;  // 30–70% next 20s
+        } else if (elapsedSeconds < 60) {
+          targetProgress = 70 + (elapsedSeconds - 30) * 0.6; // Slow to 88%
+        } else {
+          targetProgress = 88 + (elapsedSeconds - 60) * 0.15; // Crawl to ~92–95%
+          if (targetProgress > 92) targetProgress = 92;
+        }
 
-    // Smoothly move current progress toward target (feels natural)
-    setProgress((prev) => {
-      const diff = targetProgress - prev;
-      // Move 20% of the way toward target each tick → smooth catching up
-      return prev + diff * 0.2;
-    });
-  }, 500); // Update every 500ms for smoothness
-};
+        // Smoothly move current progress toward target (feels natural)
+        setProgress((prev) => {
+          const diff = targetProgress - prev;
+          // Move 20% of the way toward target each tick → smooth catching up
+          return prev + diff * 0.2;
+        });
+      }, 500); // Update every 500ms for smoothness
+    };
 
     const generateResume = async () => {
       try {
@@ -82,31 +82,35 @@ const startAdaptiveProgress = () => {
         timeoutId = setTimeout(() => controller.abort(), 90000);
 
         let response;
-        
+
         if (mode === 'ats-check') {
           // Call ATS score check API
           response = await checkATSScore(uploadedResume, jobDescription, {
             signal: controller.signal,
           });
-          
+
           clearInterval(animationInterval);
           clearTimeout(timeoutId);
-          
+
           // Store ATS score data in context
           setATSScoreData(response.data.data);
-          
+
           // Quick final fill to 100%
           setProgress(100);
-          
+
           // Navigate to ATS score result screen
           setTimeout(() => {
             navigate("/ats-score-result");
           }, 600);
         } else {
           // Call full tailor API (existing behavior)
-          response = await uploadResumeAndJDLegacy(uploadedResume, jobDescription, '697e4041793bac6a42d2cd3c', {
-            signal: controller.signal,
-          });
+          response = await uploadResumeAndJDLegacy(
+            uploadedResume,
+            jobDescription,
+            '',
+            resumeName,
+            { signal: controller.signal }
+          );
 
           clearInterval(animationInterval);
           clearTimeout(timeoutId);
@@ -194,7 +198,7 @@ const startAdaptiveProgress = () => {
               We're carefully analyzing the job description and optimizing your experience
             </p>
             <p className="text-text-muted text-sm mt-3">
-              This can take 15–30 seconds for the best results. Please wait…
+              This can take around 10 seconds for the best results. Please wait…
             </p>
           </div>
 

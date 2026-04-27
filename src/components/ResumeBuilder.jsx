@@ -103,6 +103,7 @@ export default function ResumeBuilder() {
           name={resume?.basics?.name}
         />
       </Dialog>
+      
       <Helmet>
         <title>AI Resume Builder - Create Professional Resumes</title>
         <meta name="description" content="Build resumes section by section using AI writing assistant. Generate ATS-friendly resumes with live preview, editing tools, and PDF download capabilities." />
@@ -117,6 +118,7 @@ export default function ResumeBuilder() {
         <meta name="twitter:description" content="Build resumes section by section using AI writing assistant. Generate ATS-friendly resumes with live preview, editing tools, and PDF download capabilities." />
         <meta name="twitter:image" content="https://tailerresume.com/tailer-resume-logo-1.svg" />
       </Helmet>
+
       <div className="min-h-screen bg-gradient-to-br from-surface-dark via-surface-dark-mid to-brand-secondary-dark">
         {/* Header */}
         <header className="border-b border-border-primary bg-surface-dark/60 backdrop-blur-sm sticky top-0 z-20">
